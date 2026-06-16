@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pzuro.app — preturi PZU in timp real</title>
+<meta name="description" content="Cand e ieftina electricitatea azi si maine? Grafic PZU live, top ore recomandate si calculator de factura pentru contracte dinamice E.ON si ENGIE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  :root{
+    --paper:#F7F4EE;
+    --paper-soft:#EFEAE0;
+    --ink:#1E2128;
+    --ink-soft:#5B5F6B;
+    --cyan:#0F8A93;
+    --cyan-soft:#E3F2F1;
+    --amber:#D9722C;
+    --amber-soft:#FBEADC;
+    --violet:#7B5EEA;
+    --violet-soft:#EFEAFD;
+    --line:#E3DFD4;
+    --card:#FFFFFF;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(30,33,40,.04), 0 6px 20px rgba(30,33,40,.06);
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'IBM Plex Sans',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  a{color:var(--cyan);}
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px 64px;}
+
+  /* ---------- header ---------- */
+  header.top{
+    background:var(--ink);
+    color:var(--paper);
+    padding:22px 18px 18px;
+  }
+  header.top .wrap{padding-bottom:0;}
+  .brand{
+    display:flex;align-items:baseline;gap:10px;margin-bottom:14px;
+  }
+  .brand .mark{
+    font-family:var(--font-display);font-weight:700;font-size:1.5rem;letter-spacing:-.02em;
+  }
+  .brand .mark span{color:var(--cyan);}
+  .brand .tag{font-size:.8rem;color:#AEB3BD;}
+  .now-readout{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+  .now-readout .price{
+    font-family:var(--font-mono);font-weight:500;font-size:2.4rem;line-height:1;
+  }
+  .now-readout .price small{font-size:1rem;font-weight:400;color:#AEB3BD;margin-left:4px;}
+  .now-readout .label{font-size:.85rem;color:#AEB3BD;}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-family:var(--font-mono);
+    padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:#D8DBE0;
+  }
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);}
+
+  /* pulse strip - signature element: 96 quarter-hour bars, color-coded */
+  .pulse{
+    display:flex;align-items:flex-end;gap:1.5px;height:46px;margin-top:4px;
+  }
+  .pulse .bar{
+    flex:1;min-width:1px;border-radius:1px 1px 0 0;background:var(--ink-soft);
+    position:relative;cursor:default;
+  }
+  .pulse .bar.now::after{
+    content:'';position:absolute;left:50%;top:-6px;width:4px;height:4px;border-radius:50%;
+    background:#fff;transform:translateX(-50%);
+  }
+  .pulse-axis{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.65rem;color:#7D828D;margin-top:4px;}
+
+  /* ---------- tabs ---------- */
+  .tabs{
+    display:flex;gap:4px;background:var(--paper-soft);border-radius:12px;padding:4px;
+    margin:18px 0 22px;position:sticky;top:8px;z-index:5;
+  }
+  .tab-btn{
+    flex:1;border:none;background:transparent;font-family:var(--font-body);font-weight:500;
+    font-size:.82rem;padding:10px 6px;border-radius:9px;color:var(--ink-soft);cursor:pointer;
+    transition:background .15s,color .15s;
+  }
+  .tab-btn[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow);}
+  .tab-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  h2.section-title{font-family:var(--font-display);font-weight:600;font-size:1.15rem;margin:0 0 4px;}
+  p.section-sub{color:var(--ink-soft);font-size:.88rem;margin:0 0 16px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px;}
+
+  .day-toggle{display:flex;gap:8px;margin-bottom:14px;}
+  .day-toggle button{
+    font-family:var(--font-body);font-size:.82rem;font-weight:500;border:1px solid var(--line);
+    background:var(--card);padding:7px 14px;border-radius:999px;cursor:pointer;color:var(--ink-soft);
+  }
+  .day-toggle button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .day-toggle button:disabled{opacity:.4;cursor:not-allowed;}
+
+  .legend{display:flex;gap:14px;font-size:.78rem;color:var(--ink-soft);margin-top:10px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  /* top hours list */
+  .hour-list{display:flex;flex-direction:column;gap:8px;}
+  .hour-row{display:grid;grid-template-columns:64px 1fr 76px;align-items:center;gap:10px;font-size:.85rem;}
+  .hour-row time{font-family:var(--font-mono);color:var(--ink-soft);}
+  .hour-row .track{height:8px;background:var(--paper-soft);border-radius:6px;overflow:hidden;}
+  .hour-row .fill{height:100%;border-radius:6px;}
+  .hour-row .val{font-family:var(--font-mono);text-align:right;font-weight:500;}
+
+  /* calculator */
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:.8rem;font-weight:500;margin-bottom:5px;color:var(--ink-soft);}
+  .field select, .field input{
+    width:100%;font-family:var(--font-body);font-size:.92rem;padding:10px 12px;
+    border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);
+  }
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media (max-width:520px){.field-row{grid-template-columns:1fr;}}
+  .result{border-radius:var(--radius);padding:18px;margin-top:6px;}
+  .result.win{background:var(--cyan-soft);}
+  .result.lose{background:var(--amber-soft);}
+  .result .headline{font-family:var(--font-display);font-weight:600;font-size:1.25rem;margin-bottom:4px;}
+  .result .sub{font-size:.85rem;color:var(--ink-soft);}
+  .breakdown{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:.84rem;margin-top:12px;}
+  .breakdown dt{color:var(--ink-soft);}
+  .breakdown dd{margin:0;font-family:var(--font-mono);text-align:right;}
+  .disclaimer{font-size:.76rem;color:var(--ink-soft);margin-top:10px;}
+
+  .chart-wrap{position:relative;height:260px;}
+  .stat-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+  .stat{flex:1;min-width:90px;}
+  .stat .v{font-family:var(--font-mono);font-weight:500;font-size:1.3rem;}
+  .stat .k{font-size:.74rem;color:var(--ink-soft);}
+
+  .empty-state{padding:24px;text-align:center;color:var(--ink-soft);font-size:.88rem;}
+  footer.site{padding:28px 18px 40px;text-align:center;color:var(--ink-soft);font-size:.78rem;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark">pzuro<span>.</span>app</div>
+      <div class="tag">preturi PZU pentru contracte dinamice de energie</div>
+    </div>
+    <div class="now-readout">
+      <div>
+        <div class="label">acum costa</div>
+        <div class="price" id="nowPrice">— <small>lei/kWh</small></div>
+      </div>
+      <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">se incarca...</span></span>
+    </div>
+    <div class="pulse" id="pulseStrip" aria-hidden="true"></div>
+    <div class="pulse-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" role="tablist" aria-label="Sectiuni pzuro">
+    <button class="tab-btn" role="tab" id="tabbtn-grafic" aria-controls="panel-grafic" aria-selected="true">Grafic PZU</button>
+    <button class="tab-btn" role="tab" id="tabbtn-ore" aria-controls="panel-ore" aria-selected="false">Top ore</button>
+    <button class="tab-btn" role="tab" id="tabbtn-calc" aria-controls="panel-calc" aria-selected="false">Calculator</button>
+    <button class="tab-btn" role="tab" id="tabbtn-istoric" aria-controls="panel-istoric" aria-selected="false">Istoric 30 zile</button>
+  </div>
+
+  <!-- TAB 1: grafic -->
+  <section class="panel active" id="panel-grafic" role="tabpanel" aria-labelledby="tabbtn-grafic">
+    <h2 class="section-title">Graficul zilei, din 15 in 15 minute</h2>
+    <p class="section-sub">96 de intervale (mai multe sau mai puține în zilele cu schimbarea orei). Verde = ieftin, amber = vârf, violet = preț negativ.</p>
+    <div class="card">
+      <div class="day-toggle">
+        <button id="btnToday" aria-pressed="true">Azi</button>
+        <button id="btnTomorrow" aria-pressed="false">Mâine</button>
+      </div>
+      <div class="stat-row" id="dayStats"></div>
+      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+      <div class="legend">
+        <span><i style="background:var(--cyan)"></i>Ieftin</span>
+        <span><i style="background:var(--ink-soft)"></i>Mediu</span>
+        <span><i style="background:var(--amber)"></i>Vârf</span>
+        <span><i style="background:var(--violet)"></i>Preț negativ</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: top ore -->
+  <section class="panel" id="panel-ore" role="tabpanel" aria-labelledby="tabbtn-ore">
+    <h2 class="section-title">Cele mai bune (și mai proaste) 6 ore</h2>
+    <p class="section-sub">Folosește orele ieftine pentru maşina de spălat, boiler sau încărcat maşina electrică.</p>
+    <div class="card">
+      <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai ieftine 6 intervale</h3>
+      <div class="hour-list" id="cheapList"></div>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai scumpe 6 intervale — evită dacă se poate</h3>
+      <div class="hour-list" id="pricyList"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: calculator -->
+  <section class="panel" id="panel-calc" role="tabpanel" aria-labelledby="tabbtn-calc">
+    <h2 class="section-title">Calculator factură: dinamic vs. fix</h2>
+    <p class="section-sub">Estimare pe baza prețului PZU de azi. Ajustează componentele reglementate ca să se apropie de factura ta reală.</p>
+    <div class="card">
+      <div class="field">
+        <label for="furnizor">Furnizor</label>
+        <select id="furnizor">
+          <option value="eon">E.ON Dinamic Pro</option>
+          <option value="engie">ENGIE Elec Flexibil</option>
+          <option value="ppc">PPC — ofertă preț dinamic</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="consum">Consum lunar (kWh)</label>
+          <input type="number" id="consum" value="250" min="1" step="1">
+        </div>
+        <div class="field">
+          <label for="profil">Profil de consum</label>
+          <select id="profil">
+            <option value="uniform">Uniform pe parcursul zilei</option>
+            <option value="noapte">Predominant noaptea (EV, boiler programat)</option>
+            <option value="seara">Predominant seara (vârf)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="reglementate">Componente reglementate (lei/kWh)</label>
+          <input type="number" id="reglementate" value="0.45" min="0" step="0.01">
+        </div>
+        <div class="field">
+          <label for="marja">Marjă furnizor (lei/kWh)</label>
+          <input type="number" id="marja" value="0.02" min="0" step="0.01">
+        </div>
+      </div>
+      <div class="field">
+        <label for="tarifFix">Preț fix de comparat, tot inclus cu TVA (lei/kWh)</label>
+        <input type="number" id="tarifFix" value="0.95" min="0" step="0.01">
+      </div>
+      <div class="result" id="calcResult"></div>
+      <p class="disclaimer">Estimare orientativă, nu factură oficială. Componentele reglementate diferă în funcție de operatorul de distribuție (Electrica, Delgaz Grid, Distribuție Oltenia, E-Distribuție etc.) — ajustează valoarea ca să corespundă facturii tale.</p>
+    </div>
+  </section>
+
+  <!-- TAB 4: istoric -->
+  <section class="panel" id="panel-istoric" role="tabpanel" aria-labelledby="tabbtn-istoric">
+    <h2 class="section-title">Ultimele 30 de zile</h2>
+    <p class="section-sub">Preț mediu zilnic, cu interval min–max. Util ca să vezi dacă merită un contract dinamic pe termen mai lung.</p>
+    <div class="card">
+      <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
+    </div>
+  </section>
+</div>
+
+<footer class="site">pzuro.app · date oficiale ENTSO-E / OPCOM · actualizat zilnic</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const CYAN = "#0F8A93", AMBER = "#D9722C", VIOLET = "#7B5EEA", INKSOFT = "#5B5F6B";
+  let pricesData = null, historyData = null, activeDay = "today";
+  let mainChart = null, historyChart = null;
+
+  function fmt(n, d=3){ return (n===null||n===undefined) ? "—" : n.toFixed(d); }
+  function timeLabel(iso){ return new Date(iso).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"}); }
+
+  function colorFor(interval, min, max){
+    if(interval.is_negative) return VIOLET;
+    const range = max - min || 1;
+    const pos = (interval.price_ron_kwh - min) / range;
+    if(pos < 0.33) return CYAN;
+    if(pos > 0.66) return AMBER;
+    return INKSOFT;
+  }
+
+  // ---------- header: now price + pulse strip (uses TODAY regardless of active tab) ----------
+  function renderHeader(){
+    const day = pricesData.today;
+    if(!day){ document.getElementById("nowPillText").textContent = "date indisponibile"; return; }
+    const now = new Date();
+    const current = day.intervals.find(iv => now >= new Date(iv.start) && now < new Date(iv.end)) || day.intervals[0];
+    document.getElementById("nowPrice").innerHTML = fmt(current.price_ron_kwh) + " <small>lei/kWh</small>";
+    document.getElementById("nowPillText").textContent = current.is_negative ? "preț negativ acum — energie gratuită" : "preț live PZU";
+
+    const strip = document.getElementById("pulseStrip");
+    strip.innerHTML = "";
+    const maxAbs = Math.max(...day.intervals.map(i=>Math.abs(i.price_ron_kwh)), 0.01);
+    day.intervals.forEach(iv => {
+      const bar = document.createElement("div");
+      bar.className = "bar" + (iv === current ? " now" : "");
+      const h = Math.max(8, Math.round((Math.abs(iv.price_ron_kwh)/maxAbs)*44));
+      bar.style.height = h + "px";
+      bar.style.background = colorFor(iv, day.min_ron_kwh, day.max_ron_kwh);
+      bar.title = timeLabel(iv.start) + " — " + fmt(iv.price_ron_kwh) + " lei/kWh";
+      strip.appendChild(bar);
+    });
+  }
+
+  // ---------- tab 1: main chart ----------
+  function renderMainChart(){
+    const day = pricesData[activeDay];
+    const statsEl = document.getElementById("dayStats");
+    if(!day){
+      statsEl.innerHTML = "";
+      document.querySelector(".chart-wrap").innerHTML = '<div class="empty-state">Prețurile pentru mâine nu sunt încă publicate (de regulă apar puțin după 13:00–14:00). Revino mai târziu.</div>';
+      return;
+    }
+    statsEl.innerHTML = `
+      <div class="stat"><div class="v">${fmt(day.avg_ron_kwh)}</div><div class="k">medie lei/kWh</div></div>
+      <div class="stat"><div class="v">${fmt(day.min_ron_kwh)}</div><div class="k">minim</div></div>
+      <div class="stat"><div class="v">${fmt(day.max_ron_kwh)}</div><div class="k">maxim</div></div>`;
+
+    const labels = day.intervals.map(iv => timeLabel(iv.start));
+    const values = day.intervals.map(iv => iv.price_ron_kwh);
+    const colors = day.intervals.map(iv => colorFor(iv, day.min_ron_kwh, day.max_ron_kwh));
+
+    if(mainChart) mainChart.destroy();
+    const ctx = document.getElementById("mainChart");
+    mainChart = new Chart(ctx, {
+      type: "bar",
+      data: { labels, datasets: [{ data: values, backgroundColor: colors, borderRadius: 2, barPercentage: 1, categoryPercentage: .9 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display:false }, tooltip: { callbacks: { label: c => fmt(c.parsed.y) + " lei/kWh" } } },
+        scales: {
+          x: { ticks: { autoSkip:true, maxTicksLimit:8, font:{family:"IBM Plex Mono", size:10} }, grid:{display:false} },
+          y: { ticks: { font:{family:"IBM Plex Mono", size:10} }, grid:{color:"#E3DFD4"} }
+        }
+      }
+    });
+  }
+
+  // ---------- tab 2: top hours ----------
+  function renderHourList(elId, list, kind){
+    const el = document.getElementById(elId);
+    el.innerHTML = "";
+    if(!list || !list.length){ el.innerHTML = '<div class="empty-state">Fără date.</div>'; return; }
+    const maxAbs = Math.max(...list.map(i=>Math.abs(i.price_ron_kwh)), 0.01);
+    list.forEach(iv => {
+      const row = document.createElement("div");
+      row.className = "hour-row";
+      const pct = Math.max(6, Math.round((Math.abs(iv.price_ron_kwh)/maxAbs)*100));
+      const color = kind === "cheap" ? CYAN : AMBER;
+      row.innerHTML = `<time>${timeLabel(iv.start)}</time>
+        <div class="track"><div class="fill" style="width:${pct}%;background:${iv.is_negative?VIOLET:color}"></div></div>
+        <div class="val">${fmt(iv.price_ron_kwh)}</div>`;
+      el.appendChild(row);
+    });
+  }
+  function renderTopHours(){
+    const day = pricesData.today;
+    if(!day) return;
+    renderHourList("cheapList", day.cheapest_intervals, "cheap");
+    renderHourList("pricyList", day.priciest_intervals, "pricy");
+  }
+
+  // ---------- tab 3: calculator ----------
+  function profileWeightedAvg(day, profil){
+    if(profil === "uniform") return day.avg_ron_kwh;
+    const cheapAvg = day.cheapest_intervals.reduce((s,i)=>s+i.price_ron_kwh,0)/day.cheapest_intervals.length;
+    const pricyAvg = day.priciest_intervals.reduce((s,i)=>s+i.price_ron_kwh,0)/day.priciest_intervals.length;
+    if(profil === "noapte") return day.avg_ron_kwh*0.7 + cheapAvg*0.3;
+    if(profil === "seara") return day.avg_ron_kwh*0.7 + pricyAvg*0.3;
+    return day.avg_ron_kwh;
+  }
+  function runCalculator(){
+    const day = pricesData.today;
+    const resultEl = document.getElementById("calcResult");
+    if(!day){ resultEl.innerHTML = '<div class="empty-state">Date indisponibile.</div>'; return; }
+    const consum = parseFloat(document.getElementById("consum").value) || 0;
+    const profil = document.getElementById("profil").value;
+    const reglementate = parseFloat(document.getElementById("reglementate").value) || 0;
+    const marja = parseFloat(document.getElementById("marja").value) || 0;
+    const tarifFix = parseFloat(document.getElementById("tarifFix").value) || 0;
+
+    const pzuAvg = profileWeightedAvg(day, profil);
+    const pretDinamicTotal = (pzuAvg + reglementate + marja) * 1.21; // TVA 21%
+    const costDinamic = pretDinamicTotal * consum;
+    const costFix = tarifFix * consum;
+    const diff = costFix - costDinamic;
+    const win = diff >= 0;
+
+    resultEl.className = "result " + (win ? "win" : "lose");
+    resultEl.innerHTML = `
+      <div class="headline">${win ? "Economisești ~" : "Plătești cu ~"} ${fmt(Math.abs(diff),2)} lei/lună ${win ? "" : "mai mult"}</div>
+      <div class="sub">comparativ cu un contract fix la ${fmt(tarifFix,2)} lei/kWh, pentru un profil "${profil}"</div>
+      <dl class="breakdown">
+        <dt>Preț mediu PZU ponderat pe profil</dt><dd>${fmt(pzuAvg)} lei/kWh</dd>
+        <dt>Preț dinamic estimat, tot inclus</dt><dd>${fmt(pretDinamicTotal,3)} lei/kWh</dd>
+        <dt>Cost lunar estimat — dinamic</dt><dd>${fmt(costDinamic,2)} lei</dd>
+        <dt>Cost lunar estimat — fix</dt><dd>${fmt(costFix,2)} lei</dd>
+      </dl>`;
+  }
+
+  // ---------- tab 4: history ----------
+  function renderHistoryChart(){
+    if(!historyData || !historyData.length) return;
+    const labels = historyData.map(h => h.date.slice(5));
+    if(historyChart) historyChart.destroy();
+    historyChart = new Chart(document.getElementById("historyChart"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          { label:"medie", data: historyData.map(h=>h.avg_ron_kwh), borderColor: CYAN, backgroundColor:"transparent", tension:.25, pointRadius:0 },
+          { label:"maxim", data: historyData.map(h=>h.max_ron_kwh), borderColor:"transparent", backgroundColor:"rgba(217,114,44,.12)", fill:"+1", tension:.25, pointRadius:0 },
+          { label:"minim", data: historyData.map(h=>h.min_ron_kwh), borderColor:"transparent", backgroundColor:"rgba(15,138,147,.10)", fill:false, tension:.25, pointRadius:0 }
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false} },
+        scales:{
+          x:{ ticks:{maxTicksLimit:8, font:{family:"IBM Plex Mono", size:10}}, grid:{display:false} },
+          y:{ ticks:{font:{family:"IBM Plex Mono", size:10}}, grid:{color:"#E3DFD4"} }
+        }
+      }
+    });
+  }
+
+  // ---------- tabs wiring ----------
+  function selectTab(id){
+    document.querySelectorAll(".tab-btn").forEach(b => b.setAttribute("aria-selected", b.id === "tabbtn-"+id ? "true":"false"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-"+id));
+  }
+  ["grafic","ore","calc","istoric"].forEach(id=>{
+    document.getElementById("tabbtn-"+id).addEventListener("click", ()=>selectTab(id));
+  });
+
+  document.getElementById("btnToday").addEventListener("click", ()=>{
+    activeDay="today";
+    document.getElementById("btnToday").setAttribute("aria-pressed","true");
+    document.getElementById("btnTomorrow").setAttribute("aria-pressed","false");
+    renderMainChart();
+  });
+  document.getElementById("btnTomorrow").addEventListener("click", ()=>{
+    activeDay="tomorrow";
+    document.getElementById("btnTomorrow").setAttribute("aria-pressed","true");
+    document.getElementById("btnToday").setAttribute("aria-pressed","false");
+    renderMainChart();
+  });
+
+  ["furnizor","consum","profil","reglementate","marja","tarifFix"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", runCalculator);
+  });
+
+  // ---------- boot ----------
+  async function init(){
+    try{
+      const [pricesRes, historyRes] = await Promise.all([
+        fetch("data/prices.json"), fetch("data/history.json")
+      ]);
+      pricesData = await pricesRes.json();
+      historyData = await historyRes.json();
+    }catch(e){
+      document.getElementById("nowPillText").textContent = "eroare la încărcarea datelor";
+      console.error(e);
+      return;
+    }
+    if(!pricesData.tomorrow_published){
+      document.getElementById("btnTomorrow").disabled = true;
+    }
+    renderHeader();
+    renderMainChart();
+    renderTopHours();
+    runCalculator();
+    renderHistoryChart();
+  }
+  init();
+})();
+</script>
+</body>
+</html>

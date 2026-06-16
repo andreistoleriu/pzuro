@@ -1,0 +1,212 @@
+[
+  {
+    "date": "2026-05-12",
+    "avg_ron_kwh": 0.5585,
+    "min_ron_kwh": -0.1228,
+    "max_ron_kwh": 1.4396
+  },
+  {
+    "date": "2026-05-13",
+    "avg_ron_kwh": 0.5689,
+    "min_ron_kwh": -0.095,
+    "max_ron_kwh": 1.4364
+  },
+  {
+    "date": "2026-05-14",
+    "avg_ron_kwh": 0.5693,
+    "min_ron_kwh": -0.1151,
+    "max_ron_kwh": 1.4212
+  },
+  {
+    "date": "2026-05-15",
+    "avg_ron_kwh": 0.5779,
+    "min_ron_kwh": -0.1068,
+    "max_ron_kwh": 1.4288
+  },
+  {
+    "date": "2026-05-16",
+    "avg_ron_kwh": 0.5691,
+    "min_ron_kwh": -0.1237,
+    "max_ron_kwh": 1.4476
+  },
+  {
+    "date": "2026-05-17",
+    "avg_ron_kwh": 0.5561,
+    "min_ron_kwh": -0.1007,
+    "max_ron_kwh": 1.3801
+  },
+  {
+    "date": "2026-05-18",
+    "avg_ron_kwh": 0.5587,
+    "min_ron_kwh": -0.1243,
+    "max_ron_kwh": 1.4319
+  },
+  {
+    "date": "2026-05-19",
+    "avg_ron_kwh": 0.5676,
+    "min_ron_kwh": -0.0652,
+    "max_ron_kwh": 1.4307
+  },
+  {
+    "date": "2026-05-20",
+    "avg_ron_kwh": 0.5617,
+    "min_ron_kwh": -0.1003,
+    "max_ron_kwh": 1.4473
+  },
+  {
+    "date": "2026-05-21",
+    "avg_ron_kwh": 0.5747,
+    "min_ron_kwh": -0.117,
+    "max_ron_kwh": 1.445
+  },
+  {
+    "date": "2026-05-22",
+    "avg_ron_kwh": 0.5719,
+    "min_ron_kwh": -0.0939,
+    "max_ron_kwh": 1.4392
+  },
+  {
+    "date": "2026-05-23",
+    "avg_ron_kwh": 0.5665,
+    "min_ron_kwh": -0.1066,
+    "max_ron_kwh": 1.4411
+  },
+  {
+    "date": "2026-05-24",
+    "avg_ron_kwh": 0.5535,
+    "min_ron_kwh": -0.1165,
+    "max_ron_kwh": 1.4462
+  },
+  {
+    "date": "2026-05-25",
+    "avg_ron_kwh": 0.58,
+    "min_ron_kwh": -0.1102,
+    "max_ron_kwh": 1.4467
+  },
+  {
+    "date": "2026-05-26",
+    "avg_ron_kwh": 0.5644,
+    "min_ron_kwh": -0.1252,
+    "max_ron_kwh": 1.4393
+  },
+  {
+    "date": "2026-05-27",
+    "avg_ron_kwh": 0.5679,
+    "min_ron_kwh": -0.0761,
+    "max_ron_kwh": 1.4428
+  },
+  {
+    "date": "2026-05-28",
+    "avg_ron_kwh": 0.5635,
+    "min_ron_kwh": -0.1258,
+    "max_ron_kwh": 1.4233
+  },
+  {
+    "date": "2026-05-29",
+    "avg_ron_kwh": 0.5601,
+    "min_ron_kwh": -0.1002,
+    "max_ron_kwh": 1.4411
+  },
+  {
+    "date": "2026-05-30",
+    "avg_ron_kwh": 0.5729,
+    "min_ron_kwh": -0.0889,
+    "max_ron_kwh": 1.4406
+  },
+  {
+    "date": "2026-05-31",
+    "avg_ron_kwh": 0.5594,
+    "min_ron_kwh": -0.1145,
+    "max_ron_kwh": 1.4015
+  },
+  {
+    "date": "2026-06-01",
+    "avg_ron_kwh": 0.5824,
+    "min_ron_kwh": -0.1078,
+    "max_ron_kwh": 1.4145
+  },
+  {
+    "date": "2026-06-02",
+    "avg_ron_kwh": 0.5583,
+    "min_ron_kwh": -0.1022,
+    "max_ron_kwh": 1.4477
+  },
+  {
+    "date": "2026-06-03",
+    "avg_ron_kwh": 0.5719,
+    "min_ron_kwh": -0.0922,
+    "max_ron_kwh": 1.4367
+  },
+  {
+    "date": "2026-06-04",
+    "avg_ron_kwh": 0.5657,
+    "min_ron_kwh": -0.1042,
+    "max_ron_kwh": 1.4202
+  },
+  {
+    "date": "2026-06-05",
+    "avg_ron_kwh": 0.5733,
+    "min_ron_kwh": -0.0756,
+    "max_ron_kwh": 1.4222
+  },
+  {
+    "date": "2026-06-06",
+    "avg_ron_kwh": 0.5586,
+    "min_ron_kwh": -0.1122,
+    "max_ron_kwh": 1.4173
+  },
+  {
+    "date": "2026-06-07",
+    "avg_ron_kwh": 0.5793,
+    "min_ron_kwh": -0.0078,
+    "max_ron_kwh": 1.4379
+  },
+  {
+    "date": "2026-06-08",
+    "avg_ron_kwh": 0.5661,
+    "min_ron_kwh": -0.1181,
+    "max_ron_kwh": 1.442
+  },
+  {
+    "date": "2026-06-09",
+    "avg_ron_kwh": 0.5803,
+    "min_ron_kwh": -0.0138,
+    "max_ron_kwh": 1.4433
+  },
+  {
+    "date": "2026-06-10",
+    "avg_ron_kwh": 0.5627,
+    "min_ron_kwh": -0.0834,
+    "max_ron_kwh": 1.4201
+  },
+  {
+    "date": "2026-06-11",
+    "avg_ron_kwh": 0.5778,
+    "min_ron_kwh": -0.1222,
+    "max_ron_kwh": 1.443
+  },
+  {
+    "date": "2026-06-12",
+    "avg_ron_kwh": 0.5637,
+    "min_ron_kwh": -0.1238,
+    "max_ron_kwh": 1.4309
+  },
+  {
+    "date": "2026-06-13",
+    "avg_ron_kwh": 0.5719,
+    "min_ron_kwh": -0.0973,
+    "max_ron_kwh": 1.3838
+  },
+  {
+    "date": "2026-06-14",
+    "avg_ron_kwh": 0.5707,
+    "min_ron_kwh": 0.002,
+    "max_ron_kwh": 1.4356
+  },
+  {
+    "date": "2026-06-15",
+    "avg_ron_kwh": 0.5611,
+    "min_ron_kwh": -0.125,
+    "max_ron_kwh": 1.4391
+  }
+]
