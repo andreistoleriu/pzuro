@@ -170,6 +170,7 @@
       </div>
       <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">se incarca...</span></span>
     </div>
+    <div class="freshness" id="freshness" style="font-size:.74rem;color:#AEB3BD;margin-bottom:8px;"></div>
     <div class="pulse" id="pulseStrip" aria-hidden="true"></div>
     <div class="pulse-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
   </div>
@@ -247,19 +248,33 @@
       <div class="field-row">
         <div class="field">
           <label for="reglementate">Componente reglementate (lei/kWh)</label>
-          <input type="number" id="reglementate" value="0.45" min="0" step="0.01">
+          <input type="number" id="reglementate" value="0.54" min="0" step="0.01">
         </div>
         <div class="field">
-          <label for="marja">Marjă furnizor (lei/kWh)</label>
-          <input type="number" id="marja" value="0.02" min="0" step="0.01">
+          <label for="marja">Marjă furnizor (lei/kWh) <span style="color:var(--amber)">— neconfirmat, verifică oferta PDF</span></label>
+          <input type="number" id="marja" value="0.35" min="0" step="0.01">
         </div>
       </div>
       <div class="field">
         <label for="tarifFix">Preț fix de comparat, tot inclus cu TVA (lei/kWh)</label>
-        <input type="number" id="tarifFix" value="0.95" min="0" step="0.01">
+        <input type="number" id="tarifFix" value="1.15" min="0" step="0.01">
+      </div>
+      <div class="field" style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+        <input type="checkbox" id="prosumator" style="width:auto;">
+        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (am panouri și exportă surplus în rețea)</label>
+      </div>
+      <div class="field-row" id="prosumatorFields" style="display:none;">
+        <div class="field">
+          <label for="export">Energie exportată lunar (kWh)</label>
+          <input type="number" id="export" value="0" min="0" step="1">
+        </div>
+        <div class="field">
+          <label for="rataExport">Rată fixă de răscumpărare curentă (lei/kWh)</label>
+          <input type="number" id="rataExport" value="0.74" min="0" step="0.01">
+        </div>
       </div>
       <div class="result" id="calcResult"></div>
-      <p class="disclaimer">Estimare orientativă, nu factură oficială. Componentele reglementate diferă în funcție de operatorul de distribuție (Electrica, Delgaz Grid, Distribuție Oltenia, E-Distribuție etc.) — ajustează valoarea ca să corespundă facturii tale.</p>
+      <p class="disclaimer">Estimare orientativă, nu factură oficială. Componentele reglementate diferă în funcție de operatorul de distribuție (Electrica, Delgaz Grid, Distribuție Oltenia, E-Distribuție etc.) — ajustează valoarea ca să corespundă facturii tale. Pentru export: presupunem că venitul din surplus nu mai e impozitat separat cu TVA (se compensează în factură) — o simplificare, nu o regulă fiscală garantată.</p>
     </div>
   </section>
 
@@ -316,6 +331,22 @@
       bar.title = timeLabel(iv.start) + " — " + fmt(iv.price_ron_kwh) + " lei/kWh";
       strip.appendChild(bar);
     });
+
+    renderFreshness();
+  }
+
+  function renderFreshness(){
+    const el = document.getElementById("freshness");
+    if(!pricesData.generated_at){ el.textContent = ""; return; }
+    const ageMs = Date.now() - new Date(pricesData.generated_at).getTime();
+    const ageH = ageMs / 36e5;
+    const label = ageH < 1 ? "actualizat acum câteva minute"
+      : ageH < 24 ? `actualizat acum ${Math.round(ageH)}h`
+      : `actualizat acum ${Math.round(ageH/24)} zile`;
+    // peste ~30h inseamna ca cron-ul zilnic (2 incercari/zi) a ratat de doua ori la rand
+    const stale = ageH > 30;
+    el.textContent = stale ? `⚠ ${label} — posibil date vechi, ENTSO-E poate fi indisponibil` : label;
+    el.style.color = stale ? "#E8A66B" : "#AEB3BD";
   }
 
   // ---------- tab 1: main chart ----------
@@ -385,6 +416,24 @@
     if(profil === "seara") return day.avg_ron_kwh*0.7 + pricyAvg*0.3;
     return day.avg_ron_kwh;
   }
+  // pretul mediu PZU in fereastra orara tipica de productie solara (10:00-16:00).
+  // folosit pentru exportul prosumatorilor: panourile produc indiferent de pret,
+  // si in aceasta piata orele de soare coincid de regula cu orele cele mai ieftine
+  // (vezi tab Grafic) -- de-aia NU folosim media zilei pentru export, ar fi optimist.
+  function solarWindowAvg(day, startHour=10, endHour=16){
+    const inWindow = day.intervals.filter(iv => {
+      const h = new Date(iv.start).getHours();
+      return h >= startHour && h < endHour;
+    });
+    if(!inWindow.length) return day.avg_ron_kwh;
+    return inWindow.reduce((s,i)=>s+i.price_ron_kwh,0) / inWindow.length;
+  }
+
+  document.getElementById("prosumator").addEventListener("change", (e) => {
+    document.getElementById("prosumatorFields").style.display = e.target.checked ? "grid" : "none";
+    runCalculator();
+  });
+
   function runCalculator(){
     const day = pricesData.today;
     const resultEl = document.getElementById("calcResult");
@@ -394,23 +443,50 @@
     const reglementate = parseFloat(document.getElementById("reglementate").value) || 0;
     const marja = parseFloat(document.getElementById("marja").value) || 0;
     const tarifFix = parseFloat(document.getElementById("tarifFix").value) || 0;
+    const isProsumator = document.getElementById("prosumator").checked;
+    const exportKwh = isProsumator ? (parseFloat(document.getElementById("export").value) || 0) : 0;
+    const rataExport = parseFloat(document.getElementById("rataExport").value) || 0;
 
     const pzuAvg = profileWeightedAvg(day, profil);
     const pretDinamicTotal = (pzuAvg + reglementate + marja) * 1.21; // TVA 21%
     const costDinamic = pretDinamicTotal * consum;
     const costFix = tarifFix * consum;
-    const diff = costFix - costDinamic;
-    const win = diff >= 0;
 
+    let breakdownExtra = "";
+    let netFix = costFix, netDinamic = costDinamic;
+    let headlineDiff, headlineLabel;
+
+    if(isProsumator && exportKwh > 0){
+      const exportPzuAvg = solarWindowAvg(day);
+      // formula oficiala E.ON pentru prosumatori: venitul din export = pretul din piata x energia produsa,
+      // FARA componenta de furnizare/marja (acelea se aplica doar la ce CONSUMI, nu la ce exporti)
+      const venitExportFix = exportKwh * rataExport;
+      const venitExportDinamic = exportKwh * Math.max(exportPzuAvg, 0); // nu platesti tu furnizorul la preturi negative aici, simplificat la 0
+      netFix = costFix - venitExportFix;
+      netDinamic = costDinamic - venitExportDinamic;
+      breakdownExtra = `
+        <dt>Preț PZU mediu 10:00-16:00 (fereastră solară)</dt><dd>${fmt(exportPzuAvg)} lei/kWh</dd>
+        <dt>Venit export — rată fixă actuală</dt><dd>${fmt(venitExportFix,2)} lei</dd>
+        <dt>Venit export — preț PZU dinamic</dt><dd>${fmt(venitExportDinamic,2)} lei</dd>`;
+      headlineDiff = netFix - netDinamic;
+      headlineLabel = "net (consum minus export)";
+    } else {
+      headlineDiff = costFix - costDinamic;
+      headlineLabel = `pentru un profil "${profil}"`;
+    }
+
+    const win = headlineDiff >= 0;
     resultEl.className = "result " + (win ? "win" : "lose");
     resultEl.innerHTML = `
-      <div class="headline">${win ? "Economisești ~" : "Plătești cu ~"} ${fmt(Math.abs(diff),2)} lei/lună ${win ? "" : "mai mult"}</div>
-      <div class="sub">comparativ cu un contract fix la ${fmt(tarifFix,2)} lei/kWh, pentru un profil "${profil}"</div>
+      <div class="headline">${win ? "Economisești ~" : "Plătești cu ~"} ${fmt(Math.abs(headlineDiff),2)} lei/lună ${win ? "" : "mai mult"}</div>
+      <div class="sub">comparativ cu un contract fix la ${fmt(tarifFix,2)} lei/kWh, ${headlineLabel}</div>
       <dl class="breakdown">
         <dt>Preț mediu PZU ponderat pe profil</dt><dd>${fmt(pzuAvg)} lei/kWh</dd>
         <dt>Preț dinamic estimat, tot inclus</dt><dd>${fmt(pretDinamicTotal,3)} lei/kWh</dd>
-        <dt>Cost lunar estimat — dinamic</dt><dd>${fmt(costDinamic,2)} lei</dd>
-        <dt>Cost lunar estimat — fix</dt><dd>${fmt(costFix,2)} lei</dd>
+        <dt>Cost consum — dinamic</dt><dd>${fmt(costDinamic,2)} lei</dd>
+        <dt>Cost consum — fix</dt><dd>${fmt(costFix,2)} lei</dd>
+        ${breakdownExtra}
+        ${isProsumator && exportKwh > 0 ? `<dt><b>Cost net — dinamic</b></dt><dd><b>${fmt(netDinamic,2)} lei</b></dd><dt><b>Cost net — fix</b></dt><dd><b>${fmt(netFix,2)} lei</b></dd>` : ""}
       </dl>`;
   }
 
@@ -462,9 +538,37 @@
     renderMainChart();
   });
 
-  ["furnizor","consum","profil","reglementate","marja","tarifFix"].forEach(id=>{
+  ["furnizor","consum","profil","reglementate","marja","tarifFix","export","rataExport"].forEach(id=>{
     document.getElementById(id).addEventListener("input", runCalculator);
   });
+
+  function currentRoDateStr(){
+    // data calendaristica de AZI in ora Romaniei (YYYY-MM-DD), indiferent de
+    // fusul orar al vizitatorului -- trebuie sa se potriveasca exact formatul
+    // din prices.json (generat tot in Europe/Bucharest de fetch_prices.py)
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Bucharest" }).format(new Date());
+  }
+
+  function normalizeDayLabels(){
+    // prices.json eticheteaza "today"/"tomorrow" relativ la MOMENTUL CAND A RULAT
+    // pipeline-ul (o data pe zi, ~14:15 ora Romaniei), nu relativ la data reala
+    // din calendarul vizitatorului. Intre miezul noptii si prima rulare a zilei,
+    // ce e stocat sub "today" e de fapt IERI, iar "tomorrow" e de fapt AZI
+    // (a fost deja publicat cu o zi inainte). Corectam aici, o singura data,
+    // inainte de orice randare -- restul codului continua sa citeasca
+    // pricesData.today / .tomorrow normal, fara sa stie de aceasta logica.
+    const todayStr = currentRoDateStr();
+    if(pricesData.today && pricesData.today.date !== todayStr){
+      if(pricesData.tomorrow && pricesData.tomorrow.date === todayStr){
+        pricesData.today = pricesData.tomorrow;
+        pricesData.tomorrow = null;
+        pricesData.tomorrow_published = false;
+      }
+      // daca nici "tomorrow" nu se potriveste cu azi, ambele zile sunt vechi
+      // (outage prelungit) -- nu inventam date, indicatorul de vechime
+      // (renderFreshness) ramane sa avertizeze vizual, e exact scopul lui
+    }
+  }
 
   // ---------- boot ----------
   async function init(){
@@ -479,6 +583,7 @@
       console.error(e);
       return;
     }
+    normalizeDayLabels();
     if(!pricesData.tomorrow_published){
       document.getElementById("btnTomorrow").disabled = true;
     }
