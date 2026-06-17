@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integrare Home Assistant cu pzuro.app — preț PZU în automatizări</title>
+<meta name="description" content="Cum citești prețul PZU în Home Assistant: un senzor simplu cu statisticile zilei, și un senzor precis cu prețul exact al intervalului curent, pentru automatizări reale.">
+<link rel="canonical" href="https://pzuro.vercel.app/home-assistant.html"> <!-- TODO: domeniu final -->
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://pzuro.vercel.app/home-assistant.html"> <!-- TODO: domeniu final -->
+<meta property="og:title" content="Integrare Home Assistant cu pzuro.app">
+<meta property="og:description" content="Citește prețul PZU direct în Home Assistant și pornește automatizări pe baza lui.">
+<meta property="og:image" content="https://pzuro.vercel.app/og-image.png"> <!-- TODO: domeniu final -->
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pzuro.vercel.app/og-image.png"> <!-- TODO: domeniu final -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F7F4EE; --ink:#1E2128; --ink-soft:#5B5F6B;
+    --cyan:#0F8A93; --amber:#D9722C; --violet:#7B5EEA; --line:#E3DFD4;
+    --font-display:'Space Grotesk',sans-serif; --font-body:'IBM Plex Sans',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);line-height:1.6;}
+  .wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px;}
+  header.top{background:var(--ink);color:var(--paper);padding:18px 20px;}
+  header.top .wrap{padding:0;max-width:680px;margin:0 auto;display:flex;align-items:baseline;gap:10px;}
+  .mark{font-family:var(--font-display);font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--paper);}
+  .mark span{color:var(--cyan);}
+  .tag{font-size:.78rem;color:#AEB3BD;}
+  h1{font-family:var(--font-display);font-weight:600;font-size:1.85rem;line-height:1.25;margin:0 0 6px;}
+  .meta{font-size:.82rem;color:var(--ink-soft);margin-bottom:32px;}
+  h2{font-family:var(--font-display);font-weight:600;font-size:1.3rem;margin:36px 0 12px;}
+  h3{font-family:var(--font-display);font-weight:600;font-size:1.05rem;margin:24px 0 10px;}
+  p{margin:0 0 16px;}
+  ul,ol{margin:0 0 16px;padding-left:22px;}
+  li{margin-bottom:6px;}
+  .level{display:inline-block;font-family:var(--font-mono);font-size:.72rem;background:var(--cyan);color:#fff;padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+  .level.precis{background:var(--amber);}
+  pre{background:var(--ink);color:#E8E6DF;padding:16px 18px;border-radius:10px;overflow-x:auto;font-family:var(--font-mono);font-size:.82rem;line-height:1.55;margin:0 0 18px;}
+  code{font-family:var(--font-mono);background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:4px;font-size:.88em;}
+  pre code{background:none;border:none;padding:0;}
+  .callout{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:24px 0;font-size:.92rem;}
+  .cta{background:var(--ink);color:var(--paper);border-radius:14px;padding:28px 24px;margin:40px 0 0;text-align:center;}
+  .cta h3{color:var(--paper);margin:0 0 8px;}
+  .cta p{color:#C9CCD3;margin:0 0 18px;font-size:.9rem;}
+  .cta a{display:inline-block;background:var(--cyan);color:#fff;text-decoration:none;font-weight:500;padding:11px 22px;border-radius:999px;font-size:.92rem;}
+  a{color:var(--cyan);}
+  footer{margin-top:48px;font-size:.78rem;color:var(--ink-soft);text-align:center;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="/">pzuro<span>.</span>app</a>
+    <span class="tag">ghid tehnic</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Prețul PZU în Home Assistant</h1>
+  <p class="meta">Pentru cei care vor mai mult decât un grafic — automatizări reale pe baza prețului</p>
+
+  <p>Datele de pe pzuro.app sunt publice și pot fi citite direct de Home Assistant, fără cont, fără cheie API, gratuit. Sunt două moduri de integrare, după cât de precis vrei să fie:</p>
+
+  <h2><span class="level">simplu</span><br>Statisticile zilei (medie, minim, maxim)</h2>
+  <p>Bun pentru un panou de control sau o notificare generală — "azi prețul mediu e X". Citește direct fișierul <code>data/prices.json</code>, fără nimic construit special pentru asta.</p>
+
+  <pre><code># configuration.yaml
+rest:
+  - resource: https://pzuro.vercel.app/data/prices.json
+    scan_interval: 1800
+    sensor:
+      - name: "PZU pret mediu azi"
+        value_template: "{{ value_json.today.avg_ron_kwh }}"
+        unit_of_measurement: "lei/kWh"
+      - name: "PZU pret minim azi"
+        value_template: "{{ value_json.today.min_ron_kwh }}"
+        unit_of_measurement: "lei/kWh"</code></pre>
+
+  <p>Cu astea două, ai deja niște senzori pe care îi poți pune pe un dashboard sau folosi într-o notificare zilnică. Un singur <code>resource:</code> alimentează ambii senzori — nu se face câte un request separat pentru fiecare.</p>
+
+  <h2><span class="level precis">precis</span><br>Prețul exact al intervalului curent</h2>
+  <p>Pentru o automatizare reală — "pornește boilerul acum dacă prețul curent e sub un prag" — ai nevoie de prețul exact al intervalului de 15 minute în care te afli, nu media zilei. Asta înseamnă identificarea intervalului corect din cele 96 ale zilei, ținând cont și de faptul că etichetele "azi"/"mâine" din fișierul brut depind de ora la care a rulat ultima actualizare, nu de data calendaristică reală.</p>
+  <p>În loc să rescrii logica asta în Jinja2 (posibil, dar greu de întreținut), am pus-o direct într-un mic API dedicat, care răspunde mereu cu un singur număr corect:</p>
+
+  <pre><code># configuration.yaml
+rest:
+  - resource: https://pzuro.vercel.app/api/now
+    scan_interval: 300
+    sensor:
+      - name: "PZU pret acum"
+        value_template: "{{ value_json.price_ron_kwh }}"
+        unit_of_measurement: "lei/kWh"
+        json_attributes:
+          - is_negative
+          - interval_start
+          - interval_end</code></pre>
+
+  <p>Cu senzorul ăsta, o automatizare devine simplă:</p>
+
+  <pre><code># automations.yaml
+- alias: "Pornește boilerul cand pretul e mic"
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.pzu_pret_acum
+      below: 0.3
+  action:
+    - service: switch.turn_on
+      entity_id: switch.boiler</code></pre>
+
+  <div class="callout">
+    <b>De reținut</b>: dacă API-ul nu are date valabile pentru azi (de exemplu, un outage prelungit la sursa de date), răspunde cu eroare HTTP 503 în loc să trimită date vechi ca și cum ar fi curente — senzorul din Home Assistant va deveni <code>unavailable</code> în acel caz, nu va arăta tăcut un preț greșit. Merită un trigger separat pe starea senzorului dacă automatizarea ta controlează ceva important.
+  </div>
+
+  <h2>Limită de utilizare</h2>
+  <p>Nu e nevoie de <code>scan_interval</code> mai agresiv decât 5 minute (300 secunde) — prețul se schimbă o dată la 15 minute, deci verificările mai frecvente nu aduc date noi, doar consumă inutil.</p>
+
+  <div class="cta">
+    <h3>Vezi și restul datelor</h3>
+    <p>Graficul complet, calculatorul de factură și istoricul sunt pe pagina principală.</p>
+    <a href="/">Deschide pzuro.app →</a>
+  </div>
+</div>
+
+<footer>pzuro.app · date oficiale ENTSO-E / OPCOM · API public, fără autentificare</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
