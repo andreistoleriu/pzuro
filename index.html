@@ -309,6 +309,7 @@
           <input type="number" id="rataExport" value="0.74" min="0" step="0.01">
         </div>
       </div>
+      <p id="prosumatorLink" style="display:none;font-size:.78rem;color:var(--ink-soft);margin:-6px 0 16px;">De ce contează asta? <a href="/prosumator-contract-pret-dinamic.html" style="color:var(--cyan);">Citește de ce surplusul se vinde de regulă la ore ieftine →</a></p>
       <div class="result" id="calcResult"></div>
       <p class="disclaimer">Estimare orientativă, nu factură oficială. Componentele reglementate diferă în funcție de operatorul de distribuție (Electrica, Delgaz Grid, Distribuție Oltenia, E-Distribuție etc.) — ajustează valoarea ca să corespundă facturii tale. Pentru export: presupunem că venitul din surplus nu mai e impozitat separat cu TVA (se compensează în factură) — o simplificare, nu o regulă fiscală garantată.</p>
     </div>
@@ -474,6 +475,7 @@
 
   document.getElementById("prosumator").addEventListener("change", (e) => {
     document.getElementById("prosumatorFields").style.display = e.target.checked ? "grid" : "none";
+    document.getElementById("prosumatorLink").style.display = e.target.checked ? "block" : "none";
     runCalculator();
   });
 
