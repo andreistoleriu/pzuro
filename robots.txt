@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pzuro.vercel.app/sitemap.xml
