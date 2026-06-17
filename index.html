@@ -202,7 +202,7 @@
       </div>
       <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">Se încarcă...</span></span>
     </div>
-    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">Ăsta e prețul brut din piață. Taxele, marja furnizorului și TVA se adaugă separat — vezi cât ai plăti efectiv în tab-ul <b>Calculator</b></div>
+    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">Ăsta e prețul brut din piață. Taxele, marja furnizorului și TVA se adaugă separat — vezi cât ai plăti efectiv în <b>Calculator</b></div>
     <div class="freshness" id="freshness" style="font-size:.74rem;color:#AEB3BD;margin-bottom:8px;"></div>
     <div class="pulse" id="pulseStrip" aria-hidden="true"></div>
     <div class="pulse-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
@@ -297,7 +297,7 @@
       </div>
       <div class="field" style="display:flex;align-items:center;gap:8px;margin-top:2px;">
         <input type="checkbox" id="prosumator" style="width:auto;">
-        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (am panouri și export surplus în rețea)</label>
+        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (am panouri și exportez surplus în rețea)</label>
       </div>
       <div class="field-row" id="prosumatorFields" style="display:none;">
         <div class="field">
@@ -324,7 +324,7 @@
   </section>
 </div>
 
-<footer class="site">pzuro.app · date oficiale ENTSO-E / OPCOM · actualizat zilnic · <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);">Ghid: ce este un contract cu preț dinamic?</a></footer>
+<footer class="site">pzuro.app · date oficiale ENTSO-E / OPCOM · actualizat zilnic · <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);">Ghid: ce este un contract cu preț dinamic?</a> · <a href="https://www.buymeacoffee.com/TODO" style="color:var(--cyan);">Susține proiectul ☕</a></footer> <!-- TODO: link real Buy Me a Coffee -->
 
 <script>
 (function(){
@@ -398,6 +398,13 @@
       <div class="stat"><div class="v">${fmt(day.avg_ron_kwh)}</div><div class="k">medie lei/kWh</div></div>
       <div class="stat"><div class="v">${fmt(day.min_ron_kwh)}</div><div class="k">minim</div></div>
       <div class="stat"><div class="v">${fmt(day.max_ron_kwh)}</div><div class="k">maxim</div></div>`;
+
+    if(typeof Chart === "undefined"){
+      // Chart.js nu s-a incarcat (ad-blocker, retea proasta, CDN picat) --
+      // statisticile de mai sus raman corecte, doar bara vizuala lipseste
+      document.getElementById("mainChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca (verifică conexiunea sau un ad-blocker). Statisticile de mai sus rămân corecte.</div>';
+      return;
+    }
 
     const labels = day.intervals.map(iv => timeLabel(iv.start));
     const values = day.intervals.map(iv => iv.price_ron_kwh);
@@ -529,6 +536,10 @@
   // ---------- tab 4: history ----------
   function renderHistoryChart(){
     if(!historyData || !historyData.length) return;
+    if(typeof Chart === "undefined"){
+      document.getElementById("historyChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca (verifică conexiunea sau un ad-blocker).</div>';
+      return;
+    }
     const labels = historyData.map(h => h.date.slice(5));
     if(historyChart) historyChart.destroy();
     historyChart = new Chart(document.getElementById("historyChart"), {
@@ -624,13 +635,24 @@
       document.getElementById("btnTomorrow").disabled = true;
     }
     renderHeader();
-    renderMainChart();
-    renderTopHours();
-    runCalculator();
-    renderHistoryChart();
+    safeRender(renderMainChart);
+    safeRender(renderTopHours);
+    safeRender(runCalculator);
+    safeRender(renderHistoryChart);
+  }
+
+  // fiecare sectiune a paginii e independenta de celelalte -- daca una pica
+  // (ex. Chart.js nu s-a incarcat, ad-blocker, retea proasta), nu vrem ca
+  // eroarea sa opreasca tot restul scriptului. Fara asta, o problema doar la
+  // grafic ar lasa Calculator si Top ore complet goale, desi n-au nicio
+  // legatura cu Chart.js -- exact ce am vazut testand pe un viewport real.
+  function safeRender(fn){
+    try{ fn(); }
+    catch(e){ console.error("Sectiune indisponibila (" + fn.name + "):", e); }
   }
   init();
 })();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
