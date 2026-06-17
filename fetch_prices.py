@@ -86,7 +86,15 @@ def fetch_day_ahead(client: EntsoePandasClient, day: pd.Timestamp) -> pd.Series 
         series = client.query_day_ahead_prices(ZONE, start=start, end=end)
         return series
     except NoMatchingDataError:
+        # caz normal: ziua inca nu a fost publicata (de obicei "maine")
         log.info("Fara date PZU publicate pentru %s (normal pentru 'maine').", day.date())
+        return None
+    except Exception as exc:  # noqa: BLE001
+        # caz ANORMAL: ENTSO-E picat, timeout, eroare de retea etc.
+        # IMPORTANT: prindem aici, nu lasam exceptia sa scape -- daca fetch-ul
+        # pentru "maine" pica dur, nu trebuie sa distruga un fetch reusit
+        # pentru "azi" facut inainte. Fiecare zi e independenta.
+        log.error("Eroare neasteptata la preluarea datelor pentru %s: %s", day.date(), exc)
         return None
 
 
