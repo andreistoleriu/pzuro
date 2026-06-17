@@ -202,6 +202,7 @@
       </div>
       <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">se incarca...</span></span>
     </div>
+    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">preț brut din piață (PZU) — la el se mai adaugă taxe reglementate, marja furnizorului și TVA; vezi <b>Calculator</b> pentru prețul final estimat</div>
     <div class="freshness" id="freshness" style="font-size:.74rem;color:#AEB3BD;margin-bottom:8px;"></div>
     <div class="pulse" id="pulseStrip" aria-hidden="true"></div>
     <div class="pulse-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
@@ -222,7 +223,7 @@
   <!-- TAB 1: grafic -->
   <section class="panel active" id="panel-grafic" role="tabpanel" aria-labelledby="tabbtn-grafic">
     <h2 class="section-title">Graficul zilei, din 15 in 15 minute</h2>
-    <p class="section-sub">96 de intervale (mai multe sau mai puține în zilele cu schimbarea orei). Verde = ieftin, amber = vârf, violet = preț negativ.</p>
+    <p class="section-sub">96 de intervale (mai multe sau mai puține în zilele cu schimbarea orei). Verde = ieftin, amber = vârf, violet = preț negativ. Prețurile sunt brute, din piață — nu includ taxele și marja furnizorului.</p>
     <div class="card">
       <div class="day-toggle">
         <button id="btnToday" aria-pressed="true">Azi</button>
@@ -242,7 +243,7 @@
   <!-- TAB 2: top ore -->
   <section class="panel" id="panel-ore" role="tabpanel" aria-labelledby="tabbtn-ore">
     <h2 class="section-title">Cele mai bune (și mai proaste) 6 ore</h2>
-    <p class="section-sub">Folosește orele ieftine pentru maşina de spălat, boiler sau încărcat maşina electrică.</p>
+    <p class="section-sub">Folosește orele ieftine pentru maşina de spălat, boiler sau încărcat maşina electrică. Valorile sunt preț brut PZU, fără taxe și marja furnizorului.</p>
     <div class="card">
       <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai ieftine 6 intervale</h3>
       <div class="hour-list" id="cheapList"></div>
@@ -316,7 +317,7 @@
   <!-- TAB 4: istoric -->
   <section class="panel" id="panel-istoric" role="tabpanel" aria-labelledby="tabbtn-istoric">
     <h2 class="section-title">Ultimele 30 de zile</h2>
-    <p class="section-sub">Preț mediu zilnic, cu interval min–max. Util ca să vezi dacă merită un contract dinamic pe termen mai lung.</p>
+    <p class="section-sub">Preț mediu zilnic, cu interval min–max. Util ca să vezi dacă merită un contract dinamic pe termen mai lung. Tot preț brut PZU — pentru estimarea facturii finale, vezi Calculator.</p>
     <div class="card">
       <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
     </div>
