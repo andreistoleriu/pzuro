@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>pzuro.app — preturi PZU in timp real</title>
-<meta name="description" content="Cand e ieftina electricitatea azi si maine? Grafic PZU live, top ore recomandate si calculator de factura pentru contracte dinamice E.ON si ENGIE.">
+<title>pzuro.app — prețuri PZU în timp real</title>
+<meta name="description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON și ENGIE.">
 
 <!-- IMPORTANT: cand alegi domeniul final (pzuro.app / pzuro.ro), inlocuieste
      URL-ul de mai jos in TOATE locurile marcate cu acelasi comentariu -->
@@ -12,16 +12,16 @@
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pzuro.vercel.app/"> <!-- TODO: domeniu final -->
-<meta property="og:title" content="pzuro.app — preturi PZU pentru contracte dinamice de energie">
-<meta property="og:description" content="Cand e ieftina electricitatea azi si maine? Grafic PZU live, top ore recomandate si calculator de factura pentru contracte dinamice E.ON, ENGIE si PPC.">
+<meta property="og:title" content="pzuro.app — prețuri PZU pentru contracte dinamice de energie">
+<meta property="og:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE și PPC.">
 <meta property="og:image" content="https://pzuro.vercel.app/og-image.png"> <!-- TODO: domeniu final -->
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ro_RO">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="pzuro.app — preturi PZU pentru contracte dinamice de energie">
-<meta name="twitter:description" content="Cand e ieftina electricitatea azi si maine? Grafic PZU live, top ore recomandate si calculator de factura pentru contracte dinamice E.ON, ENGIE si PPC.">
+<meta name="twitter:title" content="pzuro.app — prețuri PZU pentru contracte dinamice de energie">
+<meta name="twitter:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE și PPC.">
 <meta name="twitter:image" content="https://pzuro.vercel.app/og-image.png"> <!-- TODO: domeniu final -->
 
 <script type="application/ld+json">
@@ -30,7 +30,7 @@
   "@type": "WebApplication",
   "name": "pzuro.app",
   "url": "https://pzuro.vercel.app/",
-  "description": "Portal gratuit cu preturile PZU (Piata pentru Ziua Urmatoare) pentru Romania, grafic live, calculator de factura si recomandari pentru contracte dinamice de energie E.ON, ENGIE si PPC.",
+  "description": "Portal gratuit cu prețurile PZU (Piața pentru Ziua Următoare) pentru România, grafic live, calculator de factură și recomandări pentru contracte dinamice de energie E.ON, ENGIE și PPC.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RON" },
@@ -193,16 +193,16 @@
   <div class="wrap">
     <div class="brand">
       <div class="mark">pzuro<span>.</span>app</div>
-      <div class="tag">preturi PZU pentru contracte dinamice de energie</div>
+      <div class="tag">prețuri PZU pentru contracte dinamice de energie</div>
     </div>
     <div class="now-readout">
       <div>
-        <div class="label">acum costa</div>
+        <div class="label">acum costă</div>
         <div class="price" id="nowPrice">— <small>lei/kWh</small></div>
       </div>
-      <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">se incarca...</span></span>
+      <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">Se încarcă...</span></span>
     </div>
-    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">preț brut din piață (PZU) — la el se mai adaugă taxe reglementate, marja furnizorului și TVA; vezi <b>Calculator</b> pentru prețul final estimat</div>
+    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">Ăsta e prețul brut din piață. Taxele, marja furnizorului și TVA se adaugă separat — vezi cât ai plăti efectiv în tab-ul <b>Calculator</b></div>
     <div class="freshness" id="freshness" style="font-size:.74rem;color:#AEB3BD;margin-bottom:8px;"></div>
     <div class="pulse" id="pulseStrip" aria-hidden="true"></div>
     <div class="pulse-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
@@ -222,8 +222,8 @@
   </p>
   <!-- TAB 1: grafic -->
   <section class="panel active" id="panel-grafic" role="tabpanel" aria-labelledby="tabbtn-grafic">
-    <h2 class="section-title">Graficul zilei, din 15 in 15 minute</h2>
-    <p class="section-sub">96 de intervale (mai multe sau mai puține în zilele cu schimbarea orei). Verde = ieftin, amber = vârf, violet = preț negativ. Prețurile sunt brute, din piață — nu includ taxele și marja furnizorului.</p>
+    <h2 class="section-title">Graficul zilei, din 15 în 15 minute</h2>
+    <p class="section-sub">96 de intervale (mai multe sau mai puține în zilele cu schimbarea orei) — vezi mai jos ce înseamnă culorile. Sunt prețuri brute din piață, fără taxe și marja furnizorului.</p>
     <div class="card">
       <div class="day-toggle">
         <button id="btnToday" aria-pressed="true">Azi</button>
@@ -243,7 +243,7 @@
   <!-- TAB 2: top ore -->
   <section class="panel" id="panel-ore" role="tabpanel" aria-labelledby="tabbtn-ore">
     <h2 class="section-title">Cele mai bune (și mai proaste) 6 ore</h2>
-    <p class="section-sub">Folosește orele ieftine pentru maşina de spălat, boiler sau încărcat maşina electrică. Valorile sunt preț brut PZU, fără taxe și marja furnizorului.</p>
+    <p class="section-sub">Folosește orele ieftine pentru mașina de spălat, boiler sau încărcat mașina electrică — tot preț brut din piață, fără taxe și marja furnizorului.</p>
     <div class="card">
       <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai ieftine 6 intervale</h3>
       <div class="hour-list" id="cheapList"></div>
@@ -297,7 +297,7 @@
       </div>
       <div class="field" style="display:flex;align-items:center;gap:8px;margin-top:2px;">
         <input type="checkbox" id="prosumator" style="width:auto;">
-        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (am panouri și exportă surplus în rețea)</label>
+        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (am panouri și export surplus în rețea)</label>
       </div>
       <div class="field-row" id="prosumatorFields" style="display:none;">
         <div class="field">
@@ -317,7 +317,7 @@
   <!-- TAB 4: istoric -->
   <section class="panel" id="panel-istoric" role="tabpanel" aria-labelledby="tabbtn-istoric">
     <h2 class="section-title">Ultimele 30 de zile</h2>
-    <p class="section-sub">Preț mediu zilnic, cu interval min–max. Util ca să vezi dacă merită un contract dinamic pe termen mai lung. Tot preț brut PZU — pentru estimarea facturii finale, vezi Calculator.</p>
+    <p class="section-sub">Preț mediu zilnic, cu interval min–max — util ca să vezi dacă merită un contract dinamic pe termen mai lung. Tot preț brut, ca peste tot pe site — pentru factura finală, treci pe Calculator.</p>
     <div class="card">
       <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
     </div>
