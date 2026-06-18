@@ -40,6 +40,14 @@ git push -u origin main
 In repo: **Settings → Secrets and variables → Actions → New repository secret**
 Nume: `ENTSOE_TOKEN`, valoare: token-ul de la Pasul 1.
 
+### Opțional — notificări Telegram
+
+Daca vrei rezumat zilnic pe un canal Telegram (vezi `notify_telegram.py`), adauga si:
+- `TELEGRAM_BOT_TOKEN` — token-ul botului, de la @BotFather
+- `TELEGRAM_CHAT_ID` — ID-ul canalului/grupului unde se trimite mesajul
+
+Fara aceste doua secrete, pipeline-ul functioneaza normal, doar fara notificari (script-ul iese curat, nu da eroare).
+
 ## Pas 4 — Testeaza pipeline-ul
 
 - Local, fara token (date fictive, doar pentru a vedea portalul functionand):

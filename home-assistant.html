@@ -120,6 +120,29 @@ rest:
     <b>De reținut</b>: dacă API-ul nu are date valabile pentru azi (de exemplu, un outage prelungit la sursa de date), răspunde cu eroare HTTP 503 în loc să trimită date vechi ca și cum ar fi curente — senzorul din Home Assistant va deveni <code>unavailable</code> în acel caz, nu va arăta tăcut un preț greșit. Merită un trigger separat pe starea senzorului dacă automatizarea ta controlează ceva important.
   </div>
 
+  <h2>Pentru prosumatori: semnal "preț negativ acum"</h2>
+  <p>Răspunsul de la <code>/api/now</code> include deja câmpul <code>is_negative</code> — un adevărat/fals simplu, util dacă vrei să oprești automat exportul în rețea (sau să redirecționezi surplusul către o baterie/consumatori interni) când prețul devine negativ.</p>
+
+  <pre><code># configuration.yaml
+binary_sensor:
+  - platform: template
+    sensors:
+      pzu_pret_negativ:
+        friendly_name: "PZU preț negativ acum"
+        value_template: "{{ is_state_attr('sensor.pzu_pret_acum', 'is_negative', true) }}"</code></pre>
+
+  <pre><code># automations.yaml
+- alias: "Opreste exportul cand pretul e negativ"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.pzu_pret_negativ
+      to: "on"
+  action:
+    - service: switch.turn_off
+      entity_id: switch.export_invertor</code></pre>
+
+  <p>Senzorul binar de mai sus se bazează pe senzorul <code>sensor.pzu_pret_acum</code> definit deja mai sus pe pagină — ai nevoie de ambele configurate.</p>
+
   <h2>Limită de utilizare</h2>
   <p>Nu e nevoie de <code>scan_interval</code> mai agresiv decât 5 minute (300 secunde) — prețul se schimbă o dată la 15 minute, deci verificările mai frecvente nu aduc date noi, doar consumă inutil.</p>
 
