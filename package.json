@@ -1,0 +1,13 @@
+{
+  "name": "pzuro",
+  "version": "1.0.0",
+  "description": "pzuro.app — prețuri PZU pentru contracte dinamice de energie",
+  "private": true,
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "lint": "echo 'No linting configured'"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}
