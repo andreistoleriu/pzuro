@@ -37,11 +37,18 @@ jobs:
           ENTSOE_TOKEN: ${{ secrets.ENTSOE_TOKEN }}
         run: python fetch_prices.py
 
+      - name: Trimite notificare Telegram (daca e configurata)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        continue-on-error: true  # un Telegram picat nu trebuie sa blocheze comisul datelor
+        run: python notify_telegram.py
+
       - name: Commit & push date noi (daca exista)
         run: |
           git config user.name "pzuro-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/prices.json data/history.json
+          git add data/prices.json data/history.json data/last_notified.txt
           git diff --cached --quiet && echo "Fara schimbari, nimic de comis." && exit 0
           git commit -m "data: actualizare preturi PZU $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
