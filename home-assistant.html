@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Integrare Home Assistant cu pzuro.app — preț PZU în automatizări</title>
 <meta name="description" content="Cum citești prețul PZU în Home Assistant: un senzor simplu cu statisticile zilei, și un senzor precis cu prețul exact al intervalului curent, pentru automatizări reale.">
-<link rel="canonical" href="https://pzuro.vercel.app/home-assistant.html"> <!-- TODO: domeniu final -->
+<link rel="canonical" href="https://pzuro.ro/home-assistant.html">
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://pzuro.vercel.app/home-assistant.html"> <!-- TODO: domeniu final -->
+<meta property="og:url" content="https://pzuro.ro/home-assistant.html">
 <meta property="og:title" content="Integrare Home Assistant cu pzuro.app">
 <meta property="og:description" content="Citește prețul PZU direct în Home Assistant și pornește automatizări pe baza lui.">
-<meta property="og:image" content="https://pzuro.vercel.app/og-image.png"> <!-- TODO: domeniu final -->
+<meta property="og:image" content="https://pzuro.ro/og-image.png">
 <meta property="og:locale" content="ro_RO">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pzuro.vercel.app/og-image.png"> <!-- TODO: domeniu final -->
+<meta name="twitter:image" content="https://pzuro.ro/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,7 +75,7 @@
 
   <pre><code># configuration.yaml
 rest:
-  - resource: https://pzuro.vercel.app/data/prices.json
+  - resource: https://pzuro.ro/data/prices.json
     scan_interval: 1800
     sensor:
       - name: "PZU pret mediu azi"
@@ -93,7 +93,7 @@ rest:
 
   <pre><code># configuration.yaml
 rest:
-  - resource: https://pzuro.vercel.app/api/now
+  - resource: https://pzuro.ro/api/now
     scan_interval: 300
     sensor:
       - name: "PZU pret acum"

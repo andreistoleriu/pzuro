@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pzuro.vercel.app/</loc>
+    <loc>https://pzuro.ro/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pzuro.vercel.app/ce-este-contract-pret-dinamic.html</loc>
+    <loc>https://pzuro.ro/ce-este-contract-pret-dinamic.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pzuro.vercel.app/prosumator-contract-pret-dinamic.html</loc>
+    <loc>https://pzuro.ro/prosumator-contract-pret-dinamic.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pzuro.vercel.app/home-assistant.html</loc>
+    <loc>https://pzuro.ro/home-assistant.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
