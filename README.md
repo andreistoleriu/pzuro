@@ -93,8 +93,13 @@ acelasi repo).
 
 ## Limitari cunoscute ale v1 (de adresat in Faza 3)
 
-- Calculatorul de factura foloseste o **medie ponderata pe profil** (uniform / noapte / seara),
-  nu consumul orar real al utilizatorului — e o estimare, nu o factura exacta. Componentele
-  reglementate difera pe operator de distributie si sunt editabile manual in formular.
-- Formula exacta per furnizor (cu plafoane pentru preturi negative, taxe specifice etc.) nu
-  e implementata inca — momentan toti furnizorii folosesc aceeasi formula simplificata.
+- Calculatorul de factura foloseste, implicit, o **medie ponderata pe profil** (uniform / noapte / seara) -- o estimare, nu o factura exacta. Daca utilizatorul incarca un fisier CSV cu consumul lui real (vezi mai jos), calculul devine exact, interval cu interval.
+- Formula exacta per furnizor (cu plafoane pentru preturi negative, taxe specifice etc.) nu e implementata inca -- momentan toti furnizorii folosesc aceeasi formula simplificata.
+
+## Arhiva istorica (data/archive/) si upload CSV
+
+De la 18 iunie 2026, `fetch_prices.py` salveaza si intervalele complete (nu doar rezumatul zilnic) in `data/archive/{data}.json`, un fisier per zi, scris o singura data si niciodata suprascris. Asta alimenteaza un mod nou in Calculator: utilizatorul poate incarca un CSV cu consumul lui real (format `timestamp,kwh`, o linie per interval) si vede costul EXACT pe care l-ar fi avut pe dinamic, calculat interval cu interval, nu pe baza unui profil generic.
+
+Limitare inerenta: arhiva incepe sa se construiasca de acum incolo, nu retroactiv -- zile de inainte de lansarea acestei functionalitati nu au date arhivate, si vor fi excluse automat din calcul (cu avertisment clar in interfata), nu inventate.
+
+Nu exista un format standard de export intre distribuitori (E-Distributie, Delgaz Grid, Distributie Oltenia difera) -- utilizatorul trebuie sa reformateze manual exportul lui in formatul nostru simplu, documentat direct in interfata.

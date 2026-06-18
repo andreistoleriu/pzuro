@@ -267,7 +267,11 @@
           <option value="ppc">PPC — ofertă preț dinamic</option>
         </select>
       </div>
-      <div class="field-row">
+      <div class="field" style="display:flex;align-items:center;gap:8px;margin:2px 0 14px;">
+        <input type="checkbox" id="useCsv" style="width:auto;">
+        <label for="useCsv" style="margin:0;font-size:.85rem;color:var(--ink);">Am fișier CSV cu consumul meu real (în loc de profil estimat)</label>
+      </div>
+      <div class="field-row" id="profilFields">
         <div class="field">
           <label for="consum">Consum lunar (kWh)</label>
           <input type="number" id="consum" value="250" min="1" step="1">
@@ -280,6 +284,18 @@
             <option value="seara">Predominant seara (vârf)</option>
           </select>
         </div>
+      </div>
+      <div id="csvFields" style="display:none;">
+        <div class="field">
+          <label for="csvFile">Fișier CSV (format: <code>timestamp,kwh</code>)</label>
+          <input type="file" id="csvFile" accept=".csv" style="padding:8px;">
+        </div>
+        <p style="font-size:.78rem;color:var(--ink-soft);margin:-4px 0 14px;">
+          O linie pe interval, format exact: <code>2026-06-01 00:00,0.32</code> (dată și oră separate de spațiu, punct decimal la kWh).
+          <a href="data:text/csv;charset=utf-8,timestamp%2Ckwh%0A2026-06-01%2000%3A00%2C0.32%0A2026-06-01%2001%3A00%2C0.41" download="exemplu-consum.csv" style="color:var(--cyan);">Descarcă un exemplu →</a>
+          Distribuitorul tău (E-Distribuție, Delgaz Grid etc.) exportă consumul orar din contul tău — trebuie reformatat manual în acest tipar.
+        </p>
+        <div id="csvStatus" style="font-size:.82rem;color:var(--ink-soft);margin-bottom:14px;"></div>
       </div>
       <div class="field-row">
         <div class="field">
@@ -479,12 +495,118 @@
     runCalculator();
   });
 
+  let csvMatchResult = null;
+
+  document.getElementById("useCsv").addEventListener("change", (e) => {
+    document.getElementById("profilFields").style.display = e.target.checked ? "none" : "grid";
+    document.getElementById("csvFields").style.display = e.target.checked ? "block" : "none";
+    if(!e.target.checked) csvMatchResult = null;
+    runCalculator();
+  });
+
+  // mediana intervalului dintre citiri consecutive -- mai robust decat
+  // diferenta primelor doua randuri, in caz ca fisierul are un gap/lipsa
+  function inferDurationMinutes(sortedDates){
+    if(sortedDates.length < 2) return 60; // presupunem citiri orare, implicit
+    const gaps = [];
+    for(let i=1;i<sortedDates.length;i++) gaps.push((sortedDates[i]-sortedDates[i-1])/60000);
+    gaps.sort((a,b)=>a-b);
+    return gaps[Math.floor(gaps.length/2)];
+  }
+
+  async function matchCsvToArchive(rows){
+    const sorted = [...rows].sort((a,b)=>a.date-b.date);
+    const durationMin = inferDurationMinutes(sorted.map(r=>r.date));
+    const durationMs = durationMin * 60000;
+    const dayFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Bucharest" });
+    const neededDates = [...new Set(sorted.map(r=>dayFmt.format(r.date)))];
+
+    const archives = {};
+    const missingDates = [];
+    await Promise.all(neededDates.map(async d => {
+      try{
+        const res = await fetch(`data/archive/${d}.json`);
+        if(!res.ok) throw new Error("missing");
+        archives[d] = await res.json();
+      }catch(e){ missingDates.push(d); }
+    }));
+
+    let totalKwh=0, matchedKwh=0, costPzuRaw=0;
+    for(const row of sorted){
+      totalKwh += row.kwh;
+      const dayKey = dayFmt.format(row.date);
+      const archive = archives[dayKey];
+      if(!archive) continue; // zi nearhivata -- exclusa, nu inventam date
+      const rowStart = row.date, rowEnd = new Date(row.date.getTime()+durationMs);
+      for(const iv of archive.intervals){
+        const ivStart = new Date(iv.start), ivEnd = new Date(iv.end);
+        const overlapMin = Math.max(0, Math.min(rowEnd,ivEnd) - Math.max(rowStart,ivStart)) / 60000;
+        if(overlapMin <= 0) continue;
+        const kwhSlice = row.kwh * (overlapMin/durationMin);
+        costPzuRaw += kwhSlice * iv.price_ron_kwh;
+        matchedKwh += kwhSlice;
+      }
+    }
+    return { totalKwh, matchedKwh, excludedKwh: totalKwh-matchedKwh, costPzuRaw, missingDates, neededDates, durationMin };
+  }
+
+  // parser minimal, fara dependinta externa -- formatul e simplu si fix
+  // (timestamp,kwh), definit chiar de noi, deci nu avem nevoie de o
+  // librarie intreaga doar pentru asta. Un CDN extern pentru ceva simplu
+  // ar introduce exact riscul pe care l-am eliminat deja la Chart.js:
+  // daca CDN-ul pica (ad-blocker, retea), toata functia cade odata cu el.
+  function parseSimpleCsv(text){
+    const lines = text.trim().split(/\r?\n/);
+    if(!lines.length) return [];
+    const header = lines[0].split(",").map(h => h.trim().toLowerCase());
+    const tsIdx = header.indexOf("timestamp");
+    const kwhIdx = header.indexOf("kwh");
+    const rows = [];
+    if(tsIdx < 0 || kwhIdx < 0) return rows;
+    for(let i=1;i<lines.length;i++){
+      if(!lines[i].trim()) continue;
+      const parts = lines[i].split(",");
+      if(parts.length <= Math.max(tsIdx,kwhIdx)) continue;
+      const date = new Date(parts[tsIdx].trim().replace(" ","T"));
+      const kwh = parseFloat(parts[kwhIdx].trim());
+      if(!isNaN(date.getTime()) && !isNaN(kwh)) rows.push({ date, kwh });
+    }
+    return rows;
+  }
+
+  document.getElementById("csvFile").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    const statusEl = document.getElementById("csvStatus");
+    if(!file) return;
+    statusEl.textContent = "Se procesează...";
+    try{
+      const text = await file.text();
+      const rows = parseSimpleCsv(text);
+      if(!rows.length){
+        statusEl.textContent = "Nu am găsit rânduri valide -- verifică formatul (timestamp,kwh).";
+        csvMatchResult = null;
+        return;
+      }
+      csvMatchResult = await matchCsvToArchive(rows);
+      const r = csvMatchResult;
+      let msg = `${rows.length} rânduri citite, ${fmt(r.matchedKwh,2)} kWh potrivite cu date PZU arhivate.`;
+      if(r.missingDates.length){
+        msg += ` ⚠ ${r.missingDates.length} zile nearhivate încă (${r.missingDates.slice(0,3).join(", ")}${r.missingDates.length>3?"...":""}) -- excluse din calcul, ${fmt(r.excludedKwh,2)} kWh.`;
+      }
+      statusEl.textContent = msg;
+    }catch(err){
+      statusEl.textContent = "Eroare la citirea fișierului: " + err.message;
+      csvMatchResult = null;
+      console.error(err);
+    }
+    runCalculator();
+  });
+
   function runCalculator(){
     const day = pricesData.today;
     const resultEl = document.getElementById("calcResult");
     if(!day){ resultEl.innerHTML = '<div class="empty-state">Date indisponibile.</div>'; return; }
-    const consum = parseFloat(document.getElementById("consum").value) || 0;
-    const profil = document.getElementById("profil").value;
+    const useCsv = document.getElementById("useCsv").checked;
     const reglementate = parseFloat(document.getElementById("reglementate").value) || 0;
     const marja = parseFloat(document.getElementById("marja").value) || 0;
     const tarifFix = parseFloat(document.getElementById("tarifFix").value) || 0;
@@ -492,21 +614,39 @@
     const exportKwh = isProsumator ? (parseFloat(document.getElementById("export").value) || 0) : 0;
     const rataExport = parseFloat(document.getElementById("rataExport").value) || 0;
 
-    const pzuAvg = profileWeightedAvg(day, profil);
-    const pretDinamicTotal = (pzuAvg + reglementate + marja) * 1.21; // TVA 21%
-    const costDinamic = pretDinamicTotal * consum;
-    const costFix = tarifFix * consum;
+    let consum, pzuAvg, pretDinamicTotal, costDinamic, costFix, modeLabel;
+
+    if(useCsv){
+      if(!csvMatchResult || csvMatchResult.matchedKwh <= 0){
+        resultEl.className = "result";
+        resultEl.innerHTML = '<div class="empty-state">Încarcă un fișier CSV mai sus ca să vezi rezultatul exact.</div>';
+        return;
+      }
+      consum = csvMatchResult.matchedKwh;
+      // cost exact: suma (kWh_interval x preț_PZU_interval), cu reglementate+marja adaugate FLAT per kWh, TVA o singura data la final
+      costDinamic = (csvMatchResult.costPzuRaw + consum*(reglementate+marja)) * 1.21;
+      costFix = tarifFix * consum;
+      pzuAvg = csvMatchResult.costPzuRaw / consum; // preț PZU mediu ponderat exact pe consumul real
+      pretDinamicTotal = costDinamic / consum;
+      modeLabel = `pe baza consumului real încărcat (${fmt(consum,1)} kWh)`;
+    } else {
+      consum = parseFloat(document.getElementById("consum").value) || 0;
+      const profil = document.getElementById("profil").value;
+      pzuAvg = profileWeightedAvg(day, profil);
+      pretDinamicTotal = (pzuAvg + reglementate + marja) * 1.21;
+      costDinamic = pretDinamicTotal * consum;
+      costFix = tarifFix * consum;
+      modeLabel = `pentru un profil "${profil}"`;
+    }
 
     let breakdownExtra = "";
     let netFix = costFix, netDinamic = costDinamic;
-    let headlineDiff, headlineLabel;
+    let headlineDiff, headlineLabel = modeLabel;
 
     if(isProsumator && exportKwh > 0){
       const exportPzuAvg = solarWindowAvg(day);
-      // formula oficiala E.ON pentru prosumatori: venitul din export = pretul din piata x energia produsa,
-      // FARA componenta de furnizare/marja (acelea se aplica doar la ce CONSUMI, nu la ce exporti)
       const venitExportFix = exportKwh * rataExport;
-      const venitExportDinamic = exportKwh * Math.max(exportPzuAvg, 0); // nu platesti tu furnizorul la preturi negative aici, simplificat la 0
+      const venitExportDinamic = exportKwh * Math.max(exportPzuAvg, 0);
       netFix = costFix - venitExportFix;
       netDinamic = costDinamic - venitExportDinamic;
       breakdownExtra = `
@@ -514,19 +654,18 @@
         <dt>Venit export — rată fixă actuală</dt><dd>${fmt(venitExportFix,2)} lei</dd>
         <dt>Venit export — preț PZU dinamic</dt><dd>${fmt(venitExportDinamic,2)} lei</dd>`;
       headlineDiff = netFix - netDinamic;
-      headlineLabel = "net (consum minus export)";
+      headlineLabel += ", net (consum minus export)";
     } else {
       headlineDiff = costFix - costDinamic;
-      headlineLabel = `pentru un profil "${profil}"`;
     }
 
     const win = headlineDiff >= 0;
     resultEl.className = "result " + (win ? "win" : "lose");
     resultEl.innerHTML = `
-      <div class="headline">${win ? "Economisești ~" : "Plătești cu ~"} ${fmt(Math.abs(headlineDiff),2)} lei/lună ${win ? "" : "mai mult"}</div>
+      <div class="headline">${win ? "Economisești ~" : "Plătești cu ~"} ${fmt(Math.abs(headlineDiff),2)} lei${useCsv?"":"/lună"} ${win ? "" : "mai mult"}</div>
       <div class="sub">comparativ cu un contract fix la ${fmt(tarifFix,2)} lei/kWh, ${headlineLabel}</div>
       <dl class="breakdown">
-        <dt>Preț mediu PZU ponderat pe profil</dt><dd>${fmt(pzuAvg)} lei/kWh</dd>
+        <dt>Preț mediu PZU ${useCsv?"(exact, ponderat pe consumul real)":"ponderat pe profil"}</dt><dd>${fmt(pzuAvg)} lei/kWh</dd>
         <dt>Preț dinamic estimat, tot inclus</dt><dd>${fmt(pretDinamicTotal,3)} lei/kWh</dd>
         <dt>Cost consum — dinamic</dt><dd>${fmt(costDinamic,2)} lei</dd>
         <dt>Cost consum — fix</dt><dd>${fmt(costFix,2)} lei</dd>

@@ -49,6 +49,7 @@ HISTORY_MAX_DAYS = 60
 DATA_DIR = Path(__file__).parent / "data"
 PRICES_FILE = DATA_DIR / "prices.json"
 HISTORY_FILE = DATA_DIR / "history.json"
+ARCHIVE_DIR = DATA_DIR / "archive"
 
 
 def get_eur_ron_rate() -> tuple[float, str]:
@@ -144,6 +145,30 @@ def load_json(path: Path, default):
         return default
 
 
+def archive_day(payload: dict | None):
+    """Salveaza intervalele complete ale unei zile intr-un fisier propriu,
+    o data si pentru totdeauna -- data/archive/{data}.json. Separat de
+    history.json (care tine doar rezumatul zilnic, pentru tab-ul Istoric).
+
+    De ce un fisier per zi, nu un singur fisier mare cumulativ:
+    un singur JSON care creste zilnic ar deveni greu de gestionat in git
+    (diff uriaș la fiecare commit) si ar creste nelimitat. Fisiere mici,
+    imutabile, unul per zi, inseamna ca git vede doar "fisier nou adaugat"
+    in fiecare zi, nu o modificare a unui fisier deja existent.
+
+    O zi se arhiveaza o singura data -- daca fisierul exista deja, nu-l
+    rescriem (preturile PZU publicate nu se mai schimba ulterior, deci
+    nu exista motiv sa suprascriem)."""
+    if payload is None:
+        return
+    ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+    archive_file = ARCHIVE_DIR / f"{payload['date']}.json"
+    if archive_file.exists():
+        return
+    archive_file.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+    log.info("Arhivat %s", archive_file)
+
+
 def update_history(today_payload: dict | None):
     """Adauga/actualizeaza intrarea de azi in istoricul rolant. History se
     pastreaza separat de prices.json pentru ca 'azi'/'maine' se rescriu zilnic,
@@ -214,6 +239,8 @@ def main():
     log.info("Scris %s (azi: %s, maine publicat: %s)", PRICES_FILE, bool(today_payload), output["tomorrow_published"])
 
     update_history(today_payload)
+    archive_day(today_payload)
+    archive_day(tomorrow_payload)
 
 
 if __name__ == "__main__":

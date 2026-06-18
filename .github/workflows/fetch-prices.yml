@@ -48,7 +48,7 @@ jobs:
         run: |
           git config user.name "pzuro-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/prices.json data/history.json data/last_notified.txt
+          git add data/prices.json data/history.json data/last_notified.txt data/archive/
           git diff --cached --quiet && echo "Fara schimbari, nimic de comis." && exit 0
           git commit -m "data: actualizare preturi PZU $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push

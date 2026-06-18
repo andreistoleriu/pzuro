@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from fetch_prices import build_day_payload, series_to_intervals, update_history, PRICES_FILE, DATA_DIR  # noqa: E402
+from fetch_prices import build_day_payload, series_to_intervals, update_history, archive_day, PRICES_FILE, DATA_DIR  # noqa: E402
 
 RATE = 5.08
 
@@ -57,12 +57,15 @@ def main():
     }
     PRICES_FILE.write_text(json.dumps(output, indent=2, ensure_ascii=False))
     print("Scris", PRICES_FILE)
+    archive_day(today_payload)
+    archive_day(tomorrow_payload)
 
     # 35 de zile de istoric, pentru tab-ul "Istoric 30 zile"
     history = []
     for i in range(35, 0, -1):
         d = today - timedelta(days=i)
         payload = build_day_payload(d.isoformat(), series_to_intervals(synthetic_day_series(d, 100 + i), RATE))
+        archive_day(payload)
         history.append(
             {
                 "date": payload["date"],
