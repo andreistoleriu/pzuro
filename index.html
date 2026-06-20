@@ -358,7 +358,14 @@
   let pricesData = null, historyData = null, activeDay = "today";
   let mainChart = null, historyChart = null;
 
-  function fmt(n, d=3){ return (n===null||n===undefined) ? "—" : n.toFixed(d); }
+  function fmt(n, d=3){
+    if(n===null||n===undefined) return "—";
+    // evitam afisarea "-0.000" pentru numere foarte mici negative care
+    // rotunjesc matematic la zero -- e corect matematic, dar deruteaza
+    // vizual (pare o eroare, nu un pret aproape de zero)
+    const rounded = n.toFixed(d);
+    return rounded === "-" + (0).toFixed(d) ? (0).toFixed(d) : rounded;
+  }
   function timeLabel(iso){ return new Date(iso).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"}); }
 
   function colorFor(interval, min, max){

@@ -45,6 +45,13 @@ TZ = "Europe/Bucharest"
 ZONE = "RO"  # entsoe-py mapeaza intern la EIC 10YRO-TEL------P
 DEFAULT_EUR_RON_RATE = 5.08  # fallback folosit doar daca BNR e indisponibil
 HISTORY_MAX_DAYS = 60
+# o zi normala are 96 de intervale de 15 min (92 sau 100 doar in zilele cu
+# schimbarea orei) -- orice raspuns cu mult mai putine intervale inseamna
+# o publicare PARTIALA de la ENTSO-E/OPCOM, nu o zi completa. Tratam un
+# raspuns sub acest prag la fel ca "inca nepublicat", nu ca date valide --
+# altfel riscam sa scriem si sa anuntam (Telegram) doar 3-4 intervale dintr-o
+# zi, exact bug-ul prins in productie pe 19 iunie 2026.
+MIN_VALID_INTERVALS = 80
 
 DATA_DIR = Path(__file__).parent / "data"
 PRICES_FILE = DATA_DIR / "prices.json"
@@ -85,6 +92,16 @@ def fetch_day_ahead(client: EntsoePandasClient, day: pd.Timestamp) -> pd.Series 
     end = start + pd.DateOffset(days=1)
     try:
         series = client.query_day_ahead_prices(ZONE, start=start, end=end)
+        if len(series) < MIN_VALID_INTERVALS:
+            # publicare partiala -- ENTSO-E a raspuns, dar cu mult mai putine
+            # intervale decat o zi completa. Tratam la fel ca nepublicat inca,
+            # NU scriem date incomplete in prices.json.
+            log.warning(
+                "Doar %d intervale primite pentru %s (asteptam >= %d) -- "
+                "tratez ca publicare incompleta, nu ca date valide.",
+                len(series), day.date(), MIN_VALID_INTERVALS,
+            )
+            return None
         return series
     except NoMatchingDataError:
         # caz normal: ziua inca nu a fost publicata (de obicei "maine")
