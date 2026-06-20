@@ -138,6 +138,15 @@
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px;}
 
+  .verdict{border-left:4px solid var(--ink-soft);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .verdict.good{border-left-color:var(--cyan);}
+  .verdict.bad{border-left-color:var(--amber);}
+  .verdict-body{flex:1;min-width:200px;}
+  .verdict-label{font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:4px;}
+  .verdict-headline{font-family:var(--font-display);font-weight:600;font-size:1.1rem;margin-bottom:4px;}
+  .verdict-sub{font-size:.86rem;color:var(--ink-soft);}
+  .verdict-cta{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-size:.84rem;font-weight:500;padding:9px 16px;border-radius:999px;white-space:nowrap;}
+
   .day-toggle{display:flex;gap:8px;margin-bottom:14px;}
   .day-toggle button{
     font-family:var(--font-body);font-size:.82rem;font-weight:500;border:1px solid var(--line);
@@ -210,6 +219,8 @@
 </header>
 
 <div class="wrap">
+  <div id="verdictCard" class="card" style="display:none;margin-bottom:18px;"></div>
+
   <div class="tabs" role="tablist" aria-label="Sectiuni pzuro">
     <button class="tab-btn" role="tab" id="tabbtn-grafic" aria-controls="panel-grafic" aria-selected="true">Grafic PZU</button>
     <button class="tab-btn" role="tab" id="tabbtn-ore" aria-controls="panel-ore" aria-selected="false">Top ore</button>
@@ -488,6 +499,46 @@
     if(!day) return;
     renderHourList("cheapList", day.cheapest_intervals, "cheap");
     renderHourList("pricyList", day.priciest_intervals, "pricy");
+  }
+
+  // ---------- verdict card: rezumat de 1 propozitie deasupra tab-urilor ----------
+  // Foloseste DOAR date deja calculate (cheapest/priciest_intervals, avg/min/max),
+  // nu introduce nicio sursa noua -- doar le sintetizeaza intr-un mesaj actionabil,
+  // pentru cineva care nu vrea sa citeasca un grafic de 96 de bare ca sa afle
+  // "ce fac eu cu informatia asta azi".
+  function renderVerdict(){
+    const day = pricesData.tomorrow_published ? pricesData.tomorrow : pricesData.today;
+    const card = document.getElementById("verdictCard");
+    if(!day){ card.style.display = "none"; return; }
+
+    const labelZi = pricesData.tomorrow_published ? "Mâine" : "Azi";
+    const cheap = day.cheapest_intervals[0];
+    const pricy = day.priciest_intervals[0];
+    const spread = day.max_ron_kwh - day.min_ron_kwh;
+
+    // prag simplu: daca diferenta dintre cel mai scump si cel mai ieftin
+    // interval e mare, merita sa-ti muti consumul; daca e mica, nu prea
+    // conteaza cand consumi -- verdict in functie de cat de mult poti castiga
+    let mood, moodLabel;
+    if(spread > 0.8){ mood = "good"; moodLabel = "Zi bună pentru consum flexibil"; }
+    else if(spread > 0.3){ mood = ""; moodLabel = "Diferențe moderate azi"; }
+    else { mood = "bad"; moodLabel = "Diferențe mici — nu contează prea mult ora"; }
+
+    card.className = "card verdict " + mood;
+    card.innerHTML = `
+      <div class="verdict-body">
+        <div class="verdict-label">${labelZi} · ${moodLabel}</div>
+        <div class="verdict-headline">Cel mai ieftin la ${timeLabel(cheap.start)} (${fmt(cheap.price_ron_kwh)} lei/kWh), cel mai scump la ${timeLabel(pricy.start)} (${fmt(pricy.price_ron_kwh)} lei/kWh)</div>
+        <div class="verdict-sub">Dacă ai boiler, mașină de spălat sau încarci o mașină electrică, programează-le cât mai aproape de ${timeLabel(cheap.start)}.</div>
+      </div>
+      <a href="#tabbtn-calc" class="verdict-cta" id="verdictCalcLink">Vezi cât economisești →</a>`;
+    card.style.display = "flex";
+
+    document.getElementById("verdictCalcLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("tabbtn-calc").click();
+      document.getElementById("verdictCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   // ---------- tab 3: calculator ----------
@@ -799,6 +850,7 @@
       document.getElementById("btnTomorrow").disabled = true;
     }
     renderHeader();
+    safeRender(renderVerdict);
     safeRender(renderMainChart);
     safeRender(renderTopHours);
     safeRender(runCalculator);
