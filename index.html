@@ -366,10 +366,19 @@
     const rounded = n.toFixed(d);
     return rounded === "-" + (0).toFixed(d) ? (0).toFixed(d) : rounded;
   }
+
+  // un pret e "vizibil negativ" doar daca ramane negativ DUPA rotunjirea
+  // la 3 zecimale -- aceeasi rotunjire folosita de fmt() mai sus. Fara asta,
+  // un pret de -0.00004 (care se afiseaza "0.000") tot ar aparea cu bara
+  // mov de "pret negativ", desi textul de langa el arata zero -- contradictie
+  // vizuala directa intre culoare si cifra.
+  function isVisiblyNegative(priceRonKwh){
+    return parseFloat(priceRonKwh.toFixed(3)) < 0;
+  }
   function timeLabel(iso){ return new Date(iso).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"}); }
 
   function colorFor(interval, min, max){
-    if(interval.is_negative) return VIOLET;
+    if(isVisiblyNegative(interval.price_ron_kwh)) return VIOLET;
     const range = max - min || 1;
     const pos = (interval.price_ron_kwh - min) / range;
     if(pos < 0.33) return CYAN;
@@ -384,7 +393,7 @@
     const now = new Date();
     const current = day.intervals.find(iv => now >= new Date(iv.start) && now < new Date(iv.end)) || day.intervals[0];
     document.getElementById("nowPrice").innerHTML = fmt(current.price_ron_kwh) + " <small>lei/kWh</small>";
-    document.getElementById("nowPillText").textContent = current.is_negative ? "preț negativ acum — energie gratuită" : "preț live PZU";
+    document.getElementById("nowPillText").textContent = isVisiblyNegative(current.price_ron_kwh) ? "preț negativ acum — energie gratuită" : "preț live PZU";
 
     const strip = document.getElementById("pulseStrip");
     strip.innerHTML = "";
@@ -469,7 +478,7 @@
       const pct = Math.max(6, Math.round((Math.abs(iv.price_ron_kwh)/maxAbs)*100));
       const color = kind === "cheap" ? CYAN : AMBER;
       row.innerHTML = `<time>${timeLabel(iv.start)}</time>
-        <div class="track"><div class="fill" style="width:${pct}%;background:${iv.is_negative?VIOLET:color}"></div></div>
+        <div class="track"><div class="fill" style="width:${pct}%;background:${isVisiblyNegative(iv.price_ron_kwh)?VIOLET:color}"></div></div>
         <div class="val">${fmt(iv.price_ron_kwh)}</div>`;
       el.appendChild(row);
     });
