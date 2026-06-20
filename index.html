@@ -138,14 +138,30 @@
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:16px;}
 
-  .verdict{border-left:4px solid var(--ink-soft);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
-  .verdict.good{border-left-color:var(--cyan);}
-  .verdict.bad{border-left-color:var(--amber);}
-  .verdict-body{flex:1;min-width:200px;}
-  .verdict-label{font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:4px;}
-  .verdict-headline{font-family:var(--font-display);font-weight:600;font-size:1.1rem;margin-bottom:4px;}
-  .verdict-sub{font-size:.86rem;color:var(--ink-soft);}
-  .verdict-cta{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-size:.84rem;font-weight:500;padding:9px 16px;border-radius:999px;white-space:nowrap;}
+  .verdict{display:block;padding:0;overflow:hidden;}
+  .verdict-inner{padding:18px 20px;}
+  .verdict-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+  .verdict-mood{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--paper-soft);color:var(--ink-soft);}
+  .verdict-mood .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-soft);flex:none;}
+  .verdict.good .verdict-mood{background:var(--cyan-soft);color:var(--cyan);}
+  .verdict.good .verdict-mood .dot{background:var(--cyan);}
+  .verdict.bad .verdict-mood{background:var(--amber-soft);color:var(--amber);}
+  .verdict.bad .verdict-mood .dot{background:var(--amber);}
+  .verdict-day{font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);}
+  .verdict-headline{font-family:var(--font-display);font-weight:600;font-size:1.2rem;line-height:1.3;color:var(--ink);margin-bottom:14px;}
+  .verdict-prices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .vp{border-radius:12px;padding:11px 14px;background:var(--cyan-soft);}
+  .vp-pricy{background:var(--amber-soft);}
+  .vp-neg{background:var(--violet-soft);}
+  .vp-tag{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:5px;color:var(--cyan);}
+  .vp-pricy .vp-tag{color:var(--amber);}
+  .vp-neg .vp-tag{color:var(--violet);}
+  .vp-time{display:block;font-family:var(--font-mono);font-weight:600;font-size:1.15rem;color:var(--ink);line-height:1;}
+  .vp-price{display:block;font-family:var(--font-mono);font-size:.8rem;color:var(--ink-soft);margin-top:3px;}
+  .verdict-sub{font-size:.9rem;line-height:1.5;color:var(--ink-soft);margin-bottom:16px;}
+  .verdict-cta{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;text-decoration:none;font-size:.86rem;font-weight:500;padding:10px 18px;border-radius:999px;white-space:nowrap;transition:opacity .15s;}
+  .verdict-cta:hover{opacity:.88;}
+  @media(max-width:520px){ .verdict-prices{grid-template-columns:1fr;} }
 
   .day-toggle{display:flex;gap:8px;margin-bottom:14px;}
   .day-toggle button{
@@ -507,32 +523,79 @@
   // pentru cineva care nu vrea sa citeasca un grafic de 96 de bare ca sa afle
   // "ce fac eu cu informatia asta azi".
   function renderVerdict(){
-    const day = pricesData.tomorrow_published ? pricesData.tomorrow : pricesData.today;
+    // Folosim "maine" DOAR daca avem o zi completa publicata (>= 80 intervale).
+    // Nu ne incredem orbeste in flag-ul tomorrow_published: daca ENTSO-E a
+    // publicat doar primele cateva intervale (publicare partiala), min/max-ul
+    // ar fi calculat pe o ora din zi si verdictul ar fi gresit. In cazul asta
+    // cadem inapoi pe "azi", care e mereu complet.
+    const t = pricesData.tomorrow;
+    const tomorrowReady = pricesData.tomorrow_published && t &&
+      (t.interval_count ?? (t.intervals ? t.intervals.length : 0)) >= 80;
+    const day = tomorrowReady ? t : pricesData.today;
     const card = document.getElementById("verdictCard");
     if(!day){ card.style.display = "none"; return; }
 
-    const labelZi = pricesData.tomorrow_published ? "Mâine" : "Azi";
+    const labelZi = tomorrowReady ? "Mâine" : "Azi";
     const cheap = day.cheapest_intervals[0];
     const pricy = day.priciest_intervals[0];
     const spread = day.max_ron_kwh - day.min_ron_kwh;
 
+    const cheapTime = timeLabel(cheap.start);
+    const pricyTime = timeLabel(pricy.start);
+    const cheapNeg = isVisiblyNegative(cheap.price_ron_kwh);
+
     // prag simplu: daca diferenta dintre cel mai scump si cel mai ieftin
     // interval e mare, merita sa-ti muti consumul; daca e mica, nu prea
-    // conteaza cand consumi -- verdict in functie de cat de mult poti castiga
-    let mood, moodLabel;
-    if(spread > 0.8){ mood = "good"; moodLabel = "Zi bună pentru consum flexibil"; }
-    else if(spread > 0.3){ mood = ""; moodLabel = "Diferențe moderate azi"; }
-    else { mood = "bad"; moodLabel = "Diferențe mici — nu contează prea mult ora"; }
+    // conteaza cand consumi. IMPORTANT: textul urmeaza mood-ul -- cand
+    // diferentele sunt mici NU mai recomandam o ora anume, altfel mesajul
+    // s-ar contrazice ("nu conteaza ora" + "programeaza la X").
+    let mood, moodLabel, headline, sub;
+    if(spread > 0.8){
+      mood = "good"; moodLabel = "Merită să-ți muți consumul";
+      if(cheapNeg){
+        headline = `La ${cheapTime} prețul coboară sub zero.`;
+        sub = `Practic ești plătit să consumi: pornește atunci consumatorii mari (boiler, mașină de spălat, încărcarea mașinii). Evită vârful de la ${pricyTime}.`;
+      } else {
+        headline = "Sunt ore mult mai ieftine decât restul zilei.";
+        sub = `Programează consumatorii mari (boiler, mașină de spălat, încărcarea mașinii) spre ${cheapTime} și evită vârful de la ${pricyTime}.`;
+      }
+    } else if(spread > 0.3){
+      mood = ""; moodLabel = "Diferențe moderate";
+      headline = "Câteva ore ies mai ieftine, dar nu dramatic.";
+      sub = `Dacă poți, mută consumul mare spre ${cheapTime}. Economia există, însă e modestă.`;
+    } else {
+      mood = "bad"; moodLabel = "Preț aproape constant";
+      headline = "Prețul rămâne cam la fel toată ziua.";
+      sub = "Nu prea contează ora — consumă când îți convine.";
+    }
+
+    const cheapClass = cheapNeg ? "vp vp-cheap vp-neg" : "vp vp-cheap";
+    const cheapTag = cheapNeg ? "preț negativ" : "cel mai ieftin";
 
     card.className = "card verdict " + mood;
     card.innerHTML = `
-      <div class="verdict-body">
-        <div class="verdict-label">${labelZi} · ${moodLabel}</div>
-        <div class="verdict-headline">Cel mai ieftin la ${timeLabel(cheap.start)} (${fmt(cheap.price_ron_kwh)} lei/kWh), cel mai scump la ${timeLabel(pricy.start)} (${fmt(pricy.price_ron_kwh)} lei/kWh)</div>
-        <div class="verdict-sub">Dacă ai boiler, mașină de spălat sau încarci o mașină electrică, programează-le cât mai aproape de ${timeLabel(cheap.start)}.</div>
-      </div>
-      <a href="#tabbtn-calc" class="verdict-cta" id="verdictCalcLink">Vezi cât economisești →</a>`;
-    card.style.display = "flex";
+      <div class="verdict-inner">
+        <div class="verdict-top">
+          <span class="verdict-mood"><span class="dot"></span>${moodLabel}</span>
+          <span class="verdict-day">${labelZi}</span>
+        </div>
+        <div class="verdict-headline">${headline}</div>
+        <div class="verdict-prices">
+          <div class="${cheapClass}">
+            <span class="vp-tag">${cheapTag}</span>
+            <span class="vp-time">${cheapTime}</span>
+            <span class="vp-price">${fmt(cheap.price_ron_kwh)} lei/kWh</span>
+          </div>
+          <div class="vp vp-pricy">
+            <span class="vp-tag">cel mai scump</span>
+            <span class="vp-time">${pricyTime}</span>
+            <span class="vp-price">${fmt(pricy.price_ron_kwh)} lei/kWh</span>
+          </div>
+        </div>
+        <div class="verdict-sub">${sub}</div>
+        <a href="#tabbtn-calc" class="verdict-cta" id="verdictCalcLink">Vezi cât economisești →</a>
+      </div>`;
+    card.style.display = "block";
 
     document.getElementById("verdictCalcLink").addEventListener("click", (e) => {
       e.preventDefault();
