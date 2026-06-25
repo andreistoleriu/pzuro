@@ -2,7 +2,7 @@
 
 A production data pipeline and consumer dashboard for the Romanian day-ahead electricity market (PZU — *Piața pentru Ziua Următoare*), built to help households on dynamic pricing contracts decide when to run high-consumption appliances.
 
-**Live at [pzuro.app](https://pzuro.app)**
+**Live at [pzuro.app](https://pzuro.ro)**
 
 ---
 
