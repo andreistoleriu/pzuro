@@ -1,105 +1,151 @@
-# pzuro.app — Faza 1: Pipeline + Portal v1
+# pzuro.app — Romanian Day-Ahead Electricity Price Dashboard
 
-Portal static care arata preturile PZU (Piata pentru Ziua Urmatoare) pentru
-Romania si ajuta utilizatorii cu contracte dinamice (E.ON Dinamic Pro, ENGIE
-Elec Flexibil, PPC pret dinamic) sa decida cand sa consume energie.
+A production data pipeline and consumer dashboard for the Romanian day-ahead electricity market (PZU — *Piața pentru Ziua Următoare*), built to help households on dynamic pricing contracts decide when to run high-consumption appliances.
 
-## Structura
+**Live at [pzuro.app](https://pzuro.app)**
+
+---
+
+## What it does
+
+Romanian energy suppliers offer dynamic contracts where the price changes every 15 minutes, tracking the wholesale day-ahead market. Most customers on these contracts have no easy way to see tomorrow's prices or understand whether the contract is actually saving them money.
+
+Pzuro pulls wholesale prices from the ENTSO-E Transparency Platform, converts them to RON/kWh using the live BNR exchange rate, and surfaces them in a dashboard optimized for non-technical users:
+
+- **Daily verdict card** — cheapest and most expensive intervals, with a plain-language recommendation
+- **15-minute price chart** — color-coded by price tier (cheap / mid / expensive / negative)
+- **Top hours** — ranked best and worst intervals for the day
+- **Cost calculator** — estimate your monthly bill under dynamic vs. fixed pricing, with optional CSV upload of your real consumption data for an exact match
+- **30-day history** — daily average, min, and max prices
+- **Telegram alerts** — daily summary pushed every morning before prices change
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                   GitHub Actions (cron)                  │
+│         11:15 UTC daily + 12:30 UTC fallback            │
+│         + cron-job.org workflow_dispatch trigger        │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+                  fetch_prices.py
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+   ENTSO-E API       BNR API      Local validation
+   (day-ahead     (EUR→RON      (≥80 intervals guard,
+    prices)        rate)         DST handling)
+          │
+          ▼
+   data/prices.json          data/archive/YYYY-MM-DD.json
+   data/history.json         (one file per day, immutable)
+          │
+          ▼
+   git commit + push
+          │
+          ▼
+      Vercel CDN
+   (auto-deploy on push,
+    no-cache headers on
+    data/*.json)
+          │
+     ┌────┴────┐
+     ▼         ▼
+ index.html  notify_telegram.py
+ (static SPA) (daily digest to
+              Telegram channel)
+```
+
+---
+
+## Data pipeline details
+
+**Source**: ENTSO-E Transparency Platform (`A44` document type, `10YRO-TEL------P` domain). Prices arrive in EUR/MWh for 15-minute intervals.
+
+**Transformation**:
+- EUR/MWh → RON/kWh using live BNR exchange rate (`bnr.ro/nbrfxrates.xml`), with a hardcoded fallback if BNR is unavailable
+- DST-aware windowing via `pd.DateOffset` (not `timedelta`) — ensures correct interval count on clock-change days (92 or 100 intervals instead of 96)
+- Negative prices preserved as-is with `is_negative` flag; displayed in violet in the UI, not filtered out
+
+**Validation**:
+- `MIN_VALID_INTERVALS = 80` guard: if ENTSO-E returns a partial response for tomorrow (common between 11:00–13:00 UTC before the day-ahead auction clears), the pipeline sets `tomorrow_published: false` and keeps the previous good file intact
+- The frontend independently re-validates `interval_count >= 80` before trusting the published flag — defense in depth against stale cached responses
+- On total failure (both days unavailable), the script exits with code 1 and does **not** overwrite the last good `prices.json`
+
+**Scheduling**:
+- Primary: GitHub Actions cron at `11:15 UTC` and `12:30 UTC` (UTC-fixed, covers both CET and CEST without manual adjustment)
+- Fallback: [cron-job.org](https://cron-job.org) triggers `workflow_dispatch` via GitHub API — compensates for free-tier GitHub Actions scheduling drift
+
+---
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Data pipeline | Python, `entsoe-py`, `pandas`, `requests` |
+| Exchange rate | BNR XML feed |
+| Scheduling | GitHub Actions + cron-job.org |
+| Storage | JSON files committed to Git |
+| Hosting | Vercel (static + serverless) |
+| Frontend | Vanilla HTML/CSS/JS, Chart.js |
+| Notifications | Telegram Bot API |
+| Domain | pzuro.app / pzuro.ro |
+
+No database server. The entire state is in versioned JSON files, which doubles as a free audit trail and makes the historical archive trivially reproducible. The daily archive (~150KB/day) fits comfortably in Git for the near term; the natural next step when the repo grows is moving the archive to object storage (Vercel Blob or Cloudflare R2) while keeping the same JSON format — no server needed at this data volume.
+
+---
+
+## Key engineering decisions
+
+**Why JSON files in Git instead of a database?**
+The dataset is small (one JSON per day, ~150KB), write frequency is low (once or twice daily), and reads are high. A CDN-served static file outperforms any database query for this access pattern. Git also provides a full history of every price fetch for free. At ~2 years of daily files (~110MB), the archive will outgrow Git comfortably — the planned migration is to object storage (Vercel Blob or Cloudflare R2), keeping the same JSON format without introducing a database server.
+
+**Why two separate scheduling systems?**
+GitHub Actions free-tier cron has documented drift of up to several minutes and occasionally skips runs. Since the ENTSO-E day-ahead auction typically publishes between 12:45–13:30 CET, a missed or late run means users see no tomorrow prices. The cron-job.org trigger via `workflow_dispatch` adds a reliable external heartbeat.
+
+**Why validate interval count on both sides?**
+The pipeline guard prevents writing bad data. The frontend guard prevents displaying bad data from an older cached file. The two guards are independent so either one catching a partial response is sufficient.
+
+---
+
+## Running locally
+
+```bash
+git clone https://github.com/andreistoleriu/pzuro.git
+cd pzuro
+pip install -r requirements.txt
+
+# Generate synthetic data (no ENTSO-E token needed)
+python generate_sample_data.py
+
+# Serve locally
+python -m http.server 8000
+# Open http://localhost:8000
+```
+
+To run the real pipeline, add your ENTSO-E API token ([register here](https://transparency.entsoe.eu/)) as `ENTSOE_TOKEN` in your environment or as a GitHub Actions secret.
+
+---
+
+## Project structure
 
 ```
 pzuro/
-  fetch_prices.py          # pipeline-ul de date: ENTSO-E -> data/prices.json + data/history.json
-  generate_sample_data.py  # genereaza date FICTIVE pentru testare locala, fara token ENTSO-E
-  requirements.txt
-  index.html                # portalul (HTML + CSS + JS, Chart.js prin CDN, fara framework)
-  data/
-    prices.json             # azi + maine, regenerat zilnic
-    history.json             # ultimele ~60 de zile (medie/min/max), folosit de tab-ul Istoric
-  .github/workflows/fetch-prices.yml   # cron zilnic care ruleaza fetch_prices.py si comite rezultatul
+├── fetch_prices.py              # main pipeline: ENTSO-E + BNR → prices.json
+├── notify_telegram.py           # daily Telegram digest with duplicate guard
+├── generate_sample_data.py      # synthetic data generator for local dev
+├── index.html                   # single-page dashboard (no build step)
+├── api/
+│   └── now.js                   # Vercel serverless: current interval price
+├── data/
+│   ├── prices.json              # today + tomorrow, regenerated daily
+│   ├── history.json             # ~60-day summary (avg/min/max per day)
+│   └── archive/
+│       └── YYYY-MM-DD.json      # full 15-min intervals per day (immutable)
+├── .github/workflows/
+│   └── fetch-prices.yml         # Actions cron + workflow_dispatch
+└── vercel.json                  # cache-control: no-store for data/*.json
 ```
-
-## Pas 1 — Token ENTSO-E (5 minute)
-
-1. Mergi pe https://transparency.entsoe.eu/ → Register → confirma email.
-2. Dupa logare, in contul tau cere acces API ("Restful API access") — vine de obicei automat.
-3. Token-ul apare in setarile contului ("Web Api Security Token").
-
-## Pas 2 — Repo GitHub
-
-```bash
-gh repo create pzuro --public --source=. --remote=origin
-git add .
-git commit -m "init: pipeline + portal v1"
-git push -u origin main
-```
-
-(Sau manual: creeaza repo-ul "pzuro" pe github.com, apoi `git remote add origin ...` + push.)
-
-## Pas 3 — Adauga secretul
-
-In repo: **Settings → Secrets and variables → Actions → New repository secret**
-Nume: `ENTSOE_TOKEN`, valoare: token-ul de la Pasul 1.
-
-### Opțional — notificări Telegram
-
-Daca vrei rezumat zilnic pe un canal Telegram (vezi `notify_telegram.py`), adauga si:
-- `TELEGRAM_BOT_TOKEN` — token-ul botului, de la @BotFather
-- `TELEGRAM_CHAT_ID` — ID-ul canalului/grupului unde se trimite mesajul
-
-Fara aceste doua secrete, pipeline-ul functioneaza normal, doar fara notificari (script-ul iese curat, nu da eroare).
-
-## Pas 4 — Testeaza pipeline-ul
-
-- Local, fara token (date fictive, doar pentru a vedea portalul functionand):
-  ```bash
-  pip install -r requirements.txt  # nu e nevoie de entsoe-py/requests pentru asta
-  python generate_sample_data.py
-  python -m http.server 8000
-  # deschide http://localhost:8000
-  ```
-- Pe GitHub, cu date reale: tab **Actions → Fetch PZU prices → Run workflow** (buton manual,
-  `workflow_dispatch`). Verifica apoi ca `data/prices.json` s-a actualizat cu un commit nou.
-
-## Pas 5 — Deploy
-
-**Vercel**: Import Project → selecteaza repo-ul `pzuro` → Framework Preset: "Other" →
-Deploy. Domeniu gratuit `*.vercel.app`.
-
-**GitHub Pages** (alternativa, zero config extra): Settings → Pages → Source: `main` / `/ (root)`.
-
-Important: pentru ambele, `index.html` face `fetch("data/prices.json")` cu cale relativa,
-deci trebuie ca `index.html` si `data/` sa fie in aceeasi locatie de hosting (sunt deja, in
-acelasi repo).
-
-## Note despre pipeline (fetch_prices.py)
-
-- **Ora de iarna/vara**: cron-ul ruleaza in UTC la o ora fixa (11:15 si 12:15 UTC), care
-  corespunde automat la 13:15 / 14:15 ora Romaniei, indiferent de sezon — nu necesita
-  ajustare manuala de doua ori pe an. Fereastra de interogare a fiecarei zile foloseste
-  `pd.DateOffset(days=1)` (nu `timedelta`), ca sa respecte miezul noptii local si nu o
-  durata fixa de 24h — altfel zilele de schimbare a orei (92 sau 100 de intervale de 15
-  min, in loc de 96) ar fi calculate gresit.
-- **Curs EUR→RON**: preluat de la BNR (`bnr.ro/nbrfxrates.xml`); daca feed-ul e indisponibil,
-  se foloseste o valoare implicita si campul `eur_ron_rate_source` din `prices.json` arata
-  clar care a fost folosita ("bnr.ro" sau "fallback").
-- **Preturi negative**: nu sunt tratate ca eroare; fiecare interval are `is_negative` pentru
-  stilizare distincta in UI (violet, nu rosu/verde).
-- **"Maine" indisponibil**: daca OPCOM nu a publicat inca, scriptul nu crapa — pastreaza
-  `tomorrow: null` si `tomorrow_published: false`, iar portalul dezactiveaza automat
-  butonul "Maine".
-- **Esec total** (ambele zile indisponibile, ex. ENTSO-E e cazut): scriptul NU suprascrie
-  `prices.json` cu date goale — pastreaza ultima versiune buna si returneaza exit code 1,
-  ca job-ul sa apara ca failed in Actions.
-
-## Limitari cunoscute ale v1 (de adresat in Faza 3)
-
-- Calculatorul de factura foloseste, implicit, o **medie ponderata pe profil** (uniform / noapte / seara) -- o estimare, nu o factura exacta. Daca utilizatorul incarca un fisier CSV cu consumul lui real (vezi mai jos), calculul devine exact, interval cu interval.
-- Formula exacta per furnizor (cu plafoane pentru preturi negative, taxe specifice etc.) nu e implementata inca -- momentan toti furnizorii folosesc aceeasi formula simplificata.
-
-## Arhiva istorica (data/archive/) si upload CSV
-
-De la 18 iunie 2026, `fetch_prices.py` salveaza si intervalele complete (nu doar rezumatul zilnic) in `data/archive/{data}.json`, un fisier per zi, scris o singura data si niciodata suprascris. Asta alimenteaza un mod nou in Calculator: utilizatorul poate incarca un CSV cu consumul lui real (format `timestamp,kwh`, o linie per interval) si vede costul EXACT pe care l-ar fi avut pe dinamic, calculat interval cu interval, nu pe baza unui profil generic.
-
-Limitare inerenta: arhiva incepe sa se construiasca de acum incolo, nu retroactiv -- zile de inainte de lansarea acestei functionalitati nu au date arhivate, si vor fi excluse automat din calcul (cu avertisment clar in interfata), nu inventate.
-
-Nu exista un format standard de export intre distribuitori (E-Distributie, Delgaz Grid, Distributie Oltenia difera) -- utilizatorul trebuie sa reformateze manual exportul lui in formatul nostru simplu, documentat direct in interfata.
