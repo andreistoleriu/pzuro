@@ -391,7 +391,9 @@
     // rotunjesc matematic la zero -- e corect matematic, dar deruteaza
     // vizual (pare o eroare, nu un pret aproape de zero)
     const rounded = n.toFixed(d);
-    return rounded === "-" + (0).toFixed(d) ? (0).toFixed(d) : rounded;
+    const clean = rounded === "-" + (0).toFixed(d) ? (0).toFixed(d) : rounded;
+    // separator zecimal cu virgula (standard roman), nu punct
+    return clean.replace(".", ",");
   }
 
   // un pret e "vizibil negativ" doar daca ramane negativ DUPA rotunjirea
