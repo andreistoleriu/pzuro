@@ -5,7 +5,7 @@ process.env.TZ = "UTC";
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { fmt, isVisiblyNegative, profileWeightedAvg, solarWindowAvg, inferDurationMinutes, parseSimpleCsv, matchIntervalsToArchive } = require("../js/calc.js");
+const { fmt, isVisiblyNegative, profileWeightedAvg, solarWindowAvg, inferDurationMinutes, parseSimpleCsv, matchIntervalsToArchive, toCsv } = require("../js/calc.js");
 
 test("fmt: rotunjeste si foloseste virgula zecimala", () => {
   assert.equal(fmt(0.4534, 3), "0,453");
@@ -124,6 +124,26 @@ test("matchIntervalsToArchive: calculeaza costul PZU prin suprapunere interval",
   assert.ok(Math.abs(result.matchedKwh - 1) < 1e-9);
   assert.ok(Math.abs(result.costPzuRaw - (0.5 * 0.5 + 0.5 * 0.9)) < 1e-9);
   assert.deepEqual(result.missingDates, []);
+});
+
+test("toCsv: implicit foloseste ; ca delimitator (compatibil Excel RO)", () => {
+  const csv = toCsv(["Ora", "Preț"], [["00:00", "0.5"], ["00:15", "0.6"]]);
+  assert.equal(csv, "Ora;Preț\r\n00:00;0.5\r\n00:15;0.6");
+});
+
+test("toCsv: NU escapeaza pretul cu virgula zecimala cand delimitatorul e ;", () => {
+  const csv = toCsv(["Ora", "Preț"], [["00:00", "0,453"]]);
+  assert.equal(csv, "Ora;Preț\r\n00:00;0,453");
+});
+
+test("toCsv: escapeaza celule ce contin chiar delimitatorul sau ghilimele", () => {
+  const csv = toCsv(["A", "B"], [["are; punct-virgula", 'are "ghilimele"']]);
+  assert.equal(csv, 'A;B\r\n"are; punct-virgula";"are ""ghilimele"""');
+});
+
+test("toCsv: accepta un delimitator custom (,)", () => {
+  const csv = toCsv(["A", "B"], [["are, virgula", "simplu"]], ",");
+  assert.equal(csv, 'A,B\r\n"are, virgula",simplu');
 });
 
 test("matchIntervalsToArchive: zilele nearhivate sunt excluse, nu inventate", () => {

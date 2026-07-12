@@ -185,6 +185,12 @@
   .data-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:.78rem;}
   .data-table th,.data-table td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);}
   .data-table th{color:var(--ink-soft);font-weight:500;position:sticky;top:0;background:var(--card);}
+  .csv-export-btn{
+    display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-family:var(--font-body);
+    font-size:.78rem;font-weight:500;border:1px solid var(--line);background:var(--paper);
+    color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer;
+  }
+  .csv-export-btn:hover{background:var(--paper-soft);}
 
   /* top hours list */
   .hour-list{display:flex;flex-direction:column;gap:8px;}
@@ -283,6 +289,7 @@
             <tbody id="mainChartTableBody"></tbody>
           </table>
         </div>
+        <button type="button" class="csv-export-btn" id="exportMainCsv">⬇ Descarcă CSV (Excel)</button>
       </details>
     </div>
     <div class="card" style="display:flex;align-items:center;gap:16px;padding:14px 18px;">
@@ -391,6 +398,16 @@
     <p class="section-sub">Preț mediu zilnic, cu interval min–max — util ca să vezi dacă merită un contract dinamic pe termen mai lung. Tot preț brut, ca peste tot pe site — pentru factura finală, treci pe Calculator.</p>
     <div class="card">
       <div class="chart-wrap"><canvas id="historyChart" role="img" aria-label="Grafic istoric preț PZU, ultimele 30 de zile"></canvas></div>
+      <details class="data-details">
+        <summary>Vezi datele istoricului ca tabel</summary>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Data</th><th>Medie</th><th>Minim</th><th>Maxim</th></tr></thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+        <button type="button" class="csv-export-btn" id="exportHistoryCsv">⬇ Descarcă CSV (Excel)</button>
+      </details>
     </div>
   </section>
 </div>
@@ -407,7 +424,21 @@
 
   // logica pura (testata in test/calc.test.js) traieste in js/calc.js,
   // incarcat inainte de acest script -- aici doar o folosim
-  const { fmt, isVisiblyNegative, profileWeightedAvg, solarWindowAvg, inferDurationMinutes, parseSimpleCsv, matchIntervalsToArchive } = window.PzuroCalc;
+  const { fmt, isVisiblyNegative, profileWeightedAvg, solarWindowAvg, inferDurationMinutes, parseSimpleCsv, matchIntervalsToArchive, toCsv } = window.PzuroCalc;
+
+  // declanseaza descarcarea unui fisier text ca si cum ar fi un raspuns de
+  // server -- Blob + link temporar, fara nicio dependinta externa. Adaugam
+  // BOM UTF-8 la inceput ca Excel sa recunoasca diacriticele corect la
+  // deschidere directa (fara asta, Excel presupune Windows-1252 si strica â/ă/ș/ț).
+  function downloadTextFile(filename, text, mime){
+    const BOM = "﻿";
+    const blob = new Blob([BOM + text], { type: (mime||"text/csv") + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
   function timeLabel(iso){ return new Date(iso).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"}); }
 
@@ -484,6 +515,17 @@
       <div class="stat"><div class="v">${fmt(day.min_ron_kwh)}</div><div class="k">minim</div></div>
       <div class="stat"><div class="v">${fmt(day.max_ron_kwh)}</div><div class="k">maxim</div></div>`;
 
+    // alternativa text pentru screen reader (canvas-ul Chart.js nu are continut
+    // accesibil singur) -- un rezumat scurt pe canvas plus un tabel complet,
+    // vizibil oricui prin <details>, nu doar cititoarelor de ecran. Populate
+    // ÎNAINTE de verificarea Chart.js, ca statisticile si tabelul sa ramana
+    // disponibile chiar daca CDN-ul cu Chart.js pica (acelasi principiu ca
+    // stats-urile de mai sus).
+    const minIv = day.intervals.reduce((a,b)=> b.price_ron_kwh < a.price_ron_kwh ? b : a);
+    const maxIv = day.intervals.reduce((a,b)=> b.price_ron_kwh > a.price_ron_kwh ? b : a);
+    document.getElementById("mainChartTableBody").innerHTML = day.intervals.map(iv =>
+      `<tr><td>${timeLabel(iv.start)}</td><td>${fmt(iv.price_ron_kwh)}</td></tr>`).join("");
+
     if(typeof Chart === "undefined"){
       // Chart.js nu s-a incarcat (ad-blocker, retea proasta, CDN picat) --
       // statisticile de mai sus raman corecte, doar bara vizuala lipseste
@@ -491,19 +533,12 @@
       return;
     }
 
+    document.getElementById("mainChart").setAttribute("aria-label",
+      `Grafic preț PZU, ${day.intervals.length} intervale de 15 minute. Medie ${fmt(day.avg_ron_kwh)} lei/kWh, minim ${fmt(minIv.price_ron_kwh)} la ${timeLabel(minIv.start)}, maxim ${fmt(maxIv.price_ron_kwh)} la ${timeLabel(maxIv.start)}.`);
+
     const labels = day.intervals.map(iv => timeLabel(iv.start));
     const values = day.intervals.map(iv => iv.price_ron_kwh);
     const colors = day.intervals.map(iv => colorFor(iv, day.min_ron_kwh, day.max_ron_kwh));
-
-    // alternativa text pentru screen reader (canvas-ul Chart.js nu are continut
-    // accesibil singur) -- un rezumat scurt pe canvas plus un tabel complet,
-    // vizibil oricui prin <details>, nu doar cititoarelor de ecran
-    const minIv = day.intervals.reduce((a,b)=> b.price_ron_kwh < a.price_ron_kwh ? b : a);
-    const maxIv = day.intervals.reduce((a,b)=> b.price_ron_kwh > a.price_ron_kwh ? b : a);
-    document.getElementById("mainChart").setAttribute("aria-label",
-      `Grafic preț PZU, ${day.intervals.length} intervale de 15 minute. Medie ${fmt(day.avg_ron_kwh)} lei/kWh, minim ${fmt(minIv.price_ron_kwh)} la ${timeLabel(minIv.start)}, maxim ${fmt(maxIv.price_ron_kwh)} la ${timeLabel(maxIv.start)}.`);
-    document.getElementById("mainChartTableBody").innerHTML = day.intervals.map(iv =>
-      `<tr><td>${timeLabel(iv.start)}</td><td>${fmt(iv.price_ron_kwh)}</td></tr>`).join("");
 
     if(mainChart) mainChart.destroy();
     const ctx = document.getElementById("mainChart");
@@ -771,6 +806,10 @@
   // ---------- tab 4: history ----------
   function renderHistoryChart(){
     if(!historyData || !historyData.length) return;
+
+    document.getElementById("historyTableBody").innerHTML = historyData.map(h =>
+      `<tr><td>${h.date}</td><td>${fmt(h.avg_ron_kwh)}</td><td>${fmt(h.min_ron_kwh)}</td><td>${fmt(h.max_ron_kwh)}</td></tr>`).join("");
+
     if(typeof Chart === "undefined"){
       document.getElementById("historyChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca (verifică conexiunea sau un ad-blocker).</div>';
       return;
@@ -817,6 +856,22 @@
   }
   TAB_IDS.forEach(id=>{
     document.getElementById("tabbtn-"+id).addEventListener("click", ()=>selectTab(id));
+  });
+
+  // ---------- export CSV (Excel) ----------
+  document.getElementById("exportMainCsv").addEventListener("click", () => {
+    const day = pricesData[activeDay];
+    if(!day) return;
+    const csv = toCsv(["Ora", "Preț (lei/kWh)"], day.intervals.map(iv => [timeLabel(iv.start), fmt(iv.price_ron_kwh)]));
+    downloadTextFile(`pzuro-preturi-${day.date}.csv`, csv);
+  });
+  document.getElementById("exportHistoryCsv").addEventListener("click", () => {
+    if(!historyData || !historyData.length) return;
+    const csv = toCsv(
+      ["Data", "Medie (lei/kWh)", "Minim (lei/kWh)", "Maxim (lei/kWh)"],
+      historyData.map(h => [h.date, fmt(h.avg_ron_kwh), fmt(h.min_ron_kwh), fmt(h.max_ron_kwh)])
+    );
+    downloadTextFile(`pzuro-istoric-${historyData[0].date}_${historyData[historyData.length-1].date}.csv`, csv);
   });
 
   // navigare cu tastatura pe tab-uri (pattern ARIA "tabs, automatic

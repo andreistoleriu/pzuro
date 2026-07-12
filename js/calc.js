@@ -138,6 +138,23 @@
     return { totalKwh, matchedKwh, excludedKwh: totalKwh - matchedKwh, costPzuRaw, missingDates, neededDates, durationMin };
   }
 
+  // construieste text CSV dintr-un antet si un tabel de randuri -- separat
+  // de partea de descarcare (Blob/anchor), care are nevoie de DOM si ramane
+  // in index.html. Delimitator implicit ";" (nu ",") pentru ca preturile
+  // folosesc deja virgula ca separator zecimal (fmt(), standard roman) --
+  // Excel pe Windows cu regiunea Romania foloseste ";" ca separator de lista
+  // exact din acest motiv, si deschide fisierul corect la dublu-click, fara
+  // sa ceara import manual.
+  function toCsv(headers, rows, delimiter) {
+    if (delimiter === undefined) delimiter = ";";
+    const needsQuote = new RegExp('["' + delimiter + "\\r\\n]");
+    const escapeCell = (v) => {
+      const s = String(v);
+      return needsQuote.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+    return [headers, ...rows].map((row) => row.map(escapeCell).join(delimiter)).join("\r\n");
+  }
+
   return {
     fmt,
     isVisiblyNegative,
@@ -147,5 +164,6 @@
     parseSimpleCsv,
     overlapMinutes,
     matchIntervalsToArchive,
+    toCsv,
   };
 });
