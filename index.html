@@ -237,7 +237,7 @@
 <div class="wrap">
   <div id="verdictCard" class="card" style="display:none;margin-bottom:18px;"></div>
 
-  <div class="tabs" role="tablist" aria-label="Sectiuni pzuro">
+  <div class="tabs" role="tablist" aria-label="Secțiuni pzuro.app">
     <button class="tab-btn" role="tab" id="tabbtn-grafic" aria-controls="panel-grafic" aria-selected="true">Grafic PZU</button>
     <button class="tab-btn" role="tab" id="tabbtn-ore" aria-controls="panel-ore" aria-selected="false">Top ore</button>
     <button class="tab-btn" role="tab" id="tabbtn-calc" aria-controls="panel-calc" aria-selected="false">Calculator</button>
@@ -337,7 +337,7 @@
           <input type="number" id="reglementate" value="0.54" min="0" step="0.01">
         </div>
         <div class="field">
-          <label for="marja">Marjă furnizor (lei/kWh) <span style="color:var(--cyan)">— confirmat din contract</span></label>
+          <label for="marja">Marja furnizorului (lei/kWh) <span style="color:var(--cyan)">— confirmată din contract</span></label>
           <input type="number" id="marja" value="0.39432" min="0" step="0.00001">
         </div>
       </div>
@@ -355,7 +355,7 @@
           <input type="number" id="export" value="0" min="0" step="1">
         </div>
         <div class="field">
-          <label for="rataExport">Rată fixă de răscumpărare curentă (lei/kWh)</label>
+          <label for="rataExport">Rata curentă de răscumpărare fixă (lei/kWh)</label>
           <input type="number" id="rataExport" value="0.74" min="0" step="0.01">
         </div>
       </div>
@@ -775,7 +775,8 @@
       pretDinamicTotal = (pzuAvg + reglementate + marja) * 1.21;
       costDinamic = pretDinamicTotal * consum;
       costFix = tarifFix * consum;
-      modeLabel = `pentru un profil "${profil}"`;
+      const profilLabel = { uniform: "un consum uniform pe parcursul zilei", noapte: "un consum predominant nocturn", seara: "un consum predominant de seară" }[profil] || `un profil "${profil}"`;
+      modeLabel = `pentru ${profilLabel}`;
     }
 
     let breakdownExtra = "";
