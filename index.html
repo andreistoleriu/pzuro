@@ -7,7 +7,7 @@
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="theme-color" content="#1E2128">
 <title>pzuro.app — prețuri PZU în timp real</title>
-<meta name="description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON și ENGIE.">
+<meta name="description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica și Electrica.">
 
 <!-- IMPORTANT: cand alegi domeniul final (pzuro.app / pzuro.ro), inlocuieste
      URL-ul de mai jos in TOATE locurile marcate cu acelasi comentariu -->
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pzuro.ro/">
 <meta property="og:title" content="pzuro.app — prețuri PZU pentru contracte dinamice de energie">
-<meta property="og:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE și PPC.">
+<meta property="og:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica și Electrica.">
 <meta property="og:image" content="https://pzuro.ro/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="pzuro.app — prețuri PZU pentru contracte dinamice de energie">
-<meta name="twitter:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE și PPC.">
+<meta name="twitter:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica și Electrica.">
 <meta name="twitter:image" content="https://pzuro.ro/og-image.png">
 
 <script type="application/ld+json">
@@ -33,7 +33,7 @@
   "@type": "WebApplication",
   "name": "pzuro.app",
   "url": "https://pzuro.ro/",
-  "description": "Portal gratuit cu prețurile PZU (Piața pentru Ziua Următoare) pentru România, grafic live, calculator de factură și recomandări pentru contracte dinamice de energie E.ON, ENGIE și PPC.",
+  "description": "Portal gratuit cu prețurile PZU (Piața pentru Ziua Următoare) pentru România, grafic live, calculator de factură și recomandări pentru contracte dinamice de energie E.ON, ENGIE, PPC, Hidroelectrica și Electrica.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RON" },
@@ -326,7 +326,10 @@
           <option value="eon">E.ON Dinamic Pro</option>
           <option value="engie">ENGIE Elec Flexibil</option>
           <option value="ppc">PPC — ofertă preț dinamic</option>
+          <option value="hidroelectrica">Hidroelectrica — Hidro DINAMIC C</option>
+          <option value="electrica">Electrica Furnizare — Electrica Dinamic</option>
         </select>
+        <p id="furnizorNota" style="font-size:.78rem;color:var(--amber);margin:6px 0 0;display:none;"></p>
       </div>
       <div class="field" style="display:flex;align-items:center;gap:8px;margin:2px 0 14px;">
         <input type="checkbox" id="useCsv" style="width:auto;">
@@ -902,6 +905,32 @@
     document.getElementById("btnToday").setAttribute("aria-pressed","false");
     renderMainChart();
   });
+
+  // marja "confirmata" = cifra reala verificata dintr-un contract sau oferta oficiala.
+  // null = nu avem o cifra oficiala confirmata pentru acest furnizor -- nu inventam una,
+  // lasam campul marja neschimbat si aratam nota de avertisment in loc.
+  const FURNIZOR_MARJA = {
+    eon: 0.39432,
+    engie: null,
+    ppc: 0.149,
+    hidroelectrica: 0.125,
+    electrica: null,
+  };
+
+  function onFurnizorChange(){
+    const furnizor = document.getElementById("furnizor").value;
+    const marjaCunoscuta = FURNIZOR_MARJA[furnizor];
+    const nota = document.getElementById("furnizorNota");
+    if(marjaCunoscuta !== null && marjaCunoscuta !== undefined){
+      document.getElementById("marja").value = marjaCunoscuta;
+      nota.style.display = "none";
+    } else {
+      nota.textContent = "Nu avem o valoare oficială confirmată a marjei pentru acest furnizor — verifică propriul contract și ajustează câmpul de mai jos.";
+      nota.style.display = "block";
+    }
+    runCalculator();
+  }
+  document.getElementById("furnizor").addEventListener("change", onFurnizorChange);
 
   ["furnizor","consum","profil","reglementate","marja","tarifFix","export","rataExport"].forEach(id=>{
     document.getElementById(id).addEventListener("input", runCalculator);
