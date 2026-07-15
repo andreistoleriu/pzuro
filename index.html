@@ -1073,9 +1073,40 @@
 
   // inregistrare service worker (PWA/offline) -- neblocanta, esueaza tacit
   // pe browsere fara suport, nu trebuie sa opreasca restul aplicatiei
+  //
+  // reg.update() la fiecare incarcare forteaza browserul sa verifice IMEDIAT
+  // daca sw.js s-a schimbat, in loc sa astepte propriul lui interval de
+  // verificare in fundal (pana la 24h in Chrome) -- fara asta, un utilizator
+  // care revine zilnic ar putea sa nu primeasca update-ul zile la rand.
+  //
+  // controllerchange + reload o singura data: cand noul service worker preia
+  // controlul (skipWaiting+clients.claim in sw.js), tab-ul deja deschis tot ar
+  // ramane pe shell-ul vechi din memorie pana la o navigare noua -- reload-ul
+  // automat inchide acel decalaj, ca update-urile sa apara fara actiune manuala.
+  //
+  // hadControllerAtLoad e esential: la prima vizita vreodata (sau prima data
+  // dupa un "clear site data"), pagina porneste FARA niciun service worker
+  // care sa o controleze -- clients.claim() din sw.js ii asigneaza unul putin
+  // mai tarziu, ceea ce declanseaza si el controllerchange, desi nu exista
+  // nimic "vechi" de reimprospatat (continutul a fost deja incarcat proaspat
+  // din retea, in aceeasi navigare). Fara acest flag, orice vizitator nou ar
+  // vedea un reload brusc, nejustificat, imediat dupa incarcarea paginii.
+  // Reload-ul automat are sens DOAR cand pagina era deja controlata de un SW
+  // mai vechi, iar acesta e inlocuit de unul nou.
   if("serviceWorker" in navigator){
+    const hadControllerAtLoad = !!navigator.serviceWorker.controller;
+
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js").catch(e => console.error("Inregistrare service worker esuata:", e));
+      navigator.serviceWorker.register("/sw.js").then((reg) => {
+        reg.update().catch(() => {});
+      }).catch(e => console.error("Inregistrare service worker esuata:", e));
+    });
+
+    let reloadedForUpdate = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if(reloadedForUpdate || !hadControllerAtLoad) return;
+      reloadedForUpdate = true;
+      window.location.reload();
     });
   }
 })();
