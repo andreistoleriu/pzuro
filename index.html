@@ -393,6 +393,11 @@
       <div class="result" id="calcResult"></div>
       <p class="disclaimer">Estimare orientativă, nu factură oficială. Componentele reglementate diferă în funcție de operatorul de distribuție (Electrica, Delgaz Grid, Distribuție Oltenia, E-Distribuție etc.) — ajustează valoarea ca să corespundă facturii tale. Pentru export: presupunem că venitul din surplus nu mai e impozitat separat cu TVA (se compensează în factură) — o simplificare, nu o regulă fiscală garantată.</p>
     </div>
+    <div class="card">
+      <h3 style="margin:0 0 4px;font-size:.92rem;">Compară toți furnizorii cu marjă confirmată</h3>
+      <p style="font-size:.78rem;color:var(--ink-soft);margin:0 0 12px;">Cu același consum și profil de mai sus, tot inclus cu TVA. ENGIE și Electrica nu apar aici — nu avem o marjă oficială confirmată pentru ele (vezi avertismentul de la dropdown-ul Furnizor).</p>
+      <div id="furnizorComparisonTable"></div>
+    </div>
   </section>
 
   <!-- TAB 4: istoric -->
@@ -733,6 +738,73 @@
     runCalculator();
   });
 
+  // calculul costului dinamic pentru o marja data -- extras din runCalculator ca sa
+  // poata fi refolosit si de comparatorul de furnizori (aceeasi formula, alta marja),
+  // fara sa duplicam logica CSV-vs-profil in doua locuri care s-ar putea dezincroniza
+  function computeDinamicCost(marjaValue, reglementate, day, useCsv, profil){
+    if(useCsv){
+      if(!csvMatchResult || csvMatchResult.matchedKwh <= 0) return null;
+      const consum = csvMatchResult.matchedKwh;
+      // cost exact: suma (kWh_interval x preț_PZU_interval), cu reglementate+marja adaugate FLAT per kWh, TVA o singura data la final
+      const costDinamic = (csvMatchResult.costPzuRaw + consum*(reglementate+marjaValue)) * 1.21;
+      const pzuAvg = csvMatchResult.costPzuRaw / consum; // preț PZU mediu ponderat exact pe consumul real
+      return { consum, pzuAvg, pretDinamicTotal: costDinamic / consum, costDinamic };
+    }
+    const consum = parseFloat(document.getElementById("consum").value) || 0;
+    const pzuAvg = profileWeightedAvg(day, profil);
+    const pretDinamicTotal = (pzuAvg + reglementate + marjaValue) * 1.21;
+    return { consum, pzuAvg, pretDinamicTotal, costDinamic: pretDinamicTotal * consum };
+  }
+
+  const FURNIZOR_LABEL_CONFIRMAT = {
+    eon: "E.ON Dinamic Pro",
+    ppc: "PPC — ofertă preț dinamic",
+    hidroelectrica: "Hidroelectrica — Hidro DINAMIC C",
+  };
+
+  function renderFurnizorComparison(day, reglementate, useCsv, profil, tarifFix, isProsumator, exportKwh, rataExport){
+    const container = document.getElementById("furnizorComparisonTable");
+    if(!day){ container.innerHTML = ""; return; }
+
+    let venitExportDinamic = 0, venitExportFix = 0;
+    if(isProsumator && exportKwh > 0){
+      const exportPzuAvg = solarWindowAvg(day);
+      venitExportDinamic = exportKwh * Math.max(exportPzuAvg, 0);
+      venitExportFix = exportKwh * rataExport;
+    }
+
+    const furnizorSelectat = document.getElementById("furnizor").value;
+    const rows = [];
+    let consumRef = null;
+    for(const [id, label] of Object.entries(FURNIZOR_LABEL_CONFIRMAT)){
+      const r = computeDinamicCost(FURNIZOR_MARJA[id], reglementate, day, useCsv, profil);
+      if(!r) continue;
+      consumRef = r.consum;
+      rows.push({ id, label, pret: r.pretDinamicTotal, cost: r.costDinamic - venitExportDinamic });
+    }
+
+    if(!rows.length){
+      container.innerHTML = '<p class="empty-state">Încarcă un fișier CSV mai sus ca să vezi comparația.</p>';
+      return;
+    }
+
+    rows.push({ id: "fix", label: `Contract fix la ${fmt(tarifFix,2)} lei/kWh`, pret: tarifFix, cost: tarifFix*consumRef - venitExportFix });
+    rows.sort((a,b) => a.cost - b.cost);
+    const min = rows[0].cost;
+
+    container.innerHTML = `
+      <table class="data-table">
+        <thead><tr><th>Furnizor</th><th>Preț tot inclus (lei/kWh)</th><th>Cost${isProsumator && exportKwh>0 ? " net":""} lunar (lei)</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `<tr style="${r.cost===min?"font-weight:600;":""}">
+            <td>${r.label}${r.id===furnizorSelectat?" ← selectat":""}${r.cost===min?" 🏆":""}</td>
+            <td>${fmt(r.pret,3)}</td>
+            <td>${fmt(r.cost,2)}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>`;
+  }
+
   function runCalculator(){
     const day = pricesData.today;
     const resultEl = document.getElementById("calcResult");
@@ -744,28 +816,24 @@
     const isProsumator = document.getElementById("prosumator").checked;
     const exportKwh = isProsumator ? (parseFloat(document.getElementById("export").value) || 0) : 0;
     const rataExport = parseFloat(document.getElementById("rataExport").value) || 0;
+    const profil = document.getElementById("profil").value;
+
+    renderFurnizorComparison(day, reglementate, useCsv, profil, tarifFix, isProsumator, exportKwh, rataExport);
 
     let consum, pzuAvg, pretDinamicTotal, costDinamic, costFix, modeLabel;
 
+    const r = computeDinamicCost(marja, reglementate, day, useCsv, profil);
     if(useCsv){
-      if(!csvMatchResult || csvMatchResult.matchedKwh <= 0){
+      if(!r){
         resultEl.className = "result";
         resultEl.innerHTML = '<div class="empty-state">Încarcă un fișier CSV mai sus ca să vezi rezultatul exact.</div>';
         return;
       }
-      consum = csvMatchResult.matchedKwh;
-      // cost exact: suma (kWh_interval x preț_PZU_interval), cu reglementate+marja adaugate FLAT per kWh, TVA o singura data la final
-      costDinamic = (csvMatchResult.costPzuRaw + consum*(reglementate+marja)) * 1.21;
+      ({ consum, pzuAvg, pretDinamicTotal, costDinamic } = r);
       costFix = tarifFix * consum;
-      pzuAvg = csvMatchResult.costPzuRaw / consum; // preț PZU mediu ponderat exact pe consumul real
-      pretDinamicTotal = costDinamic / consum;
       modeLabel = `pe baza consumului real încărcat (${fmt(consum,1)} kWh)`;
     } else {
-      consum = parseFloat(document.getElementById("consum").value) || 0;
-      const profil = document.getElementById("profil").value;
-      pzuAvg = profileWeightedAvg(day, profil);
-      pretDinamicTotal = (pzuAvg + reglementate + marja) * 1.21;
-      costDinamic = pretDinamicTotal * consum;
+      ({ consum, pzuAvg, pretDinamicTotal, costDinamic } = r);
       costFix = tarifFix * consum;
       const profilLabel = { uniform: "un consum uniform pe parcursul zilei", noapte: "un consum predominant nocturn", seara: "un consum predominant de seară" }[profil] || `un profil "${profil}"`;
       modeLabel = `pentru ${profilLabel}`;
