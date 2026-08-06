@@ -1,0 +1,776 @@
+{
+  "date": "2026-08-07",
+  "intervals": [
+    {
+      "start": "2026-08-07T00:00:00+03:00",
+      "end": "2026-08-07T00:15:00+03:00",
+      "price_eur_mwh": 256.14,
+      "price_ron_kwh": 1.3012,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T00:15:00+03:00",
+      "end": "2026-08-07T00:30:00+03:00",
+      "price_eur_mwh": 227.43,
+      "price_ron_kwh": 1.1553,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T00:30:00+03:00",
+      "end": "2026-08-07T00:45:00+03:00",
+      "price_eur_mwh": 228.59,
+      "price_ron_kwh": 1.1612,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T00:45:00+03:00",
+      "end": "2026-08-07T01:00:00+03:00",
+      "price_eur_mwh": 189.67,
+      "price_ron_kwh": 0.9635,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T01:00:00+03:00",
+      "end": "2026-08-07T01:15:00+03:00",
+      "price_eur_mwh": 186.91,
+      "price_ron_kwh": 0.9495,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T01:15:00+03:00",
+      "end": "2026-08-07T01:30:00+03:00",
+      "price_eur_mwh": 176.45,
+      "price_ron_kwh": 0.8964,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T01:30:00+03:00",
+      "end": "2026-08-07T01:45:00+03:00",
+      "price_eur_mwh": 176.54,
+      "price_ron_kwh": 0.8968,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T01:45:00+03:00",
+      "end": "2026-08-07T02:00:00+03:00",
+      "price_eur_mwh": 171.27,
+      "price_ron_kwh": 0.8701,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T02:00:00+03:00",
+      "end": "2026-08-07T02:15:00+03:00",
+      "price_eur_mwh": 166.1,
+      "price_ron_kwh": 0.8438,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T02:15:00+03:00",
+      "end": "2026-08-07T02:30:00+03:00",
+      "price_eur_mwh": 155.53,
+      "price_ron_kwh": 0.7901,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T02:30:00+03:00",
+      "end": "2026-08-07T02:45:00+03:00",
+      "price_eur_mwh": 155.44,
+      "price_ron_kwh": 0.7896,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T02:45:00+03:00",
+      "end": "2026-08-07T03:00:00+03:00",
+      "price_eur_mwh": 144.91,
+      "price_ron_kwh": 0.7361,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T03:00:00+03:00",
+      "end": "2026-08-07T03:15:00+03:00",
+      "price_eur_mwh": 164.62,
+      "price_ron_kwh": 0.8363,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T03:15:00+03:00",
+      "end": "2026-08-07T03:30:00+03:00",
+      "price_eur_mwh": 156.92,
+      "price_ron_kwh": 0.7972,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T03:30:00+03:00",
+      "end": "2026-08-07T03:45:00+03:00",
+      "price_eur_mwh": 145.13,
+      "price_ron_kwh": 0.7373,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T03:45:00+03:00",
+      "end": "2026-08-07T04:00:00+03:00",
+      "price_eur_mwh": 142.57,
+      "price_ron_kwh": 0.7243,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T04:00:00+03:00",
+      "end": "2026-08-07T04:15:00+03:00",
+      "price_eur_mwh": 140.62,
+      "price_ron_kwh": 0.7143,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T04:15:00+03:00",
+      "end": "2026-08-07T04:30:00+03:00",
+      "price_eur_mwh": 138.53,
+      "price_ron_kwh": 0.7037,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T04:30:00+03:00",
+      "end": "2026-08-07T04:45:00+03:00",
+      "price_eur_mwh": 135.24,
+      "price_ron_kwh": 0.687,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T04:45:00+03:00",
+      "end": "2026-08-07T05:00:00+03:00",
+      "price_eur_mwh": 135.91,
+      "price_ron_kwh": 0.6904,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T05:00:00+03:00",
+      "end": "2026-08-07T05:15:00+03:00",
+      "price_eur_mwh": 138.79,
+      "price_ron_kwh": 0.7051,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T05:15:00+03:00",
+      "end": "2026-08-07T05:30:00+03:00",
+      "price_eur_mwh": 141.09,
+      "price_ron_kwh": 0.7167,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T05:30:00+03:00",
+      "end": "2026-08-07T05:45:00+03:00",
+      "price_eur_mwh": 139.64,
+      "price_ron_kwh": 0.7094,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T05:45:00+03:00",
+      "end": "2026-08-07T06:00:00+03:00",
+      "price_eur_mwh": 145.21,
+      "price_ron_kwh": 0.7377,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T06:00:00+03:00",
+      "end": "2026-08-07T06:15:00+03:00",
+      "price_eur_mwh": 142.89,
+      "price_ron_kwh": 0.7259,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T06:15:00+03:00",
+      "end": "2026-08-07T06:30:00+03:00",
+      "price_eur_mwh": 148.28,
+      "price_ron_kwh": 0.7533,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T06:30:00+03:00",
+      "end": "2026-08-07T06:45:00+03:00",
+      "price_eur_mwh": 171.6,
+      "price_ron_kwh": 0.8717,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T06:45:00+03:00",
+      "end": "2026-08-07T07:00:00+03:00",
+      "price_eur_mwh": 175.23,
+      "price_ron_kwh": 0.8902,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T07:00:00+03:00",
+      "end": "2026-08-07T07:15:00+03:00",
+      "price_eur_mwh": 171.71,
+      "price_ron_kwh": 0.8723,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T07:15:00+03:00",
+      "end": "2026-08-07T07:30:00+03:00",
+      "price_eur_mwh": 173.69,
+      "price_ron_kwh": 0.8823,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T07:30:00+03:00",
+      "end": "2026-08-07T07:45:00+03:00",
+      "price_eur_mwh": 174.44,
+      "price_ron_kwh": 0.8862,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T07:45:00+03:00",
+      "end": "2026-08-07T08:00:00+03:00",
+      "price_eur_mwh": 161.89,
+      "price_ron_kwh": 0.8224,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T08:00:00+03:00",
+      "end": "2026-08-07T08:15:00+03:00",
+      "price_eur_mwh": 171.82,
+      "price_ron_kwh": 0.8728,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T08:15:00+03:00",
+      "end": "2026-08-07T08:30:00+03:00",
+      "price_eur_mwh": 163.72,
+      "price_ron_kwh": 0.8317,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T08:30:00+03:00",
+      "end": "2026-08-07T08:45:00+03:00",
+      "price_eur_mwh": 153.28,
+      "price_ron_kwh": 0.7787,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T08:45:00+03:00",
+      "end": "2026-08-07T09:00:00+03:00",
+      "price_eur_mwh": 135.3,
+      "price_ron_kwh": 0.6873,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T09:00:00+03:00",
+      "end": "2026-08-07T09:15:00+03:00",
+      "price_eur_mwh": 166.1,
+      "price_ron_kwh": 0.8438,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T09:15:00+03:00",
+      "end": "2026-08-07T09:30:00+03:00",
+      "price_eur_mwh": 151.29,
+      "price_ron_kwh": 0.7686,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T09:30:00+03:00",
+      "end": "2026-08-07T09:45:00+03:00",
+      "price_eur_mwh": 144.03,
+      "price_ron_kwh": 0.7317,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T09:45:00+03:00",
+      "end": "2026-08-07T10:00:00+03:00",
+      "price_eur_mwh": 121.29,
+      "price_ron_kwh": 0.6162,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T10:00:00+03:00",
+      "end": "2026-08-07T10:15:00+03:00",
+      "price_eur_mwh": 150.42,
+      "price_ron_kwh": 0.7641,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T10:15:00+03:00",
+      "end": "2026-08-07T10:30:00+03:00",
+      "price_eur_mwh": 130.12,
+      "price_ron_kwh": 0.661,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T10:30:00+03:00",
+      "end": "2026-08-07T10:45:00+03:00",
+      "price_eur_mwh": 114.43,
+      "price_ron_kwh": 0.5813,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T10:45:00+03:00",
+      "end": "2026-08-07T11:00:00+03:00",
+      "price_eur_mwh": 110.52,
+      "price_ron_kwh": 0.5614,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T11:00:00+03:00",
+      "end": "2026-08-07T11:15:00+03:00",
+      "price_eur_mwh": 110.58,
+      "price_ron_kwh": 0.5617,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T11:15:00+03:00",
+      "end": "2026-08-07T11:30:00+03:00",
+      "price_eur_mwh": 104.72,
+      "price_ron_kwh": 0.532,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T11:30:00+03:00",
+      "end": "2026-08-07T11:45:00+03:00",
+      "price_eur_mwh": 102.52,
+      "price_ron_kwh": 0.5208,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T11:45:00+03:00",
+      "end": "2026-08-07T12:00:00+03:00",
+      "price_eur_mwh": 98.33,
+      "price_ron_kwh": 0.4995,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T12:00:00+03:00",
+      "end": "2026-08-07T12:15:00+03:00",
+      "price_eur_mwh": 109.57,
+      "price_ron_kwh": 0.5566,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T12:15:00+03:00",
+      "end": "2026-08-07T12:30:00+03:00",
+      "price_eur_mwh": 102.79,
+      "price_ron_kwh": 0.5222,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T12:30:00+03:00",
+      "end": "2026-08-07T12:45:00+03:00",
+      "price_eur_mwh": 100.17,
+      "price_ron_kwh": 0.5089,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T12:45:00+03:00",
+      "end": "2026-08-07T13:00:00+03:00",
+      "price_eur_mwh": 80.55,
+      "price_ron_kwh": 0.4092,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:00:00+03:00",
+      "end": "2026-08-07T13:15:00+03:00",
+      "price_eur_mwh": 99.32,
+      "price_ron_kwh": 0.5045,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:15:00+03:00",
+      "end": "2026-08-07T13:30:00+03:00",
+      "price_eur_mwh": 91.13,
+      "price_ron_kwh": 0.4629,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:30:00+03:00",
+      "end": "2026-08-07T13:45:00+03:00",
+      "price_eur_mwh": 94.46,
+      "price_ron_kwh": 0.4799,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:45:00+03:00",
+      "end": "2026-08-07T14:00:00+03:00",
+      "price_eur_mwh": 96.82,
+      "price_ron_kwh": 0.4918,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T14:00:00+03:00",
+      "end": "2026-08-07T14:15:00+03:00",
+      "price_eur_mwh": 105.23,
+      "price_ron_kwh": 0.5346,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T14:15:00+03:00",
+      "end": "2026-08-07T14:30:00+03:00",
+      "price_eur_mwh": 105.19,
+      "price_ron_kwh": 0.5344,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T14:30:00+03:00",
+      "end": "2026-08-07T14:45:00+03:00",
+      "price_eur_mwh": 105.18,
+      "price_ron_kwh": 0.5343,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T14:45:00+03:00",
+      "end": "2026-08-07T15:00:00+03:00",
+      "price_eur_mwh": 104.97,
+      "price_ron_kwh": 0.5332,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T15:00:00+03:00",
+      "end": "2026-08-07T15:15:00+03:00",
+      "price_eur_mwh": 106.59,
+      "price_ron_kwh": 0.5415,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T15:15:00+03:00",
+      "end": "2026-08-07T15:30:00+03:00",
+      "price_eur_mwh": 106.79,
+      "price_ron_kwh": 0.5425,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T15:30:00+03:00",
+      "end": "2026-08-07T15:45:00+03:00",
+      "price_eur_mwh": 106.29,
+      "price_ron_kwh": 0.54,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T15:45:00+03:00",
+      "end": "2026-08-07T16:00:00+03:00",
+      "price_eur_mwh": 119.44,
+      "price_ron_kwh": 0.6068,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T16:00:00+03:00",
+      "end": "2026-08-07T16:15:00+03:00",
+      "price_eur_mwh": 94.65,
+      "price_ron_kwh": 0.4808,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T16:15:00+03:00",
+      "end": "2026-08-07T16:30:00+03:00",
+      "price_eur_mwh": 98.25,
+      "price_ron_kwh": 0.4991,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T16:30:00+03:00",
+      "end": "2026-08-07T16:45:00+03:00",
+      "price_eur_mwh": 136.33,
+      "price_ron_kwh": 0.6926,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T16:45:00+03:00",
+      "end": "2026-08-07T17:00:00+03:00",
+      "price_eur_mwh": 173.79,
+      "price_ron_kwh": 0.8829,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T17:00:00+03:00",
+      "end": "2026-08-07T17:15:00+03:00",
+      "price_eur_mwh": 84.29,
+      "price_ron_kwh": 0.4282,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T17:15:00+03:00",
+      "end": "2026-08-07T17:30:00+03:00",
+      "price_eur_mwh": 131.63,
+      "price_ron_kwh": 0.6687,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T17:30:00+03:00",
+      "end": "2026-08-07T17:45:00+03:00",
+      "price_eur_mwh": 165.72,
+      "price_ron_kwh": 0.8419,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T17:45:00+03:00",
+      "end": "2026-08-07T18:00:00+03:00",
+      "price_eur_mwh": 196.64,
+      "price_ron_kwh": 0.9989,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T18:00:00+03:00",
+      "end": "2026-08-07T18:15:00+03:00",
+      "price_eur_mwh": 165.74,
+      "price_ron_kwh": 0.842,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T18:15:00+03:00",
+      "end": "2026-08-07T18:30:00+03:00",
+      "price_eur_mwh": 176.46,
+      "price_ron_kwh": 0.8964,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T18:30:00+03:00",
+      "end": "2026-08-07T18:45:00+03:00",
+      "price_eur_mwh": 210.14,
+      "price_ron_kwh": 1.0675,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T18:45:00+03:00",
+      "end": "2026-08-07T19:00:00+03:00",
+      "price_eur_mwh": 226.64,
+      "price_ron_kwh": 1.1513,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T19:00:00+03:00",
+      "end": "2026-08-07T19:15:00+03:00",
+      "price_eur_mwh": 207.9,
+      "price_ron_kwh": 1.0561,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T19:15:00+03:00",
+      "end": "2026-08-07T19:30:00+03:00",
+      "price_eur_mwh": 223.36,
+      "price_ron_kwh": 1.1347,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T19:30:00+03:00",
+      "end": "2026-08-07T19:45:00+03:00",
+      "price_eur_mwh": 243.55,
+      "price_ron_kwh": 1.2372,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T19:45:00+03:00",
+      "end": "2026-08-07T20:00:00+03:00",
+      "price_eur_mwh": 213.19,
+      "price_ron_kwh": 1.083,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T20:00:00+03:00",
+      "end": "2026-08-07T20:15:00+03:00",
+      "price_eur_mwh": 249.97,
+      "price_ron_kwh": 1.2698,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T20:15:00+03:00",
+      "end": "2026-08-07T20:30:00+03:00",
+      "price_eur_mwh": 222.27,
+      "price_ron_kwh": 1.1291,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T20:30:00+03:00",
+      "end": "2026-08-07T20:45:00+03:00",
+      "price_eur_mwh": 211.64,
+      "price_ron_kwh": 1.0751,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T20:45:00+03:00",
+      "end": "2026-08-07T21:00:00+03:00",
+      "price_eur_mwh": 230.03,
+      "price_ron_kwh": 1.1686,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T21:00:00+03:00",
+      "end": "2026-08-07T21:15:00+03:00",
+      "price_eur_mwh": 259.3,
+      "price_ron_kwh": 1.3172,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T21:15:00+03:00",
+      "end": "2026-08-07T21:30:00+03:00",
+      "price_eur_mwh": 241.16,
+      "price_ron_kwh": 1.2251,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T21:30:00+03:00",
+      "end": "2026-08-07T21:45:00+03:00",
+      "price_eur_mwh": 241.33,
+      "price_ron_kwh": 1.226,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T21:45:00+03:00",
+      "end": "2026-08-07T22:00:00+03:00",
+      "price_eur_mwh": 256.3,
+      "price_ron_kwh": 1.302,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T22:00:00+03:00",
+      "end": "2026-08-07T22:15:00+03:00",
+      "price_eur_mwh": 256.33,
+      "price_ron_kwh": 1.3022,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T22:15:00+03:00",
+      "end": "2026-08-07T22:30:00+03:00",
+      "price_eur_mwh": 250.53,
+      "price_ron_kwh": 1.2727,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T22:30:00+03:00",
+      "end": "2026-08-07T22:45:00+03:00",
+      "price_eur_mwh": 218.58,
+      "price_ron_kwh": 1.1104,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T22:45:00+03:00",
+      "end": "2026-08-07T23:00:00+03:00",
+      "price_eur_mwh": 184.42,
+      "price_ron_kwh": 0.9369,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T23:00:00+03:00",
+      "end": "2026-08-07T23:15:00+03:00",
+      "price_eur_mwh": 240.26,
+      "price_ron_kwh": 1.2205,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T23:15:00+03:00",
+      "end": "2026-08-07T23:30:00+03:00",
+      "price_eur_mwh": 211.51,
+      "price_ron_kwh": 1.0745,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T23:30:00+03:00",
+      "end": "2026-08-07T23:45:00+03:00",
+      "price_eur_mwh": 175.05,
+      "price_ron_kwh": 0.8893,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T23:45:00+03:00",
+      "end": "2026-08-08T00:00:00+03:00",
+      "price_eur_mwh": 172.02,
+      "price_ron_kwh": 0.8739,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-08T00:00:00+03:00",
+      "end": "2026-08-08T00:15:00+03:00",
+      "price_eur_mwh": 182.6,
+      "price_ron_kwh": 0.9276,
+      "is_negative": false
+    }
+  ],
+  "interval_count": 97,
+  "avg_ron_kwh": 0.8167,
+  "min_ron_kwh": 0.4092,
+  "max_ron_kwh": 1.3172,
+  "cheapest_intervals": [
+    {
+      "start": "2026-08-07T12:45:00+03:00",
+      "end": "2026-08-07T13:00:00+03:00",
+      "price_eur_mwh": 80.55,
+      "price_ron_kwh": 0.4092,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T17:00:00+03:00",
+      "end": "2026-08-07T17:15:00+03:00",
+      "price_eur_mwh": 84.29,
+      "price_ron_kwh": 0.4282,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:15:00+03:00",
+      "end": "2026-08-07T13:30:00+03:00",
+      "price_eur_mwh": 91.13,
+      "price_ron_kwh": 0.4629,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:30:00+03:00",
+      "end": "2026-08-07T13:45:00+03:00",
+      "price_eur_mwh": 94.46,
+      "price_ron_kwh": 0.4799,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T16:00:00+03:00",
+      "end": "2026-08-07T16:15:00+03:00",
+      "price_eur_mwh": 94.65,
+      "price_ron_kwh": 0.4808,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T13:45:00+03:00",
+      "end": "2026-08-07T14:00:00+03:00",
+      "price_eur_mwh": 96.82,
+      "price_ron_kwh": 0.4918,
+      "is_negative": false
+    }
+  ],
+  "priciest_intervals": [
+    {
+      "start": "2026-08-07T21:00:00+03:00",
+      "end": "2026-08-07T21:15:00+03:00",
+      "price_eur_mwh": 259.3,
+      "price_ron_kwh": 1.3172,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T22:00:00+03:00",
+      "end": "2026-08-07T22:15:00+03:00",
+      "price_eur_mwh": 256.33,
+      "price_ron_kwh": 1.3022,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T21:45:00+03:00",
+      "end": "2026-08-07T22:00:00+03:00",
+      "price_eur_mwh": 256.3,
+      "price_ron_kwh": 1.302,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T00:00:00+03:00",
+      "end": "2026-08-07T00:15:00+03:00",
+      "price_eur_mwh": 256.14,
+      "price_ron_kwh": 1.3012,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T22:15:00+03:00",
+      "end": "2026-08-07T22:30:00+03:00",
+      "price_eur_mwh": 250.53,
+      "price_ron_kwh": 1.2727,
+      "is_negative": false
+    },
+    {
+      "start": "2026-08-07T20:00:00+03:00",
+      "end": "2026-08-07T20:15:00+03:00",
+      "price_eur_mwh": 249.97,
+      "price_ron_kwh": 1.2698,
+      "is_negative": false
+    }
+  ]
+}
