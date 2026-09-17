@@ -1,11 +1,5 @@
 [
   {
-    "date": "2026-07-15",
-    "avg_ron_kwh": 0.7837,
-    "min_ron_kwh": 0.4331,
-    "max_ron_kwh": 1.783
-  },
-  {
     "date": "2026-07-16",
     "avg_ron_kwh": 0.8143,
     "min_ron_kwh": 0.0801,
@@ -358,5 +352,11 @@
     "avg_ron_kwh": 0.8574,
     "min_ron_kwh": 0.0564,
     "max_ron_kwh": 1.5945
+  },
+  {
+    "date": "2026-09-17",
+    "avg_ron_kwh": 0.8601,
+    "min_ron_kwh": 0.2083,
+    "max_ron_kwh": 1.4709
   }
 ]
