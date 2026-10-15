@@ -14,9 +14,12 @@ Pzuro pulls wholesale prices from the ENTSO-E Transparency Platform, converts th
 
 - **Daily verdict card** — cheapest and most expensive intervals, with a plain-language recommendation
 - **15-minute price chart** — color-coded by price tier (cheap / mid / expensive / negative)
-- **Top hours** — ranked best and worst intervals for the day
-- **Cost calculator** — estimate your monthly bill under dynamic vs. fixed pricing, with optional CSV upload of your real consumption data for an exact match
-- **30-day history** — daily average, min, and max prices
+- **Market / final price toggle** — every price on the page can be shown as raw market price or as the estimated final price (supplier component, regulated tariffs for the visitor's county, VAT)
+- **Appliance planner** — cheapest continuous window to run a washing machine, boiler or EV charge, including windows that cross midnight
+- **Top hours** — ranked best and worst 15-minute intervals for today or tomorrow
+- **Cost calculator** — monthly estimate based on the last 30 days of prices and a consumption profile, regulated tariffs by county, all suppliers compared side by side; optional CSV upload accepts distributor exports (; or , separators, decimal comma, separate date/time columns, Wh/kWh)
+- **30-day history** — daily average, min, and max prices, incomplete days flagged
+- **Generated SEO pages** — tomorrow's prices by hour and one page per supplier offer, regenerated daily
 - **Telegram alerts** — daily summary pushed every morning before prices change
 
 ---
@@ -136,16 +139,24 @@ To run the real pipeline, add your ENTSO-E API token ([register here](https://tr
 pzuro/
 ├── fetch_prices.py              # main pipeline: ENTSO-E + BNR → prices.json
 ├── notify_telegram.py           # daily Telegram digest with duplicate guard
+├── generate_pages.py            # daily static pages: pret-energie-maine.html, furnizori/, sitemap.xml
+├── check_furnizori.py           # twice-monthly check for new supplier offer PDFs (opens an issue)
 ├── generate_sample_data.py      # synthetic data generator for local dev
 ├── index.html                   # single-page dashboard (no build step)
+├── js/
+│   ├── calc.js                  # pure calculation logic (tested in test/calc.test.js)
+│   └── app.js                   # UI: rendering, controls, persistence
 ├── api/
 │   └── now.js                   # Vercel serverless: current interval price
 ├── data/
 │   ├── prices.json              # today + tomorrow, regenerated daily
 │   ├── history.json             # ~60-day summary (avg/min/max per day)
+│   ├── stats.json               # hourly price profile over the last 30 complete days
+│   ├── furnizori.json           # supplier offers + regulated tariffs (single source of truth)
 │   └── archive/
 │       └── YYYY-MM-DD.json      # full 15-min intervals per day (immutable)
 ├── .github/workflows/
-│   └── fetch-prices.yml         # Actions cron + workflow_dispatch
+│   ├── fetch-prices.yml         # Actions cron + workflow_dispatch
+│   └── check-furnizori.yml      # supplier offer monitor
 └── vercel.json                  # cache-control: no-store for data/*.json
 ```

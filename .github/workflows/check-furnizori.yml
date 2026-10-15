@@ -1,0 +1,45 @@
+name: Verificare oferte furnizori
+
+# Ofertele cu pret dinamic se schimba de regula lunar. Pe 2 si pe 16 ale lunii
+# verificam daca furnizorii au publicat un PDF nou si deschidem un issue daca
+# e ceva de actualizat in data/furnizori.json. Nu modificam nimic automat.
+on:
+  schedule:
+    - cron: "0 7 2,16 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instaleaza pdftotext
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Verifica ofertele
+        id: check
+        continue-on-error: true
+        run: python check_furnizori.py report.md
+
+      - name: Deschide sau actualizeaza issue-ul
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f report.md ] || echo "Scriptul de verificare a eșuat; vezi log-ul rulării." > report.md
+          TITLE="Verificare oferte furnizori"
+          NR=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number -q '.[0].number')
+          if [ -n "$NR" ]; then
+            gh issue comment "$NR" --body-file report.md
+          else
+            gh issue create --title "$TITLE" --body-file report.md
+          fi
