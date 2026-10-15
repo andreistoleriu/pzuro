@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T12:31:45.636724+00:00",
+  "generated_at": "2026-10-15T14:58:10.394736+00:00",
   "eur_ron_rate": 5.08,
   "eur_ron_rate_source": "fallback",
   "today": {
@@ -421,7 +421,7 @@
       {
         "start": "2026-10-15T14:45:00+03:00",
         "end": "2026-10-15T15:00:00+03:00",
-        "price_eur_mwh": 193,
+        "price_eur_mwh": 193.0,
         "price_ron_kwh": 0.9804,
         "is_negative": false
       },
@@ -505,7 +505,7 @@
       {
         "start": "2026-10-15T17:45:00+03:00",
         "end": "2026-10-15T18:00:00+03:00",
-        "price_eur_mwh": 286,
+        "price_eur_mwh": 286.0,
         "price_ron_kwh": 1.4529,
         "is_negative": false
       },
@@ -679,6 +679,8 @@
       }
     ],
     "interval_count": 96,
+    "expected_interval_count": 96,
+    "complete": true,
     "avg_ron_kwh": 1.2496,
     "min_ron_kwh": 0.8587,
     "max_ron_kwh": 1.9037,
@@ -769,9 +771,7 @@
         "price_ron_kwh": 1.6635,
         "is_negative": false
       }
-    ],
-    "expected_interval_count": 96,
-    "complete": true
+    ]
   },
   "tomorrow": {
     "date": "2026-10-16",
@@ -933,7 +933,7 @@
       {
         "start": "2026-10-16T05:30:00+03:00",
         "end": "2026-10-16T05:45:00+03:00",
-        "price_eur_mwh": 241,
+        "price_eur_mwh": 241.0,
         "price_ron_kwh": 1.2243,
         "is_negative": false
       },
@@ -1122,7 +1122,7 @@
       {
         "start": "2026-10-16T12:15:00+03:00",
         "end": "2026-10-16T12:30:00+03:00",
-        "price_eur_mwh": 204,
+        "price_eur_mwh": 204.0,
         "price_ron_kwh": 1.0363,
         "is_negative": false
       },
@@ -1450,6 +1450,8 @@
       }
     ],
     "interval_count": 96,
+    "expected_interval_count": 96,
+    "complete": true,
     "avg_ron_kwh": 1.3318,
     "min_ron_kwh": 0.8387,
     "max_ron_kwh": 1.9644,
@@ -1540,9 +1542,7 @@
         "price_ron_kwh": 1.7886,
         "is_negative": false
       }
-    ],
-    "expected_interval_count": 96,
-    "complete": true
+    ]
   },
   "tomorrow_published": true
 }
