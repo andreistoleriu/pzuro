@@ -7,7 +7,7 @@
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="theme-color" content="#1E2128">
 <title>pzuro.app — prețuri PZU în timp real</title>
-<meta name="description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica și Electrica.">
+<meta name="description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica, Premier Energy și Electrica.">
 
 <!-- IMPORTANT: cand alegi domeniul final (pzuro.app / pzuro.ro), inlocuieste
      URL-ul de mai jos in TOATE locurile marcate cu acelasi comentariu -->
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pzuro.ro/">
 <meta property="og:title" content="pzuro.app — prețuri PZU pentru contracte dinamice de energie">
-<meta property="og:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica și Electrica.">
+<meta property="og:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica, Premier Energy și Electrica.">
 <meta property="og:image" content="https://pzuro.ro/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="pzuro.app — prețuri PZU pentru contracte dinamice de energie">
-<meta name="twitter:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica și Electrica.">
+<meta name="twitter:description" content="Când e ieftină electricitatea azi și mâine? Grafic PZU live, top ore recomandate și calculator de factură pentru contracte dinamice E.ON, ENGIE, PPC, Hidroelectrica, Premier Energy și Electrica.">
 <meta name="twitter:image" content="https://pzuro.ro/og-image.png">
 
 <script type="application/ld+json">
@@ -33,7 +33,7 @@
   "@type": "WebApplication",
   "name": "pzuro.app",
   "url": "https://pzuro.ro/",
-  "description": "Portal gratuit cu prețurile PZU (Piața pentru Ziua Următoare) pentru România, grafic live, calculator de factură și recomandări pentru contracte dinamice de energie E.ON, ENGIE, PPC, Hidroelectrica și Electrica.",
+  "description": "Portal gratuit cu prețurile PZU (Piața pentru Ziua Următoare) pentru România, grafic live, calculator de factură și recomandări pentru contracte dinamice de energie E.ON, ENGIE, PPC, Hidroelectrica, Premier Energy și Electrica.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RON" },
@@ -235,16 +235,16 @@
   <div class="wrap">
     <div class="brand">
       <div class="mark">pzuro<span>.</span>app</div>
-      <div class="tag">prețuri PZU pentru contracte dinamice de energie</div>
+      <div class="tag">Prețul energiei pe piața PZU, pentru contracte dinamice</div>
     </div>
     <div class="now-readout">
       <div>
-        <div class="label">acum costă</div>
+        <div class="label">Preț în intervalul curent</div>
         <div class="price" id="nowPrice">— <small>lei/kWh</small></div>
       </div>
-      <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">Se încarcă...</span></span>
+      <span class="pill" id="nowPill"><span class="dot"></span><span id="nowPillText">Se încarcă…</span></span>
     </div>
-    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">Ăsta e prețul brut din piață. Taxele, marja furnizorului și TVA se adaugă separat — vezi cât ai plăti efectiv în <b>Calculator</b></div>
+    <div style="font-size:.78rem;color:#AEB3BD;margin-bottom:6px;">Preț de piață PZU, fără tarife reglementate, componenta de furnizare și TVA. Costul final îl estimezi în <b>Calculator</b>.</div>
     <div class="freshness" id="freshness" style="font-size:.74rem;color:#AEB3BD;margin-bottom:8px;"></div>
     <div class="pulse" id="pulseStrip" aria-hidden="true"></div>
     <div class="pulse-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
@@ -262,12 +262,12 @@
   </div>
 
   <p style="text-align:center;font-size:.82rem;color:var(--ink-soft);margin:-8px 0 18px;">
-    Nou pe subiect? <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);font-weight:500;">Citește ghidul: ce este un contract cu preț dinamic →</a>
+    Prima dată pe pzuro? <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);font-weight:500;">Cum funcționează un contract cu preț dinamic →</a>
   </p>
   <!-- TAB 1: grafic -->
   <section class="panel active" id="panel-grafic" role="tabpanel" aria-labelledby="tabbtn-grafic">
-    <h2 class="section-title">Graficul zilei, din 15 în 15 minute</h2>
-    <p class="section-sub">96 de intervale (mai multe sau mai puține în zilele cu schimbarea orei) — vezi mai jos ce înseamnă culorile. Sunt prețuri brute din piață, fără taxe și marja furnizorului.</p>
+    <h2 class="section-title">Prețul pe intervale de 15 minute</h2>
+    <p class="section-sub">96 de intervale pe zi (92 sau 100 în zilele de schimbare a orei). Culorile arată cât de scump e fiecare interval față de restul zilei.</p>
     <div class="card">
       <div class="day-toggle">
         <button id="btnToday" aria-pressed="true">Azi</button>
@@ -278,53 +278,54 @@
       <div class="legend">
         <span><i style="background:var(--cyan)"></i>Ieftin</span>
         <span><i style="background:var(--ink-soft)"></i>Mediu</span>
-        <span><i style="background:var(--amber)"></i>Vârf</span>
+        <span><i style="background:var(--amber)"></i>Scump</span>
         <span><i style="background:var(--violet)"></i>Preț negativ</span>
       </div>
       <details class="data-details">
-        <summary>Vezi datele graficului ca tabel</summary>
+        <summary>Afișează datele sub formă de tabel</summary>
         <div class="data-table-wrap">
           <table class="data-table">
             <thead><tr><th>Ora</th><th>Preț (lei/kWh)</th></tr></thead>
             <tbody id="mainChartTableBody"></tbody>
           </table>
         </div>
-        <button type="button" class="csv-export-btn" id="exportMainCsv">⬇ Descarcă CSV (Excel)</button>
+        <button type="button" class="csv-export-btn" id="exportMainCsv">⬇ Exportă CSV</button>
       </details>
     </div>
     <div class="card" style="display:flex;align-items:center;gap:16px;padding:14px 18px;">
       <div style="font-size:1.6rem;line-height:1;">📬</div>
       <div style="flex:1;">
-        <div style="font-weight:500;font-size:.92rem;margin-bottom:2px;">Primești prețurile de mâine direct pe telefon</div>
-        <div style="font-size:.8rem;color:var(--ink-soft);">Zilnic după ora 14:00: cele mai ieftine ore, vârful de seară și avertisment când prețul devine negativ.</div>
+        <div style="font-weight:500;font-size:.92rem;margin-bottom:2px;">Prețurile de mâine, pe Telegram</div>
+        <div style="font-size:.8rem;color:var(--ink-soft);">Un rezumat zilnic, după publicarea prețurilor: cele mai ieftine și cele mai scumpe intervale, plus eventualele prețuri negative.</div>
       </div>
-      <a href="https://t.me/pzuromania" target="_blank" rel="noopener" style="display:inline-block;background:var(--cyan);color:#fff;text-decoration:none;font-size:.82rem;font-weight:500;padding:8px 14px;border-radius:999px;white-space:nowrap;">Abonează-te →</a>
+      <a href="https://t.me/pzuromania" target="_blank" rel="noopener" style="display:inline-block;background:var(--cyan);color:#fff;text-decoration:none;font-size:.82rem;font-weight:500;padding:8px 14px;border-radius:999px;white-space:nowrap;">Abonează-te</a>
     </div>
   </section>
   <section class="panel" id="panel-ore" role="tabpanel" aria-labelledby="tabbtn-ore">
-    <h2 class="section-title">Cele mai bune (și mai proaste) 6 ore</h2>
-    <p class="section-sub">Folosește orele ieftine pentru mașina de spălat, boiler sau încărcat mașina electrică — tot preț brut din piață, fără taxe și marja furnizorului.</p>
+    <h2 class="section-title">Cele mai ieftine și cele mai scumpe intervale de azi</h2>
+    <p class="section-sub">Programează consumatorii mari în intervalele ieftine: mașina de spălat, boilerul, încărcarea mașinii electrice.</p>
     <div class="card">
       <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai ieftine 6 intervale</h3>
       <div class="hour-list" id="cheapList"></div>
     </div>
     <div class="card">
-      <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai scumpe 6 intervale — evită dacă se poate</h3>
+      <h3 style="margin:0 0 10px;font-size:.92rem;">Cele mai scumpe 6 intervale</h3>
       <div class="hour-list" id="pricyList"></div>
     </div>
     <div style="text-align:center;padding:8px 0 4px;font-size:.85rem;color:var(--ink-soft);">
-      Vrei să primești automat orele ieftine de mâine, fără să deschizi site-ul? <a href="https://t.me/pzuromania" target="_blank" rel="noopener" style="color:var(--cyan);font-weight:500;">Abonează-te pe Telegram →</a>
+      Primește zilnic intervalele ieftine de mâine pe <a href="https://t.me/pzuromania" target="_blank" rel="noopener" style="color:var(--cyan);font-weight:500;">canalul de Telegram →</a>
     </div>
   </section>
   <section class="panel" id="panel-calc" role="tabpanel" aria-labelledby="tabbtn-calc">
-    <h2 class="section-title">Calculator factură: dinamic vs. fix</h2>
-    <p class="section-sub">Estimare pe baza prețului PZU de azi. Ajustează componentele reglementate ca să se apropie de factura ta reală.</p>
+    <h2 class="section-title">Calculator: preț dinamic sau preț fix</h2>
+    <p class="section-sub">Estimare lunară pe baza prețurilor PZU de azi. Pentru un rezultat cât mai apropiat de factura ta, completează valorile din contract și din ultima factură.</p>
     <div class="card">
       <div class="field">
         <label for="furnizor">Furnizor</label>
         <select id="furnizor">
-          <option value="eon">E.ON Dinamic Pro</option>
+          <option value="eon">E.ON Dinamic Electric</option>
           <option value="engie">ENGIE Elec Flexibil</option>
+          <option value="premier">Premier Energy — PE Dinamic casnic</option>
           <option value="ppc">PPC — ofertă preț dinamic</option>
           <option value="hidroelectrica">Hidroelectrica — Hidro DINAMIC C</option>
           <option value="electrica">Electrica Furnizare — Electrica Dinamic</option>
@@ -333,7 +334,7 @@
       </div>
       <div class="field" style="display:flex;align-items:center;gap:8px;margin:2px 0 14px;">
         <input type="checkbox" id="useCsv" style="width:auto;">
-        <label for="useCsv" style="margin:0;font-size:.85rem;color:var(--ink);">Am fișier CSV cu consumul meu real (în loc de profil estimat)</label>
+        <label for="useCsv" style="margin:0;font-size:.85rem;color:var(--ink);">Folosesc consumul meu real, dintr-un fișier CSV</label>
       </div>
       <div class="field-row" id="profilFields">
         <div class="field">
@@ -344,8 +345,8 @@
           <label for="profil">Profil de consum</label>
           <select id="profil">
             <option value="uniform">Uniform pe parcursul zilei</option>
-            <option value="noapte">Predominant noaptea (EV, boiler programat)</option>
-            <option value="seara">Predominant seara (vârf)</option>
+            <option value="noapte">Mai ales noaptea (mașină electrică, boiler programat)</option>
+            <option value="seara">Mai ales seara</option>
           </select>
         </div>
       </div>
@@ -355,29 +356,29 @@
           <input type="file" id="csvFile" accept=".csv" style="padding:8px;">
         </div>
         <p style="font-size:.78rem;color:var(--ink-soft);margin:-4px 0 14px;">
-          O linie pe interval, format exact: <code>2026-06-01 00:00,0.32</code> (dată și oră separate de spațiu, punct decimal la kWh).
-          <a href="data:text/csv;charset=utf-8,timestamp%2Ckwh%0A2026-06-01%2000%3A00%2C0.32%0A2026-06-01%2001%3A00%2C0.41" download="exemplu-consum.csv" style="color:var(--cyan);">Descarcă un exemplu →</a>
-          Distribuitorul tău (E-Distribuție, Delgaz Grid etc.) exportă consumul orar din contul tău — trebuie reformatat manual în acest tipar.
+          Câte un rând pe interval, de forma <code>2026-06-01 00:00,0.32</code> (data și ora separate prin spațiu, punct zecimal).
+          <a href="data:text/csv;charset=utf-8,timestamp%2Ckwh%0A2026-06-01%2000%3A00%2C0.32%0A2026-06-01%2001%3A00%2C0.41" download="exemplu-consum.csv" style="color:var(--cyan);">Descarcă un fișier exemplu</a>.
+          Consumul orar îl poți exporta din contul tău de la operatorul de distribuție (E-Distribuție, Delgaz Grid etc.), apoi îl aduci la acest format.
         </p>
         <div id="csvStatus" style="font-size:.82rem;color:var(--ink-soft);margin-bottom:14px;"></div>
       </div>
       <div class="field-row">
         <div class="field">
-          <label for="reglementate">Componente reglementate (lei/kWh)</label>
+          <label for="reglementate">Tarife reglementate (lei/kWh, fără TVA)</label>
           <input type="number" id="reglementate" value="0.54" min="0" step="0.01">
         </div>
         <div class="field">
-          <label for="marja">Marja furnizorului (lei/kWh) <span id="marjaConfirmataTag" style="color:var(--cyan)">— confirmată din contract</span></label>
+          <label for="marja">Componenta de furnizare (lei/kWh) <span id="marjaConfirmataTag" style="color:var(--cyan)">· din oferta oficială</span></label>
           <input type="number" id="marja" value="0.39432" min="0" step="0.00001">
         </div>
       </div>
       <div class="field">
-        <label for="tarifFix">Preț fix de comparat, tot inclus cu TVA (lei/kWh)</label>
+        <label for="tarifFix">Prețul contractului fix, cu taxe și TVA (lei/kWh)</label>
         <input type="number" id="tarifFix" value="1.15" min="0" step="0.01">
       </div>
       <div class="field" style="display:flex;align-items:center;gap:8px;margin-top:2px;">
         <input type="checkbox" id="prosumator" style="width:auto;">
-        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (am panouri și export surplus în rețea)</label>
+        <label for="prosumator" style="margin:0;font-size:.85rem;color:var(--ink);">Sunt prosumator (export energie în rețea)</label>
       </div>
       <div class="field-row" id="prosumatorFields" style="display:none;">
         <div class="field">
@@ -385,17 +386,17 @@
           <input type="number" id="export" value="0" min="0" step="1">
         </div>
         <div class="field">
-          <label for="rataExport">Rata curentă de răscumpărare fixă (lei/kWh)</label>
-          <input type="number" id="rataExport" value="0.74" min="0" step="0.01">
+          <label for="rataExport">Prețul actual primit pentru surplus (lei/kWh)</label>
+          <input type="number" id="rataExport" value="0.20" min="0" step="0.01">
         </div>
       </div>
-      <p id="prosumatorLink" style="display:none;font-size:.78rem;color:var(--ink-soft);margin:-6px 0 16px;">De ce contează asta? <a href="/prosumator-contract-pret-dinamic.html" style="color:var(--cyan);">Citește de ce surplusul se vinde de regulă la ore ieftine →</a></p>
+      <p id="prosumatorLink" style="display:none;font-size:.78rem;color:var(--ink-soft);margin:-6px 0 16px;">Prețul pentru surplus îl găsești pe factură sau în contract; în 2026 este, de regulă, între 0,12 și 0,28 lei/kWh. <a href="/prosumator-contract-pret-dinamic.html" style="color:var(--cyan);">Detalii în ghidul pentru prosumatori →</a></p>
       <div class="result" id="calcResult"></div>
-      <p class="disclaimer">Estimare orientativă, nu factură oficială. Componentele reglementate diferă în funcție de operatorul de distribuție (Electrica, Delgaz Grid, Distribuție Oltenia, E-Distribuție etc.) — ajustează valoarea ca să corespundă facturii tale. Pentru export: presupunem că venitul din surplus nu mai e impozitat separat cu TVA (se compensează în factură) — o simplificare, nu o regulă fiscală garantată.</p>
+      <p class="disclaimer">Rezultatul este o estimare, nu o factură. Tarifele reglementate diferă în funcție de operatorul de distribuție din zona ta, așa că folosește valoarea de pe factura proprie. Pentru prosumatori, calculul compară doar valoarea surplusului: la prețul primit acum, față de prețul PZU mediu între 10:00 și 16:00. Regulile de compensare se schimbă prin Legea 160/2026, iar metodologia ANRE nu este încă finală.</p>
     </div>
     <div class="card">
-      <h3 style="margin:0 0 4px;font-size:.92rem;">Compară toți furnizorii cu marjă confirmată</h3>
-      <p style="font-size:.78rem;color:var(--ink-soft);margin:0 0 12px;">Cu același consum și profil de mai sus, tot inclus cu TVA. ENGIE și Electrica nu apar aici — nu avem o marjă oficială confirmată pentru ele (vezi avertismentul de la dropdown-ul Furnizor).</p>
+      <h3 style="margin:0 0 4px;font-size:.92rem;">Comparație între furnizori</h3>
+      <p style="font-size:.78rem;color:var(--ink-soft);margin:0 0 12px;">Pentru consumul și profilul de mai sus, cu taxe și TVA. Electrica nu este inclusă, pentru că nu a publicat componenta de furnizare.</p>
       <div id="furnizorComparisonTable"></div>
     </div>
   </section>
@@ -403,24 +404,24 @@
   <!-- TAB 4: istoric -->
   <section class="panel" id="panel-istoric" role="tabpanel" aria-labelledby="tabbtn-istoric">
     <h2 class="section-title">Ultimele 30 de zile</h2>
-    <p class="section-sub">Preț mediu zilnic, cu interval min–max — util ca să vezi dacă merită un contract dinamic pe termen mai lung. Tot preț brut, ca peste tot pe site — pentru factura finală, treci pe Calculator.</p>
+    <p class="section-sub">Prețul mediu zilnic și intervalul minim–maxim. Arată cum evoluează piața de la o zi la alta.</p>
     <div class="card">
       <div class="chart-wrap"><canvas id="historyChart" role="img" aria-label="Grafic istoric preț PZU, ultimele 30 de zile"></canvas></div>
       <details class="data-details">
-        <summary>Vezi datele istoricului ca tabel</summary>
+        <summary>Afișează datele sub formă de tabel</summary>
         <div class="data-table-wrap">
           <table class="data-table">
             <thead><tr><th>Data</th><th>Medie</th><th>Minim</th><th>Maxim</th></tr></thead>
             <tbody id="historyTableBody"></tbody>
           </table>
         </div>
-        <button type="button" class="csv-export-btn" id="exportHistoryCsv">⬇ Descarcă CSV (Excel)</button>
+        <button type="button" class="csv-export-btn" id="exportHistoryCsv">⬇ Exportă CSV</button>
       </details>
     </div>
   </section>
 </div>
 
-<footer class="site">pzuro.app · date oficiale ENTSO-E / OPCOM · actualizat zilnic · <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);">Ghid: ce este un contract cu preț dinamic?</a> · <a href="/home-assistant.html" style="color:var(--cyan);">Integrare Home Assistant</a> · <a href="https://t.me/pzuromania" style="color:var(--cyan);">Alerte Telegram</a> · <a href="https://buymeacoffee.com/andreistolp" style="color:var(--cyan);">Susține proiectul ☕</a><br><span style="font-size:.72rem;">Contact: <a href="mailto:contact@pzuro.ro" style="color:var(--ink-soft);">contact@pzuro.ro</a> · <a href="/politica-confidentialitate.html" style="color:var(--ink-soft);">Confidențialitate</a> · <a href="/termeni-si-conditii.html" style="color:var(--ink-soft);">Termeni</a></span></footer>
+<footer class="site">pzuro.app · Date: ENTSO-E, curs BNR · Actualizat zilnic · <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);">Ghid contracte dinamice</a> · <a href="/home-assistant.html" style="color:var(--cyan);">Integrare Home Assistant</a> · <a href="https://t.me/pzuromania" style="color:var(--cyan);">Telegram</a> · <a href="https://buymeacoffee.com/andreistolp" style="color:var(--cyan);">Susține proiectul</a><br><span style="font-size:.72rem;">Contact: <a href="mailto:contact@pzuro.ro" style="color:var(--ink-soft);">contact@pzuro.ro</a> · <a href="/politica-confidentialitate.html" style="color:var(--ink-soft);">Confidențialitate</a> · <a href="/termeni-si-conditii.html" style="color:var(--ink-soft);">Termeni</a></span></footer>
 
 <script>
 (function(){
@@ -462,11 +463,11 @@
   // ---------- header: now price + pulse strip (uses TODAY regardless of active tab) ----------
   function renderHeader(){
     const day = pricesData.today;
-    if(!day){ document.getElementById("nowPillText").textContent = "date indisponibile"; return; }
+    if(!day){ document.getElementById("nowPillText").textContent = "Date indisponibile"; return; }
     const now = new Date();
     const current = day.intervals.find(iv => now >= new Date(iv.start) && now < new Date(iv.end)) || day.intervals[0];
     document.getElementById("nowPrice").innerHTML = fmt(current.price_ron_kwh) + " <small>lei/kWh</small>";
-    document.getElementById("nowPillText").textContent = isVisiblyNegative(current.price_ron_kwh) ? "preț negativ acum — energie gratuită" : "preț live PZU";
+    document.getElementById("nowPillText").textContent = isVisiblyNegative(current.price_ron_kwh) ? "Preț negativ în acest interval" : "Preț PZU în timp real";
 
     const strip = document.getElementById("pulseStrip");
     strip.innerHTML = "";
@@ -489,19 +490,19 @@
     if(!pricesData.generated_at){ el.textContent = ""; return; }
     const ageMs = Date.now() - new Date(pricesData.generated_at).getTime();
     const ageH = ageMs / 36e5;
-    const label = ageH < 1 ? "actualizat acum câteva minute"
-      : ageH < 24 ? `actualizat acum ${Math.round(ageH)}h`
-      : `actualizat acum ${Math.round(ageH/24)} zile`;
+    const label = ageH < 1 ? "Actualizat acum câteva minute"
+      : ageH < 24 ? `Actualizat acum ${Math.round(ageH)} h`
+      : `Actualizat acum ${Math.round(ageH/24)} zile`;
     // peste ~30h inseamna ca cron-ul zilnic (2 incercari/zi) a ratat de doua ori la rand;
     // peste ~72h inseamna ca a ratat asa de multe zile la rand incat probabil
     // sursa oficiala (ENTSO-E/OPCOM) are o problema prelungita, nu doar o intarziere
     const stale = ageH > 30;
     const critical = ageH > 72;
     if(critical){
-      el.textContent = `⚠ ${label} — date vechi de peste 3 zile, sursa oficială (ENTSO-E) pare indisponibilă de mai multe rulări la rând`;
+      el.textContent = `⚠ ${label}. Datele au mai mult de 3 zile: sursa ENTSO-E nu răspunde momentan.`;
       el.style.color = "#D9722C";
     } else if(stale){
-      el.textContent = `⚠ ${label} — posibil date vechi, ENTSO-E poate fi indisponibil`;
+      el.textContent = `⚠ ${label}. Este posibil ca datele să nu fie la zi.`;
       el.style.color = "#E8A66B";
     } else {
       el.textContent = label;
@@ -515,11 +516,11 @@
     const statsEl = document.getElementById("dayStats");
     if(!day){
       statsEl.innerHTML = "";
-      document.querySelector(".chart-wrap").innerHTML = '<div class="empty-state">Prețurile pentru mâine nu sunt încă publicate (de regulă apar puțin după 13:00–14:00). Revino mai târziu.</div>';
+      document.querySelector(".chart-wrap").innerHTML = '<div class="empty-state">Prețurile pentru mâine nu au fost publicate încă. De regulă apar după ora 14:00.</div>';
       return;
     }
     statsEl.innerHTML = `
-      <div class="stat"><div class="v">${fmt(day.avg_ron_kwh)}</div><div class="k">medie lei/kWh</div></div>
+      <div class="stat"><div class="v">${fmt(day.avg_ron_kwh)}</div><div class="k">medie (lei/kWh)</div></div>
       <div class="stat"><div class="v">${fmt(day.min_ron_kwh)}</div><div class="k">minim</div></div>
       <div class="stat"><div class="v">${fmt(day.max_ron_kwh)}</div><div class="k">maxim</div></div>`;
 
@@ -537,7 +538,7 @@
     if(typeof Chart === "undefined"){
       // Chart.js nu s-a incarcat (ad-blocker, retea proasta, CDN picat) --
       // statisticile de mai sus raman corecte, doar bara vizuala lipseste
-      document.getElementById("mainChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca (verifică conexiunea sau un ad-blocker). Statisticile de mai sus rămân corecte.</div>';
+      document.getElementById("mainChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca. Verifică conexiunea sau dezactivează ad-blockerul. Valorile de mai sus sunt corecte.</div>';
       return;
     }
 
@@ -568,7 +569,7 @@
   function renderHourList(elId, list, kind){
     const el = document.getElementById(elId);
     el.innerHTML = "";
-    if(!list || !list.length){ el.innerHTML = '<div class="empty-state">Fără date.</div>'; return; }
+    if(!list || !list.length){ el.innerHTML = '<div class="empty-state">Nu există date.</div>'; return; }
     const maxAbs = Math.max(...list.map(i=>Math.abs(i.price_ron_kwh)), 0.01);
     list.forEach(iv => {
       const row = document.createElement("div");
@@ -622,22 +623,22 @@
     // s-ar contrazice ("nu conteaza ora" + "programeaza la X").
     let mood, moodLabel, headline, sub;
     if(spread > 0.8){
-      mood = "good"; moodLabel = "Merită să-ți muți consumul";
+      mood = "good"; moodLabel = "Diferențe mari de preț";
       if(cheapNeg){
-        headline = `La ${cheapTime} prețul coboară sub zero.`;
-        sub = `Practic ești plătit să consumi: pornește atunci consumatorii mari (boiler, mașină de spălat, încărcarea mașinii). Evită vârful de la ${pricyTime}.`;
+        headline = `La ${cheapTime} prețul de piață coboară sub zero.`;
+        sub = `Cel mai bun moment pentru consumatorii mari (boiler, mașină de spălat, încărcarea mașinii). Evită, dacă poți, intervalul de la ${pricyTime}.`;
       } else {
-        headline = "Sunt ore mult mai ieftine decât restul zilei.";
-        sub = `Programează consumatorii mari (boiler, mașină de spălat, încărcarea mașinii) spre ${cheapTime} și evită vârful de la ${pricyTime}.`;
+        headline = "Unele intervale sunt mult mai ieftine decât restul zilei.";
+        sub = `Programează consumatorii mari (boiler, mașină de spălat, încărcarea mașinii) în jurul orei ${cheapTime} și evită, dacă poți, intervalul de la ${pricyTime}.`;
       }
     } else if(spread > 0.3){
       mood = ""; moodLabel = "Diferențe moderate";
-      headline = "Câteva ore ies mai ieftine, dar nu dramatic.";
-      sub = `Dacă poți, mută consumul mare spre ${cheapTime}. Economia există, însă e modestă.`;
+      headline = "Câteva intervale sunt mai ieftine, dar diferența e mică.";
+      sub = `Dacă îți e la îndemână, mută consumul mare în jurul orei ${cheapTime}. Economia va fi modestă.`;
     } else {
       mood = "bad"; moodLabel = "Preț aproape constant";
-      headline = "Prețul rămâne cam la fel toată ziua.";
-      sub = "Nu prea contează ora — consumă când îți convine.";
+      headline = "Prețul este relativ constant pe parcursul zilei.";
+      sub = "Ora la care consumi nu influențează semnificativ costul.";
     }
 
     const cheapClass = cheapNeg ? "vp vp-cheap vp-neg" : "vp vp-cheap";
@@ -664,7 +665,7 @@
           </div>
         </div>
         <div class="verdict-sub">${sub}</div>
-        <a href="#tabbtn-calc" class="verdict-cta" id="verdictCalcLink">Vezi cât economisești →</a>
+        <a href="#tabbtn-calc" class="verdict-cta" id="verdictCalcLink">Calculează economia →</a>
       </div>`;
     card.style.display = "block";
 
@@ -714,24 +715,24 @@
     const file = e.target.files[0];
     const statusEl = document.getElementById("csvStatus");
     if(!file) return;
-    statusEl.textContent = "Se procesează...";
+    statusEl.textContent = "Se procesează…";
     try{
       const text = await file.text();
       const rows = parseSimpleCsv(text);
       if(!rows.length){
-        statusEl.textContent = "Nu am găsit rânduri valide -- verifică formatul (timestamp,kwh).";
+        statusEl.textContent = "Fișierul nu conține rânduri valide. Verifică formatul (timestamp,kwh).";
         csvMatchResult = null;
         return;
       }
       csvMatchResult = await matchCsvToArchive(rows);
       const r = csvMatchResult;
-      let msg = `${rows.length} rânduri citite, ${fmt(r.matchedKwh,2)} kWh potrivite cu date PZU arhivate.`;
+      let msg = `${rows.length} rânduri citite; ${fmt(r.matchedKwh,2)} kWh au prețuri PZU disponibile.`;
       if(r.missingDates.length){
-        msg += ` ⚠ ${r.missingDates.length} zile nearhivate încă (${r.missingDates.slice(0,3).join(", ")}${r.missingDates.length>3?"...":""}) -- excluse din calcul, ${fmt(r.excludedKwh,2)} kWh.`;
+        msg += ` ⚠ Pentru ${r.missingDates.length} zile nu avem încă prețuri (${r.missingDates.slice(0,3).join(", ")}${r.missingDates.length>3?"…":""}), așa că ${fmt(r.excludedKwh,2)} kWh au fost excluși din calcul.`;
       }
       statusEl.textContent = msg;
     }catch(err){
-      statusEl.textContent = "Eroare la citirea fișierului: " + err.message;
+      statusEl.textContent = "Fișierul nu a putut fi citit: " + err.message;
       csvMatchResult = null;
       console.error(err);
     }
@@ -757,7 +758,9 @@
   }
 
   const FURNIZOR_LABEL_CONFIRMAT = {
-    eon: "E.ON Dinamic Pro",
+    eon: "E.ON Dinamic Electric",
+    engie: "ENGIE Elec Flexibil",
+    premier: "Premier Energy — PE Dinamic casnic",
     ppc: "PPC — ofertă preț dinamic",
     hidroelectrica: "Hidroelectrica — Hidro DINAMIC C",
   };
@@ -784,20 +787,20 @@
     }
 
     if(!rows.length){
-      container.innerHTML = '<p class="empty-state">Încarcă un fișier CSV mai sus ca să vezi comparația.</p>';
+      container.innerHTML = '<p class="empty-state">Încarcă fișierul CSV pentru a vedea comparația.</p>';
       return;
     }
 
-    rows.push({ id: "fix", label: `Contract fix la ${fmt(tarifFix,2)} lei/kWh`, pret: tarifFix, cost: tarifFix*consumRef - venitExportFix });
+    rows.push({ id: "fix", label: `Contract fix (${fmt(tarifFix,2)} lei/kWh)`, pret: tarifFix, cost: tarifFix*consumRef - venitExportFix });
     rows.sort((a,b) => a.cost - b.cost);
     const min = rows[0].cost;
 
     container.innerHTML = `
       <table class="data-table">
-        <thead><tr><th>Furnizor</th><th>Preț tot inclus (lei/kWh)</th><th>Cost${isProsumator && exportKwh>0 ? " net":""} lunar (lei)</th></tr></thead>
+        <thead><tr><th>Ofertă</th><th>Preț final (lei/kWh)</th><th>Cost${isProsumator && exportKwh>0 ? " net":""} lunar (lei)</th></tr></thead>
         <tbody>
           ${rows.map(r => `<tr style="${r.cost===min?"font-weight:600;":""}">
-            <td>${r.label}${r.id===furnizorSelectat?" ← selectat":""}${r.cost===min?" 🏆":""}</td>
+            <td>${r.label}${r.id===furnizorSelectat?" (selectat)":""}${r.cost===min?" · cel mai avantajos":""}</td>
             <td>${fmt(r.pret,3)}</td>
             <td>${fmt(r.cost,2)}</td>
           </tr>`).join("")}
@@ -808,7 +811,7 @@
   function runCalculator(){
     const day = pricesData.today;
     const resultEl = document.getElementById("calcResult");
-    if(!day){ resultEl.innerHTML = '<div class="empty-state">Date indisponibile.</div>'; return; }
+    if(!day){ resultEl.innerHTML = '<div class="empty-state">Datele nu sunt disponibile momentan.</div>'; return; }
     const useCsv = document.getElementById("useCsv").checked;
     const reglementate = parseFloat(document.getElementById("reglementate").value) || 0;
     const marja = parseFloat(document.getElementById("marja").value) || 0;
@@ -826,12 +829,12 @@
     if(useCsv){
       if(!r){
         resultEl.className = "result";
-        resultEl.innerHTML = '<div class="empty-state">Încarcă un fișier CSV mai sus ca să vezi rezultatul exact.</div>';
+        resultEl.innerHTML = '<div class="empty-state">Încarcă fișierul CSV pentru a vedea rezultatul.</div>';
         return;
       }
       ({ consum, pzuAvg, pretDinamicTotal, costDinamic } = r);
       costFix = tarifFix * consum;
-      modeLabel = `pe baza consumului real încărcat (${fmt(consum,1)} kWh)`;
+      modeLabel = `pe baza consumului real (${fmt(consum,1)} kWh)`;
     } else {
       ({ consum, pzuAvg, pretDinamicTotal, costDinamic } = r);
       costFix = tarifFix * consum;
@@ -850,9 +853,9 @@
       netFix = costFix - venitExportFix;
       netDinamic = costDinamic - venitExportDinamic;
       breakdownExtra = `
-        <dt>Preț PZU mediu 10:00-16:00 (fereastră solară)</dt><dd>${fmt(exportPzuAvg)} lei/kWh</dd>
-        <dt>Venit export — rată fixă actuală</dt><dd>${fmt(venitExportFix,2)} lei</dd>
-        <dt>Venit export — preț PZU dinamic</dt><dd>${fmt(venitExportDinamic,2)} lei</dd>`;
+        <dt>Preț PZU mediu 10:00–16:00 (orele de producție solară)</dt><dd>${fmt(exportPzuAvg)} lei/kWh</dd>
+        <dt>Venit din export, preț actual</dt><dd>${fmt(venitExportFix,2)} lei</dd>
+        <dt>Venit din export, preț PZU</dt><dd>${fmt(venitExportDinamic,2)} lei</dd>`;
       headlineDiff = netFix - netDinamic;
       headlineLabel += ", net (consum minus export)";
     } else {
@@ -862,15 +865,15 @@
     const win = headlineDiff >= 0;
     resultEl.className = "result " + (win ? "win" : "lose");
     resultEl.innerHTML = `
-      <div class="headline">${win ? "Economisești ~" : "Plătești cu ~"} ${fmt(Math.abs(headlineDiff),2)} lei${useCsv?"":"/lună"} ${win ? "" : "mai mult"}</div>
-      <div class="sub">comparativ cu un contract fix la ${fmt(tarifFix,2)} lei/kWh, ${headlineLabel}</div>
+      <div class="headline">${win ? "Economie estimată:" : "Cost suplimentar estimat:"} ${fmt(Math.abs(headlineDiff),2)} lei${useCsv?"":"/lună"}</div>
+      <div class="sub">Față de un contract fix la ${fmt(tarifFix,2)} lei/kWh, ${headlineLabel}.</div>
       <dl class="breakdown">
-        <dt>Preț mediu PZU ${useCsv?"(exact, ponderat pe consumul real)":"ponderat pe profil"}</dt><dd>${fmt(pzuAvg)} lei/kWh</dd>
-        <dt>Preț dinamic estimat, tot inclus</dt><dd>${fmt(pretDinamicTotal,3)} lei/kWh</dd>
-        <dt>Cost consum — dinamic</dt><dd>${fmt(costDinamic,2)} lei</dd>
-        <dt>Cost consum — fix</dt><dd>${fmt(costFix,2)} lei</dd>
+        <dt>Preț PZU mediu, ${useCsv?"ponderat cu consumul real":"ponderat cu profilul ales"}</dt><dd>${fmt(pzuAvg)} lei/kWh</dd>
+        <dt>Preț final estimat, contract dinamic</dt><dd>${fmt(pretDinamicTotal,3)} lei/kWh</dd>
+        <dt>Cost consum, contract dinamic</dt><dd>${fmt(costDinamic,2)} lei</dd>
+        <dt>Cost consum, contract fix</dt><dd>${fmt(costFix,2)} lei</dd>
         ${breakdownExtra}
-        ${isProsumator && exportKwh > 0 ? `<dt><b>Cost net — dinamic</b></dt><dd><b>${fmt(netDinamic,2)} lei</b></dd><dt><b>Cost net — fix</b></dt><dd><b>${fmt(netFix,2)} lei</b></dd>` : ""}
+        ${isProsumator && exportKwh > 0 ? `<dt><b>Cost net, contract dinamic</b></dt><dd><b>${fmt(netDinamic,2)} lei</b></dd><dt><b>Cost net, contract fix</b></dt><dd><b>${fmt(netFix,2)} lei</b></dd>` : ""}
       </dl>`;
   }
 
@@ -882,7 +885,7 @@
       `<tr><td>${h.date}</td><td>${fmt(h.avg_ron_kwh)}</td><td>${fmt(h.min_ron_kwh)}</td><td>${fmt(h.max_ron_kwh)}</td></tr>`).join("");
 
     if(typeof Chart === "undefined"){
-      document.getElementById("historyChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca (verifică conexiunea sau un ad-blocker).</div>';
+      document.getElementById("historyChart").outerHTML = '<div class="empty-state">Graficul nu s-a putut încărca. Verifică conexiunea sau dezactivează ad-blockerul.</div>';
       return;
     }
     const labels = historyData.map(h => h.date.slice(5));
@@ -979,10 +982,18 @@
   // lasam campul marja neschimbat si aratam nota de avertisment in loc.
   const FURNIZOR_MARJA = {
     eon: 0.39432,
-    engie: null,
+    engie: 0.20,
+    // 0.19 componenta de furnizare + 0.15 dezechilibru estimat de furnizor --
+    // la Premier dezechilibrul se plateste separat, iar fara el oferta ar
+    // parea artificial mai ieftina decat cele care il includ in componenta
+    premier: 0.34,
     ppc: 0.149,
     hidroelectrica: 0.125,
     electrica: null,
+  };
+
+  const FURNIZOR_NOTA = {
+    premier: "Valoarea include componenta de furnizare (0,19 lei/kWh) și dezechilibrul estimat de furnizor (0,15 lei/kWh). Dezechilibrul real variază de la o lună la alta.",
   };
 
   function onFurnizorChange(){
@@ -992,10 +1003,11 @@
     const tag = document.getElementById("marjaConfirmataTag");
     if(marjaCunoscuta !== null && marjaCunoscuta !== undefined){
       document.getElementById("marja").value = marjaCunoscuta;
-      nota.style.display = "none";
+      nota.textContent = FURNIZOR_NOTA[furnizor] || "";
+      nota.style.display = FURNIZOR_NOTA[furnizor] ? "block" : "none";
       tag.style.display = "";
     } else {
-      nota.textContent = "Nu avem o valoare oficială confirmată a marjei pentru acest furnizor — verifică propriul contract și ajustează câmpul de mai jos.";
+      nota.textContent = "Furnizorul nu a publicat componenta de furnizare. Completează valoarea din contractul tău în câmpul de mai jos.";
       nota.style.display = "block";
       tag.style.display = "none";
     }
@@ -1044,7 +1056,7 @@
       pricesData = await pricesRes.json();
       historyData = await historyRes.json();
     }catch(e){
-      document.getElementById("nowPillText").textContent = "eroare la încărcarea datelor";
+      document.getElementById("nowPillText").textContent = "Datele nu au putut fi încărcate";
       console.error(e);
       return;
     }

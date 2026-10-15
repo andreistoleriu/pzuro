@@ -71,20 +71,20 @@ def build_message(tomorrow: dict) -> str:
     lines = [f"📅 Prețuri PZU pentru {tomorrow['date']}", ""]
     lines.append(f"Medie: {tomorrow['avg_ron_kwh']:.3f} lei/kWh")
     lines.append("")
-    lines.append("🟢 Cele mai ieftine ore:")
+    lines.append("🟢 Cele mai ieftine intervale:")
     lines += [f"  {fmt_interval(i)}" for i in cheap]
     lines.append("")
-    lines.append("🔴 Cele mai scumpe ore:")
+    lines.append("🔴 Cele mai scumpe intervale:")
     lines += [f"  {fmt_interval(i)}" for i in pricy]
 
     if neg_windows:
         lines.append("")
-        lines.append("⚡ Preț negativ (energie gratuită) între:")
+        lines.append("⚡ Preț de piață negativ între:")
         for start, end in neg_windows:
             lines.append(f"  {fmt_time(start)}–{fmt_time(end)}")
 
     lines.append("")
-    lines.append("Detalii complete: https://pzuro.ro")
+    lines.append("Graficul complet: https://pzuro.ro")
     return "\n".join(lines)
 
 

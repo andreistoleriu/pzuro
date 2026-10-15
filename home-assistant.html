@@ -69,12 +69,12 @@
 
 <div class="wrap">
   <h1>Prețul PZU în Home Assistant</h1>
-  <p class="meta">Pentru cei care vor mai mult decât un grafic — automatizări reale pe baza prețului</p>
+  <p class="meta">Senzori și automatizări pe baza prețului PZU</p>
 
-  <p>Datele de pe pzuro.app sunt publice și pot fi citite direct de Home Assistant, fără cont, fără cheie API, gratuit. Sunt două moduri de integrare, după cât de precis vrei să fie:</p>
+  <p>Datele pzuro.app sunt publice și pot fi citite direct din Home Assistant, fără cont și fără cheie API. Există două variante de integrare:</p>
 
   <h2><span class="level">simplu</span><br>Statisticile zilei (medie, minim, maxim)</h2>
-  <p>Bun pentru un panou de control sau o notificare generală — "azi prețul mediu e X". Citește direct fișierul <code>data/prices.json</code>, fără nimic construit special pentru asta.</p>
+  <p>Potrivit pentru un dashboard sau o notificare zilnică. Citește direct fișierul <code>data/prices.json</code>.</p>
 
   <pre><code># configuration.yaml
 rest:
@@ -88,11 +88,11 @@ rest:
         value_template: "{{ value_json.today.min_ron_kwh }}"
         unit_of_measurement: "lei/kWh"</code></pre>
 
-  <p>Cu astea două, ai deja niște senzori pe care îi poți pune pe un dashboard sau folosi într-o notificare zilnică. Un singur <code>resource:</code> alimentează ambii senzori — nu se face câte un request separat pentru fiecare.</p>
+  <p>Un singur <code>resource:</code> alimentează ambii senzori, deci se face o singură cerere.</p>
 
   <h2><span class="level precis">precis</span><br>Prețul exact al intervalului curent</h2>
-  <p>Pentru o automatizare reală — "pornește boilerul acum dacă prețul curent e sub un prag" — ai nevoie de prețul exact al intervalului de 15 minute în care te afli, nu media zilei. Asta înseamnă identificarea intervalului corect din cele 96 ale zilei, ținând cont și de faptul că etichetele "azi"/"mâine" din fișierul brut depind de ora la care a rulat ultima actualizare, nu de data calendaristică reală.</p>
-  <p>În loc să rescrii logica asta în Jinja2 (posibil, dar greu de întreținut), am pus-o direct într-un mic API dedicat, care răspunde mereu cu un singur număr corect:</p>
+  <p>Pentru automatizări de tipul „pornește boilerul dacă prețul curent e sub un prag” ai nevoie de prețul intervalului de 15 minute în curs, nu de media zilei. Identificarea intervalului corect din <code>prices.json</code> nu e trivială, pentru că etichetele „azi”/„mâine” depind de momentul ultimei actualizări.</p>
+  <p>Endpoint-ul <code>/api/now</code> face această selecție și returnează direct prețul intervalului curent:</p>
 
   <pre><code># configuration.yaml
 rest:
@@ -107,7 +107,7 @@ rest:
           - interval_start
           - interval_end</code></pre>
 
-  <p>Cu senzorul ăsta, o automatizare devine simplă:</p>
+  <p>Exemplu de automatizare:</p>
 
   <pre><code># automations.yaml
 - alias: "Pornește boilerul cand pretul e mic"
@@ -120,11 +120,11 @@ rest:
       entity_id: switch.boiler</code></pre>
 
   <div class="callout">
-    <b>De reținut</b>: dacă API-ul nu are date valabile pentru azi (de exemplu, un outage prelungit la sursa de date), răspunde cu eroare HTTP 503 în loc să trimită date vechi ca și cum ar fi curente — senzorul din Home Assistant va deveni <code>unavailable</code> în acel caz, nu va arăta tăcut un preț greșit. Merită un trigger separat pe starea senzorului dacă automatizarea ta controlează ceva important.
+    <b>De reținut:</b> dacă nu există date valabile pentru ziua curentă (de exemplu, la o întrerupere prelungită a sursei), API-ul răspunde cu HTTP 503 în loc să returneze un preț vechi. Senzorul devine <code>unavailable</code>. Dacă automatizarea controlează echipamente importante, adaugă un trigger separat pentru această stare.
   </div>
 
   <h2>Pentru prosumatori: semnal "preț negativ acum"</h2>
-  <p>Răspunsul de la <code>/api/now</code> include deja câmpul <code>is_negative</code> — un adevărat/fals simplu, util dacă vrei să oprești automat exportul în rețea (sau să redirecționezi surplusul către o baterie/consumatori interni) când prețul devine negativ.</p>
+  <p>Răspunsul <code>/api/now</code> include câmpul boolean <code>is_negative</code>. Îl poți folosi pentru a opri exportul în rețea sau pentru a direcționa surplusul către baterie ori consumatori din casă atunci când prețul devine negativ.</p>
 
   <pre><code># configuration.yaml
 binary_sensor:
@@ -144,19 +144,19 @@ binary_sensor:
     - service: switch.turn_off
       entity_id: switch.export_invertor</code></pre>
 
-  <p>Senzorul binar de mai sus se bazează pe senzorul <code>sensor.pzu_pret_acum</code> definit deja mai sus pe pagină — ai nevoie de ambele configurate.</p>
+  <p>Senzorul binar depinde de <code>sensor.pzu_pret_acum</code>, definit mai sus. Ai nevoie de ambele.</p>
 
   <h2>Limită de utilizare</h2>
-  <p>Nu e nevoie de <code>scan_interval</code> mai agresiv decât 5 minute (300 secunde) — prețul se schimbă o dată la 15 minute, deci verificările mai frecvente nu aduc date noi, doar consumă inutil.</p>
+  <p>Te rugăm să nu folosești un <code>scan_interval</code> mai mic de 300 de secunde. Prețul se schimbă o dată la 15 minute, așa că interogările mai dese nu aduc date noi.</p>
 
   <div class="cta">
-    <h3>Vezi și restul datelor</h3>
-    <p>Graficul complet, calculatorul de factură și istoricul sunt pe pagina principală.</p>
+    <h3>Graficul complet și calculatorul</h3>
+    <p>Prețurile pe intervale, calculatorul de factură și istoricul pe 30 de zile sunt pe pagina principală.</p>
     <a href="/">Deschide pzuro.app →</a>
   </div>
 </div>
 
-<footer>pzuro.app · date oficiale ENTSO-E / OPCOM · API public, fără autentificare</footer>
+<footer>pzuro.app · Date: ENTSO-E, curs BNR · API public, fără autentificare</footer>
 <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
