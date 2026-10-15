@@ -13,7 +13,7 @@
 // interceptate -- trec direct la retea, consistent cu degradarea graduala
 // deja prezenta in index.html pentru Chart.js (daca CDN-ul pica, restul merge).
 
-const CACHE_VERSION = "pzuro-v4";
+const CACHE_VERSION = "pzuro-v5";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 const SHELL_FILES = ["/", "/js/calc.js", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
