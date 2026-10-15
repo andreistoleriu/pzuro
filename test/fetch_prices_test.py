@@ -64,6 +64,43 @@ class TrimToWindowTest(unittest.TestCase):
         self.assertEqual(len(fetch_prices.trim_to_window(series, start, end)), 100)
 
 
+class ExpectedIntervalCountTest(unittest.TestCase):
+    def test_normal_and_dst_days(self):
+        self.assertEqual(fetch_prices.expected_interval_count("2026-06-01"), 96)
+        self.assertEqual(fetch_prices.expected_interval_count("2026-03-29"), 92)  # ora de vara
+        self.assertEqual(fetch_prices.expected_interval_count("2026-10-25"), 100)  # ora de iarna
+
+
+class BuildStatsTest(unittest.TestCase):
+    def _write_day(self, folder, date, prices, complete=True):
+        intervals = [
+            {"start": f"{date}T{h:02d}:00:00+03:00", "end": "", "price_ron_kwh": p}
+            for h, p in enumerate(prices)
+        ]
+        payload = {"date": date, "intervals": intervals, "complete": complete}
+        (folder / f"{date}.json").write_text(json.dumps(payload))
+
+    def test_hourly_profile_skips_incomplete_days(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            self._write_day(folder, "2026-06-01", [1.0] * 24)
+            self._write_day(folder, "2026-06-02", [3.0] * 24)
+            self._write_day(folder, "2026-06-03", [100.0] * 24, complete=False)
+            stats = fetch_prices.build_stats(folder, "2026-06-03", days=30)
+            self.assertEqual(stats["window_days"], 2)
+            self.assertEqual(stats["hourly_avg_ron_kwh"][5], 2.0)
+            self.assertEqual(stats["to"], "2026-06-02")
+
+    def test_window_limits_number_of_days_and_ignores_future(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            for d, p in [("2026-06-01", 1.0), ("2026-06-02", 2.0), ("2026-06-03", 3.0), ("2026-06-04", 9.0)]:
+                self._write_day(folder, d, [p] * 24)
+            stats = fetch_prices.build_stats(folder, "2026-06-03", days=2)
+            self.assertEqual(stats["from"], "2026-06-02")
+            self.assertEqual(stats["avg_ron_kwh"], 2.5)
+
+
 class BuildDayPayloadTest(unittest.TestCase):
     def _interval(self, price):
         return {"start": "x", "end": "y", "price_eur_mwh": 0, "price_ron_kwh": price, "is_negative": price < 0}

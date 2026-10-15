@@ -1,0 +1,140 @@
+{
+  "actualizat": "2026-10-15",
+  "tva": 0.21,
+  "furnizori": [
+    {
+      "id": "eon",
+      "nume": "E.ON",
+      "oferta": "E.ON Dinamic Electric",
+      "slug": "eon-dinamic-electric",
+      "componenta_furnizare": 0.39432,
+      "dezechilibru_estimat": 0,
+      "nota": null,
+      "valabilitate": "01.10.2026 – 15.10.2026",
+      "sursa": "https://www.eon.ro/",
+      "sursa_oficiala": false,
+      "verificat": "2026-10-15",
+      "monitor": null
+    },
+    {
+      "id": "engie",
+      "nume": "ENGIE",
+      "oferta": "ENGIE Elec Flexibil",
+      "slug": "engie-elec-flexibil",
+      "componenta_furnizare": 0.2,
+      "dezechilibru_estimat": 0,
+      "nota": null,
+      "valabilitate": "23.09.2026 – 22.10.2026",
+      "sursa": "https://www.engie.ro/wp-content/uploads/2026/09/Oferta-Elec-Flexibil-B2C.pdf",
+      "sursa_oficiala": true,
+      "verificat": "2026-10-15",
+      "monitor": {
+        "pagina": "https://www.engie.ro/energie-electrica-cu-preturi-dinamice/",
+        "pdf_regex": "https://www\\.engie\\.ro/wp-content/uploads/[0-9/]+Oferta-Elec-Flexibil-B2C[^\"']*\\.pdf",
+        "valoare_regex": "Componenta de furnizare a energiei electrice[^\\n]*\\n\\s*([0-9]+,[0-9]+) lei/kWh"
+      }
+    },
+    {
+      "id": "premier",
+      "nume": "Premier Energy",
+      "oferta": "Premier Energy PE Dinamic casnic",
+      "slug": "premier-energy-pe-dinamic",
+      "componenta_furnizare": 0.19,
+      "dezechilibru_estimat": 0.15,
+      "nota": "Valoarea include componenta de furnizare (0,19 lei/kWh) și dezechilibrul estimat de furnizor (0,15 lei/kWh). Dezechilibrul real variază de la o lună la alta.",
+      "valabilitate": "01.10.2026 – 31.10.2026",
+      "sursa": "https://www.premierenergy.info/wp-content/uploads/2026/09/Premier-Oferta-Dinamic-_casnic-OEDC_10_2026.pdf",
+      "sursa_oficiala": true,
+      "verificat": "2026-10-15",
+      "monitor": {
+        "pagina": "https://www.premierenergy.info/produse/",
+        "pdf_regex": "https://www\\.premierenergy\\.info/wp-content/uploads/[0-9/]+Premier-Oferta-Dinamic-_casnic-OEDC_[0-9_]+\\.pdf",
+        "valoare_regex": null
+      }
+    },
+    {
+      "id": "ppc",
+      "nume": "PPC Energie",
+      "oferta": "PPC ofertă preț dinamic",
+      "slug": "ppc-pret-dinamic",
+      "componenta_furnizare": 0.149,
+      "dezechilibru_estimat": 0,
+      "nota": "La PPC, partea variabilă se calculează lunar, ca medie a prețurilor PZU orare ponderată cu consumul tău.",
+      "valabilitate": "01.10.2026 – 31.10.2026",
+      "sursa": "https://www.ppcenergy.ro/info-utile/oferte-preturi-pzu/",
+      "sursa_oficiala": true,
+      "verificat": "2026-10-15",
+      "monitor": {
+        "pagina": "https://www.ppcenergy.ro/info-utile/oferte-preturi-pzu/",
+        "pdf_regex": "https://www\\.ppcenergy\\.ro/wp-content/uploads/oferta-variabila[^\"']*\\.pdf",
+        "valoare_regex": "Componenta de furnizare[\\s\\S]{0,200}?([0-9]+\\.[0-9]+) lei/kWh"
+      }
+    },
+    {
+      "id": "hidroelectrica",
+      "nume": "Hidroelectrica",
+      "oferta": "Hidroelectrica Hidro DINAMIC C",
+      "slug": "hidroelectrica-hidro-dinamic",
+      "componenta_furnizare": 0.125,
+      "dezechilibru_estimat": 0,
+      "nota": "Valoarea include și costul dezechilibrelor.",
+      "valabilitate": "ultima ofertă pentru casnici găsită: 01.10.2025 – 31.12.2025; aceeași valoare în oferta business 2026",
+      "sursa": "https://cdn.hidroelectrica.ro/cdn/furnizare/01_11/oferta_casnic_dinamic_dc-0110-3112-25_-cogen.pdf",
+      "sursa_oficiala": true,
+      "verificat": "2026-10-15",
+      "monitor": null
+    },
+    {
+      "id": "electrica",
+      "nume": "Electrica Furnizare",
+      "oferta": "Electrica Dinamic",
+      "slug": null,
+      "componenta_furnizare": null,
+      "dezechilibru_estimat": 0,
+      "nota": "Electrica nu a publicat componenta de furnizare. Completează valoarea din contractul tău în câmpul de mai jos.",
+      "valabilitate": null,
+      "sursa": "https://www.electricafurnizare.ro/asistenta/doresc-sa-devin-client-electrica-furnizare-clienti-casnici-pret-dinamic/",
+      "sursa_oficiala": true,
+      "verificat": "2026-10-15",
+      "monitor": null
+    }
+  ],
+  "tarife": {
+    "sursa": "Ofertele PPC Energie și Premier Energy pentru octombrie 2026 (tarife ANRE în vigoare)",
+    "verificat": "2026-10-15",
+    "comune": {
+      "transport_tl": 0.03645,
+      "servicii_sistem": 0.01272,
+      "certificate_verzi": 0.0740192,
+      "cogenerare": 0.0145,
+      "acciza": 0.00768,
+      "cfd": 0.000144
+    },
+    "operatori": [
+      {
+        "id": "rer",
+        "nume": "Rețele Electrice România",
+        "distributie_jt": 0.31739,
+        "judete": ["București", "Ilfov", "Giurgiu", "Călărași", "Constanța", "Ialomița", "Tulcea", "Arad", "Caraș-Severin", "Hunedoara", "Timiș"]
+      },
+      {
+        "id": "deer",
+        "nume": "Distribuție Energie Electrică România",
+        "distributie_jt": 0.35534,
+        "judete": ["Alba", "Bihor", "Bistrița-Năsăud", "Brașov", "Brăila", "Buzău", "Cluj", "Covasna", "Dâmbovița", "Galați", "Harghita", "Maramureș", "Mureș", "Prahova", "Satu Mare", "Sălaj", "Sibiu", "Vrancea"]
+      },
+      {
+        "id": "oltenia",
+        "nume": "Distribuție Oltenia",
+        "distributie_jt": 0.33325,
+        "judete": ["Argeș", "Dolj", "Gorj", "Mehedinți", "Olt", "Teleorman", "Vâlcea"]
+      },
+      {
+        "id": "delgaz",
+        "nume": "Delgaz Grid",
+        "distributie_jt": 0.38791,
+        "judete": ["Bacău", "Botoșani", "Iași", "Neamț", "Suceava", "Vaslui"]
+      }
+    ]
+  }
+}

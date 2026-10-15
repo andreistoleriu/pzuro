@@ -769,7 +769,9 @@
         "price_ron_kwh": 1.6635,
         "is_negative": false
       }
-    ]
+    ],
+    "expected_interval_count": 96,
+    "complete": true
   },
   "tomorrow": {
     "date": "2026-10-16",
@@ -1538,7 +1540,9 @@
         "price_ron_kwh": 1.7886,
         "is_negative": false
       }
-    ]
+    ],
+    "expected_interval_count": 96,
+    "complete": true
   },
   "tomorrow_published": true
 }

@@ -765,5 +765,7 @@
       "price_ron_kwh": 2.3351,
       "is_negative": false
     }
-  ]
+  ],
+  "expected_interval_count": 96,
+  "complete": true
 }

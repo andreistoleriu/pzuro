@@ -3,360 +3,420 @@
     "date": "2026-08-12",
     "avg_ron_kwh": 0.7024,
     "min_ron_kwh": 0.0001,
-    "max_ron_kwh": 2.3427
+    "max_ron_kwh": 2.3427,
+    "complete": true
   },
   {
     "date": "2026-08-13",
     "avg_ron_kwh": 0.8289,
     "min_ron_kwh": 0.3456,
-    "max_ron_kwh": 2.4759
+    "max_ron_kwh": 2.4759,
+    "complete": true
   },
   {
     "date": "2026-08-14",
     "avg_ron_kwh": 0.7267,
     "min_ron_kwh": 0.104,
-    "max_ron_kwh": 1.5231
+    "max_ron_kwh": 1.5231,
+    "complete": true
   },
   {
     "date": "2026-08-15",
     "avg_ron_kwh": 0.5854,
     "min_ron_kwh": 0.0052,
-    "max_ron_kwh": 1.0114
+    "max_ron_kwh": 1.0114,
+    "complete": true
   },
   {
     "date": "2026-08-16",
     "avg_ron_kwh": 0.6915,
     "min_ron_kwh": 0.1163,
-    "max_ron_kwh": 1.0924
+    "max_ron_kwh": 1.0924,
+    "complete": true
   },
   {
     "date": "2026-08-17",
     "avg_ron_kwh": 0.8794,
     "min_ron_kwh": 0.53,
-    "max_ron_kwh": 1.2481
+    "max_ron_kwh": 1.2481,
+    "complete": true
   },
   {
     "date": "2026-08-18",
     "avg_ron_kwh": 0.8346,
     "min_ron_kwh": 0.5832,
-    "max_ron_kwh": 1.1184
+    "max_ron_kwh": 1.1184,
+    "complete": true
   },
   {
     "date": "2026-08-19",
     "avg_ron_kwh": 0.8517,
     "min_ron_kwh": 0.6266,
-    "max_ron_kwh": 1.1383
+    "max_ron_kwh": 1.1383,
+    "complete": true
   },
   {
     "date": "2026-08-20",
     "avg_ron_kwh": 0.82,
     "min_ron_kwh": 0.4826,
-    "max_ron_kwh": 1.0984
+    "max_ron_kwh": 1.0984,
+    "complete": true
   },
   {
     "date": "2026-08-21",
     "avg_ron_kwh": 0.8614,
     "min_ron_kwh": 0.2844,
-    "max_ron_kwh": 1.1673
+    "max_ron_kwh": 1.1673,
+    "complete": true
   },
   {
     "date": "2026-08-22",
     "avg_ron_kwh": 0.6259,
     "min_ron_kwh": 0,
-    "max_ron_kwh": 1.0532
+    "max_ron_kwh": 1.0532,
+    "complete": true
   },
   {
     "date": "2026-08-23",
     "avg_ron_kwh": 0.5541,
     "min_ron_kwh": 0,
-    "max_ron_kwh": 1.0635
+    "max_ron_kwh": 1.0635,
+    "complete": true
   },
   {
     "date": "2026-08-24",
     "avg_ron_kwh": 0.864,
     "min_ron_kwh": 0.4235,
-    "max_ron_kwh": 1.35
+    "max_ron_kwh": 1.35,
+    "complete": true
   },
   {
     "date": "2026-08-25",
     "avg_ron_kwh": 0.8864,
     "min_ron_kwh": 0.5363,
-    "max_ron_kwh": 1.1967
+    "max_ron_kwh": 1.1967,
+    "complete": true
   },
   {
     "date": "2026-08-26",
     "avg_ron_kwh": 0.9412,
     "min_ron_kwh": 0.5914,
-    "max_ron_kwh": 1.3288
+    "max_ron_kwh": 1.3288,
+    "complete": true
   },
   {
     "date": "2026-08-27",
     "avg_ron_kwh": 0.8907,
     "min_ron_kwh": 0.3157,
-    "max_ron_kwh": 1.3406
+    "max_ron_kwh": 1.3406,
+    "complete": true
   },
   {
     "date": "2026-08-28",
     "avg_ron_kwh": 0.7839,
     "min_ron_kwh": 0.2522,
-    "max_ron_kwh": 1.2488
+    "max_ron_kwh": 1.2488,
+    "complete": true
   },
   {
     "date": "2026-08-29",
     "avg_ron_kwh": 0.5899,
     "min_ron_kwh": 0.0406,
-    "max_ron_kwh": 1.1463
+    "max_ron_kwh": 1.1463,
+    "complete": true
   },
   {
     "date": "2026-08-30",
     "avg_ron_kwh": 0.6273,
     "min_ron_kwh": -0.0001,
-    "max_ron_kwh": 1.1829
+    "max_ron_kwh": 1.1829,
+    "complete": true
   },
   {
     "date": "2026-09-02",
     "avg_ron_kwh": 1.0052,
     "min_ron_kwh": 0.5113,
-    "max_ron_kwh": 1.7099
+    "max_ron_kwh": 1.7099,
+    "complete": true
   },
   {
     "date": "2026-09-03",
     "avg_ron_kwh": 0.9981,
     "min_ron_kwh": 0.5338,
-    "max_ron_kwh": 1.7426
+    "max_ron_kwh": 1.7426,
+    "complete": true
   },
   {
     "date": "2026-09-04",
     "avg_ron_kwh": 0.8919,
     "min_ron_kwh": 0.1181,
-    "max_ron_kwh": 1.4704
+    "max_ron_kwh": 1.4704,
+    "complete": true
   },
   {
     "date": "2026-09-05",
     "avg_ron_kwh": 0.6818,
     "min_ron_kwh": 0.0649,
-    "max_ron_kwh": 1.3096
+    "max_ron_kwh": 1.3096,
+    "complete": true
   },
   {
     "date": "2026-09-06",
     "avg_ron_kwh": 0.5767,
     "min_ron_kwh": -0.0062,
-    "max_ron_kwh": 1.2216
+    "max_ron_kwh": 1.2216,
+    "complete": true
   },
   {
     "date": "2026-09-07",
     "avg_ron_kwh": 0.8855,
     "min_ron_kwh": 0.1677,
-    "max_ron_kwh": 1.5931
+    "max_ron_kwh": 1.5931,
+    "complete": true
   },
   {
     "date": "2026-09-09",
     "avg_ron_kwh": 0.8314,
     "min_ron_kwh": 0.1582,
-    "max_ron_kwh": 1.4965
+    "max_ron_kwh": 1.4965,
+    "complete": true
   },
   {
     "date": "2026-09-10",
     "avg_ron_kwh": 1.0257,
     "min_ron_kwh": 0.5133,
-    "max_ron_kwh": 2.6786
+    "max_ron_kwh": 2.6786,
+    "complete": false
   },
   {
     "date": "2026-09-11",
     "avg_ron_kwh": 1.0598,
     "min_ron_kwh": 0.8358,
-    "max_ron_kwh": 1.6202
+    "max_ron_kwh": 1.6202,
+    "complete": true
   },
   {
     "date": "2026-09-12",
     "avg_ron_kwh": 0.7894,
     "min_ron_kwh": 0.0032,
-    "max_ron_kwh": 1.2545
+    "max_ron_kwh": 1.2545,
+    "complete": true
   },
   {
     "date": "2026-09-14",
     "avg_ron_kwh": 1.2102,
     "min_ron_kwh": 0.5372,
-    "max_ron_kwh": 3.3346
+    "max_ron_kwh": 3.3346,
+    "complete": false
   },
   {
     "date": "2026-09-15",
     "avg_ron_kwh": 0.9711,
     "min_ron_kwh": 0.2208,
-    "max_ron_kwh": 1.6877
+    "max_ron_kwh": 1.6877,
+    "complete": true
   },
   {
     "date": "2026-09-16",
     "avg_ron_kwh": 0.8538,
     "min_ron_kwh": 0.0564,
-    "max_ron_kwh": 1.5945
+    "max_ron_kwh": 1.5945,
+    "complete": true
   },
   {
     "date": "2026-09-17",
     "avg_ron_kwh": 0.8562,
     "min_ron_kwh": 0.2083,
-    "max_ron_kwh": 1.4709
+    "max_ron_kwh": 1.4709,
+    "complete": true
   },
   {
     "date": "2026-09-18",
     "avg_ron_kwh": 0.8965,
     "min_ron_kwh": 0.0765,
-    "max_ron_kwh": 1.3837
+    "max_ron_kwh": 1.3837,
+    "complete": true
   },
   {
     "date": "2026-09-19",
     "avg_ron_kwh": 0.8141,
     "min_ron_kwh": 0.0048,
-    "max_ron_kwh": 1.3169
+    "max_ron_kwh": 1.3169,
+    "complete": true
   },
   {
     "date": "2026-09-20",
     "avg_ron_kwh": 0.71,
     "min_ron_kwh": -0.0024,
-    "max_ron_kwh": 1.2656
+    "max_ron_kwh": 1.2656,
+    "complete": true
   },
   {
     "date": "2026-09-21",
     "avg_ron_kwh": 0.9311,
     "min_ron_kwh": 0.0938,
-    "max_ron_kwh": 1.4928
+    "max_ron_kwh": 1.4928,
+    "complete": true
   },
   {
     "date": "2026-09-22",
     "avg_ron_kwh": 1.1775,
     "min_ron_kwh": 0.5931,
-    "max_ron_kwh": 2.895
+    "max_ron_kwh": 2.895,
+    "complete": true
   },
   {
     "date": "2026-09-23",
     "avg_ron_kwh": 1.0013,
     "min_ron_kwh": 0.2806,
-    "max_ron_kwh": 1.7039
+    "max_ron_kwh": 1.7039,
+    "complete": true
   },
   {
     "date": "2026-09-24",
     "avg_ron_kwh": 1.1751,
     "min_ron_kwh": 0.7378,
-    "max_ron_kwh": 2.2212
+    "max_ron_kwh": 2.2212,
+    "complete": true
   },
   {
     "date": "2026-09-25",
     "avg_ron_kwh": 1.1231,
     "min_ron_kwh": 0.6859,
-    "max_ron_kwh": 1.5557
+    "max_ron_kwh": 1.5557,
+    "complete": true
   },
   {
     "date": "2026-09-26",
     "avg_ron_kwh": 0.823,
     "min_ron_kwh": 0.0035,
-    "max_ron_kwh": 1.2755
+    "max_ron_kwh": 1.2755,
+    "complete": true
   },
   {
     "date": "2026-09-27",
     "avg_ron_kwh": 0.5853,
     "min_ron_kwh": -0.0154,
-    "max_ron_kwh": 1.0884
+    "max_ron_kwh": 1.0884,
+    "complete": true
   },
   {
     "date": "2026-09-28",
     "avg_ron_kwh": 0.7808,
     "min_ron_kwh": 0.009,
-    "max_ron_kwh": 1.9842
+    "max_ron_kwh": 1.9842,
+    "complete": true
   },
   {
     "date": "2026-09-29",
     "avg_ron_kwh": 0.8632,
     "min_ron_kwh": 0.3052,
-    "max_ron_kwh": 1.303
+    "max_ron_kwh": 1.303,
+    "complete": true
   },
   {
     "date": "2026-09-30",
     "avg_ron_kwh": 0.7349,
     "min_ron_kwh": 0.0482,
-    "max_ron_kwh": 1.3144
+    "max_ron_kwh": 1.3144,
+    "complete": true
   },
   {
     "date": "2026-10-01",
     "avg_ron_kwh": 0.8328,
     "min_ron_kwh": 0.0536,
-    "max_ron_kwh": 1.5991
+    "max_ron_kwh": 1.5991,
+    "complete": true
   },
   {
     "date": "2026-10-02",
     "avg_ron_kwh": 0.8208,
     "min_ron_kwh": 0.0035,
-    "max_ron_kwh": 1.639
+    "max_ron_kwh": 1.639,
+    "complete": true
   },
   {
     "date": "2026-10-03",
     "avg_ron_kwh": 0.7855,
     "min_ron_kwh": 0.0641,
-    "max_ron_kwh": 1.3297
+    "max_ron_kwh": 1.3297,
+    "complete": true
   },
   {
     "date": "2026-10-04",
     "avg_ron_kwh": 0.8168,
     "min_ron_kwh": 0.0697,
-    "max_ron_kwh": 1.2859
+    "max_ron_kwh": 1.2859,
+    "complete": true
   },
   {
     "date": "2026-10-05",
     "avg_ron_kwh": 1.1532,
     "min_ron_kwh": 0.2595,
-    "max_ron_kwh": 2.2102
+    "max_ron_kwh": 2.2102,
+    "complete": true
   },
   {
     "date": "2026-10-06",
     "avg_ron_kwh": 1.1324,
     "min_ron_kwh": 0.48,
-    "max_ron_kwh": 2.0625
+    "max_ron_kwh": 2.0625,
+    "complete": true
   },
   {
     "date": "2026-10-07",
     "avg_ron_kwh": 1.0617,
     "min_ron_kwh": 0.5235,
-    "max_ron_kwh": 1.4727
+    "max_ron_kwh": 1.4727,
+    "complete": true
   },
   {
     "date": "2026-10-08",
     "avg_ron_kwh": 1.0618,
     "min_ron_kwh": 0.6843,
-    "max_ron_kwh": 1.3819
+    "max_ron_kwh": 1.3819,
+    "complete": true
   },
   {
     "date": "2026-10-09",
     "avg_ron_kwh": 1.288,
     "min_ron_kwh": 0.7596,
-    "max_ron_kwh": 2.1915
+    "max_ron_kwh": 2.1915,
+    "complete": true
   },
   {
     "date": "2026-10-11",
     "avg_ron_kwh": 0.8851,
     "min_ron_kwh": 0.0773,
-    "max_ron_kwh": 1.2603
+    "max_ron_kwh": 1.2603,
+    "complete": false
   },
   {
     "date": "2026-10-12",
     "avg_ron_kwh": 1.1969,
     "min_ron_kwh": 0.8496,
-    "max_ron_kwh": 1.7481
+    "max_ron_kwh": 1.7481,
+    "complete": true
   },
   {
     "date": "2026-10-13",
     "avg_ron_kwh": 1.1127,
     "min_ron_kwh": 0.7745,
-    "max_ron_kwh": 1.4789
+    "max_ron_kwh": 1.4789,
+    "complete": true
   },
   {
     "date": "2026-10-14",
     "avg_ron_kwh": 1.1256,
     "min_ron_kwh": 0.8664,
-    "max_ron_kwh": 1.6004
+    "max_ron_kwh": 1.6004,
+    "complete": true
   },
   {
     "date": "2026-10-15",
     "avg_ron_kwh": 1.2496,
     "min_ron_kwh": 0.8587,
-    "max_ron_kwh": 1.9037
+    "max_ron_kwh": 1.9037,
+    "complete": true
   }
 ]

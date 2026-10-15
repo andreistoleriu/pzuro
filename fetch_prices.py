@@ -57,6 +57,8 @@ DATA_DIR = Path(__file__).parent / "data"
 PRICES_FILE = DATA_DIR / "prices.json"
 HISTORY_FILE = DATA_DIR / "history.json"
 ARCHIVE_DIR = DATA_DIR / "archive"
+STATS_FILE = DATA_DIR / "stats.json"
+STATS_WINDOW_DAYS = 30
 
 
 def get_eur_ron_rate() -> tuple[float, str]:
@@ -145,13 +147,27 @@ def series_to_intervals(series: pd.Series, rate: float) -> list[dict]:
     return intervals
 
 
+def expected_interval_count(date_str: str) -> int:
+    """Cate intervale de 15 minute are ziua calendaristica in ora Romaniei:
+    96 de regula, 92 / 100 in zilele de schimbare a orei."""
+    start = pd.Timestamp(date_str, tz=TZ)
+    end = start + pd.DateOffset(days=1)
+    return int((end - start) / pd.Timedelta(minutes=15))
+
+
 def build_day_payload(date_str: str, intervals: list[dict]) -> dict:
     prices = [i["price_ron_kwh"] for i in intervals]
     by_price = sorted(intervals, key=lambda i: i["price_ron_kwh"])
+    expected = expected_interval_count(date_str)
     return {
         "date": date_str,
         "intervals": intervals,
         "interval_count": len(intervals),
+        # o zi poate trece de MIN_VALID_INTERVALS si totusi sa aiba cateva
+        # intervale lipsa de la ENTSO-E -- o marcam ca sa nu o prezentam ca
+        # zi completa in interfata
+        "expected_interval_count": expected,
+        "complete": len(intervals) >= expected,
         "avg_ron_kwh": round(sum(prices) / len(prices), 4) if prices else None,
         "min_ron_kwh": min(prices) if prices else None,
         "max_ron_kwh": max(prices) if prices else None,
@@ -208,12 +224,58 @@ def update_history(today_payload: dict | None):
             "avg_ron_kwh": today_payload["avg_ron_kwh"],
             "min_ron_kwh": today_payload["min_ron_kwh"],
             "max_ron_kwh": today_payload["max_ron_kwh"],
+            "complete": today_payload.get("complete", True),
         }
     )
     history.sort(key=lambda h: h["date"])
     history = history[-HISTORY_MAX_DAYS:]
     HISTORY_FILE.write_text(json.dumps(history, indent=2, ensure_ascii=False))
     log.info("Istoric actualizat: %d zile salvate.", len(history))
+
+
+def build_stats(archive_dir: Path, end_date: str, days: int = STATS_WINDOW_DAYS) -> dict | None:
+    """Profilul orar al pretului pe ultimele `days` zile COMPLETE arhivate, pana
+    la `end_date` inclusiv. Calculatorul il foloseste in locul unei singure zile:
+    o estimare lunara facuta pe pretul unei singure zile poate iesi complet
+    diferit de la o zi la alta."""
+    files = sorted(f for f in archive_dir.glob("*.json") if f.stem <= end_date)
+    used, sums, counts = [], [0.0] * 24, [0] * 24
+    for f in reversed(files):
+        day = json.loads(f.read_text())
+        intervals = day.get("intervals") or []
+        complete = day.get("complete", len(intervals) in (92, 96, 100))
+        if not complete:
+            continue
+        for iv in intervals:
+            h = int(iv["start"][11:13])  # ora locala, din sirul ISO cu offset
+            sums[h] += iv["price_ron_kwh"]
+            counts[h] += 1
+        used.append(day["date"])
+        if len(used) == days:
+            break
+    if not used:
+        return None
+    hourly = [round(sums[h] / counts[h], 5) if counts[h] else None for h in range(24)]
+    valid = [v for v in hourly if v is not None]
+    solar = [v for v in hourly[10:16] if v is not None]
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "window_days": len(used),
+        "from": min(used),
+        "to": max(used),
+        "hourly_avg_ron_kwh": hourly,
+        "avg_ron_kwh": round(sum(valid) / len(valid), 5),
+        "solar_avg_ron_kwh": round(sum(solar) / len(solar), 5) if solar else None,
+    }
+
+
+def write_stats(end_date: str):
+    stats = build_stats(ARCHIVE_DIR, end_date)
+    if stats is None:
+        log.warning("Nicio zi completa in arhiva, nu scriu %s.", STATS_FILE)
+        return
+    STATS_FILE.write_text(json.dumps(stats, indent=2, ensure_ascii=False))
+    log.info("Statistici pe %d zile scrise in %s.", stats["window_days"], STATS_FILE)
 
 
 def main():
@@ -266,6 +328,7 @@ def main():
     update_history(today_payload)
     archive_day(today_payload)
     archive_day(tomorrow_payload)
+    write_stats(today.date().isoformat())
 
 
 if __name__ == "__main__":
