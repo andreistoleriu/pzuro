@@ -96,6 +96,25 @@
   }
   .brand .mark span{color:var(--cyan);}
   .brand .tag{font-size:.8rem;color:#AEB3BD;}
+  .brand{flex-wrap:wrap;}
+  
+  .site-nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap;}
+  .site-nav a{color:#D8DBE0;text-decoration:none;font-size:.8rem;font-weight:500;padding:5px 10px;border-radius:999px;}
+  .site-nav a:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .site-nav a[aria-current="page"]{background:rgba(255,255,255,.12);color:#fff;}
+  .site-nav a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+  @media(max-width:560px){ .site-nav{margin-left:-10px;width:100%;} }
+
+  /* carduri catre paginile de continut, sub tab-uri */
+  .explore{margin-top:36px;}
+  .explore-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;}
+  .explore-card{display:flex;flex-direction:column;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:border-color .15s,transform .15s;}
+  .explore-card:hover{border-color:var(--cyan);transform:translateY(-1px);}
+  .explore-card:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+  .explore-card .ex-k{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600;color:var(--cyan);}
+  .explore-card b{font-family:var(--font-display);font-weight:600;font-size:1rem;line-height:1.3;}
+  .explore-card span.ex-d{font-size:.82rem;color:var(--ink-soft);line-height:1.45;}
+  .explore-card .ex-live{font-family:var(--font-mono);font-size:.76rem;color:var(--ink);margin-top:auto;padding-top:6px;}
   .now-readout{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
   .now-readout .price{
     font-family:var(--font-mono);font-weight:500;font-size:2.4rem;line-height:1;
@@ -260,6 +279,7 @@
     <div class="brand">
       <div class="mark">pzuro<span>.</span>app</div>
       <div class="tag">Prețul energiei pe piața PZU, pentru contracte dinamice</div>
+      <nav class="site-nav" aria-label="Pagini pzuro"><a href="/pret-energie-maine.html">Prețul de mâine</a><a href="/furnizori/">Oferte furnizori</a><a href="/ce-este-contract-pret-dinamic.html">Ghid</a></nav>
     </div>
     <div class="now-readout">
       <div>
@@ -296,9 +316,6 @@
     </div>
   </div>
 
-  <p style="text-align:center;font-size:.82rem;color:var(--ink-soft);margin:-8px 0 18px;">
-    Prima dată pe pzuro? <a href="/ce-este-contract-pret-dinamic.html" style="color:var(--cyan);font-weight:500;">Cum funcționează un contract cu preț dinamic →</a>
-  </p>
   <!-- TAB 1: grafic -->
   <section class="panel active" id="panel-grafic" role="tabpanel" aria-labelledby="tabbtn-grafic">
     <h2 class="section-title">Prețul pe intervale de 15 minute</h2>
@@ -372,6 +389,7 @@
         <label for="furnizor">Furnizor</label>
         <select id="furnizor"></select>
         <p id="furnizorNota" class="field-hint" hidden></p>
+        <p class="field-hint" id="furnizorLinkWrap" hidden><a id="furnizorLink" href="/furnizori/" style="color:var(--cyan);">Detalii despre ofertă →</a></p>
       </div>
       <div class="field">
         <label for="judet">Județul locului de consum</label>
@@ -450,7 +468,7 @@
     </div>
     <div class="card">
       <h3 style="margin:0 0 4px;font-size:.92rem;">Comparație între furnizori</h3>
-      <p style="font-size:.78rem;color:var(--ink-soft);margin:0 0 12px;">Pentru consumul, profilul și județul de mai sus, cu taxe și TVA. Electrica nu este inclusă, pentru că nu a publicat componenta de furnizare. <a href="/furnizori/" style="color:var(--cyan);">Detalii despre fiecare ofertă →</a></p>
+      <p style="font-size:.78rem;color:var(--ink-soft);margin:0 0 12px;">Pentru consumul, profilul și județul de mai sus, cu taxe și TVA. Electrica nu este inclusă, pentru că nu a publicat componenta de furnizare. <a href="/furnizori/" style="color:var(--cyan);font-weight:500;">Comparația completă a ofertelor →</a></p>
       <div id="furnizorComparisonTable"></div>
     </div>
   </section>
@@ -471,6 +489,35 @@
         </div>
         <button type="button" class="csv-export-btn" id="exportHistoryCsv">⬇ Exportă CSV</button>
       </details>
+    </div>
+  </section>
+
+  <section class="explore" aria-labelledby="exploreTitle">
+    <h2 class="section-title" id="exploreTitle">Mai multe despre prețul dinamic</h2>
+    <p class="section-sub">Pagini actualizate zilnic, cu aceleași date ca graficul de mai sus.</p>
+    <div class="explore-grid">
+      <a class="explore-card" href="/pret-energie-maine.html">
+        <span class="ex-k">Zilnic</span>
+        <b>Prețul de mâine, pe ore</b>
+        <span class="ex-d">Tabel orar și cele mai ieftine ore pentru mașina de spălat sau mașina electrică.</span>
+        <span class="ex-live" id="exploreMaine"></span>
+      </a>
+      <a class="explore-card" href="/furnizori/">
+        <span class="ex-k">Comparație</span>
+        <b>Ofertele furnizorilor</b>
+        <span class="ex-d">Componenta de furnizare și costul lunar estimat pentru fiecare ofertă cu preț dinamic.</span>
+        <span class="ex-live" id="exploreFurnizori"></span>
+      </a>
+      <a class="explore-card" href="/ce-este-contract-pret-dinamic.html">
+        <span class="ex-k">Ghid</span>
+        <b>Cum funcționează un contract dinamic</b>
+        <span class="ex-d">Cum se calculează factura și pentru cine are sens.</span>
+      </a>
+      <a class="explore-card" href="/prosumator-contract-pret-dinamic.html">
+        <span class="ex-k">Prosumatori</span>
+        <b>Panouri solare și preț dinamic</b>
+        <span class="ex-d">Cât valorează surplusul exportat la prețul pieței și ce schimbă Legea 160/2026.</span>
+      </a>
     </div>
   </section>
 </div>

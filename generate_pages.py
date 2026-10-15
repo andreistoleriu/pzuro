@@ -141,6 +141,12 @@ STYLE = """
   .mark{font-family:var(--font-display);font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--paper);}
   .mark span{color:var(--cyan);}
   .tag{font-size:.78rem;color:#AEB3BD;}
+  header.top .wrap{flex-wrap:wrap;}
+  .site-nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap;}
+  .site-nav a{color:#D8DBE0;text-decoration:none;font-size:.8rem;font-weight:500;padding:5px 10px;border-radius:999px;}
+  .site-nav a:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .site-nav a[aria-current="page"]{background:rgba(255,255,255,.12);color:#fff;}
+  @media(max-width:560px){ .site-nav{margin-left:-10px;width:100%;} }
   h1{font-family:var(--font-display);font-weight:600;font-size:1.85rem;line-height:1.25;margin:0 0 6px;}
   .meta{font-size:.82rem;color:var(--ink-soft);margin-bottom:28px;}
   h2{font-family:var(--font-display);font-weight:600;font-size:1.3rem;margin:36px 0 12px;}
@@ -173,6 +179,22 @@ STYLE = """
   .cta a{display:inline-block;background:var(--cyan);color:#fff;text-decoration:none;font-weight:500;padding:11px 22px;border-radius:999px;font-size:.92rem;}
   footer{margin-top:48px;font-size:.78rem;color:var(--ink-soft);text-align:center;}
 """
+
+
+NAV_LINKS = [
+    ("pret-energie-maine.html", "Prețul de mâine"),
+    ("furnizori/", "Oferte furnizori"),
+    ("ce-este-contract-pret-dinamic.html", "Ghid"),
+]
+
+
+def nav_html(current_path: str) -> str:
+    """Meniul din antet, acelasi pe toate paginile; marcheaza sectiunea curenta."""
+    items = []
+    for href, label in NAV_LINKS:
+        current = href == current_path or (href == "furnizori/" and current_path.startswith("furnizori/"))
+        items.append(f'<a href="/{href}"{" aria-current=\"page\"" if current else ""}>{label}</a>')
+    return f'<nav class="site-nav" aria-label="Pagini pzuro">{"".join(items)}</nav>'
 
 
 def page(path: str, title: str, description: str, tag: str, body: str, og_type: str = "article", jsonld: dict | None = None) -> str:
@@ -210,6 +232,7 @@ def page(path: str, title: str, description: str, tag: str, body: str, og_type: 
   <div class="wrap">
     <a class="mark" href="/">pzuro<span>.</span>app</a>
     <span class="tag">{e(tag)}</span>
+    {nav_html(path)}
   </div>
 </header>
 

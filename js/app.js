@@ -484,7 +484,8 @@
       const r = computeDinamicCost(m, reglementate, basis, useCsv, profil);
       if (!r) continue;
       consumRef = r.consum;
-      rows.push({ id: f.id, label: f.oferta, pret: r.pretDinamicTotal, cost: r.costDinamic - venitExportDinamic });
+      const label = f.slug ? `<a href="/furnizori/${f.slug}.html" style="color:var(--ink);">${f.oferta}</a>` : f.oferta;
+      rows.push({ id: f.id, label, pret: r.pretDinamicTotal, cost: r.costDinamic - venitExportDinamic });
     }
     if (!rows.length) {
       container.innerHTML = '<p class="empty-state">Încarcă fișierul CSV pentru a vedea comparația.</p>';
@@ -594,6 +595,11 @@
     nota.hidden = !(f && f.nota);
     nota.style.color = oficial === null ? "var(--amber)" : "var(--ink-soft)";
     $("marjaConfirmataTag").hidden = !(oficial !== null && Math.abs(num("marja") - oficial) < 1e-9);
+    $("furnizorLinkWrap").hidden = !(f && f.slug);
+    if (f && f.slug) {
+      $("furnizorLink").href = `/furnizori/${f.slug}.html`;
+      $("furnizorLink").textContent = `Ce include ${f.oferta} și cât a costat în ultima lună →`;
+    }
   }
 
   function updateJudetUi() {
@@ -767,6 +773,20 @@
     });
   }
 
+  // ---------- cardurile catre paginile de continut: cate o cifra din datele zilei ----------
+  function renderExplore() {
+    const t = pricesData.tomorrow;
+    $("exploreMaine").textContent = tomorrowReady()
+      ? `Mâine: medie ${fmt(t.avg_ron_kwh)} lei/kWh, minim la ${timeLabel(t.cheapest_intervals[0].start)}`
+      : "Apar zilnic după ora 14:00";
+    if (statsData) {
+      const prices = cfg.furnizori.filter((f) => marjaOficiala(f) !== null).map((f) => ({
+        f, p: finalPrice(profileAvg(statsData.hourly_avg_ron_kwh, "uniform"), regulatedForJudet("medie"), marjaOficiala(f), cfg.tva),
+      })).sort((a, b) => a.p - b.p);
+      if (prices.length) $("exploreFurnizori").textContent = `Cea mai mică: ${prices[0].f.nume}, ${fmt(prices[0].p)} lei/kWh`;
+    }
+  }
+
   // ---------- tab-uri ----------
   const TAB_IDS = ["grafic", "ore", "calc", "istoric"];
   const TAB_HASH = { grafic: "grafic", ore: "ore", calc: "calculator", istoric: "istoric" };
@@ -889,6 +909,7 @@
     renderDayDependent();
     safeRender(runCalculator);
     safeRender(renderHistoryChart);
+    safeRender(renderExplore);
 
     // reimprospatam pretul curent si linia "acum" la fiecare minut
     setInterval(() => {
