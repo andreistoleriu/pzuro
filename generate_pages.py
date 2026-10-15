@@ -178,6 +178,53 @@ STYLE = """
   .cta p{color:#C9CCD3;margin:0 0 18px;font-size:.9rem;}
   .cta a{display:inline-block;background:var(--cyan);color:#fff;text-decoration:none;font-weight:500;padding:11px 22px;border-radius:999px;font-size:.92rem;}
   footer{margin-top:48px;font-size:.78rem;color:var(--ink-soft);text-align:center;}
+  .theme-toggle{background:transparent;border:none;color:#D8DBE0;padding:6px 8px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;line-height:0;}
+  .theme-toggle:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .theme-toggle:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+  .theme-toggle svg{width:16px;height:16px;}
+  .theme-toggle .i-sun{display:none;}
+  .theme-toggle[aria-pressed="true"] .i-sun{display:block;}
+  .theme-toggle[aria-pressed="true"] .i-moon{display:none;}
+  /* ---------- tema intunecata (js/theme.js) ---------- */
+  :root{--card:#fff;}
+  :root[data-theme="dark"]{
+    --paper:#101216; --paper-soft:#1A1D23; --ink:#ECE8E1; --ink-soft:#9DA3AE;
+    --cyan:#35B9C2; --cyan-soft:rgba(53,185,194,.13); --amber:#F2954F; --amber-soft:rgba(242,149,79,.14);
+    --violet:#A592F8; --violet-soft:rgba(165,146,248,.15); --line:#272B33; --card:#171A20;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+  :root[data-theme="dark"] header.top{background:radial-gradient(900px 260px at 15% -40%, rgba(53,185,194,.20), transparent 65%), #0A0B0E;color:#F7F4EE;border-bottom:1px solid var(--line);}
+  :root[data-theme="dark"] .mark{color:#F7F4EE;}
+  :root[data-theme="dark"] .cta{background:#0A0B0E;color:#F7F4EE;border:1px solid var(--line);}
+  :root[data-theme="dark"] .cta a, :root[data-theme="dark"] .btn-accent, :root[data-theme="dark"] .level{color:#071A1C !important;}
+  :root[data-theme="dark"] .callout, :root[data-theme="dark"] .stat:not(.good):not(.bad), :root[data-theme="dark"] table, :root[data-theme="dark"] code{background:var(--card);}
+  :root[data-theme="dark"] pre{background:#0A0B0E;border:1px solid var(--line);}
+  :root[data-theme="dark"] .warn{background:var(--amber-soft);border-color:rgba(242,149,79,.35);color:#F5B585;}
+  :root[data-theme="dark"] .mode-toggle button[aria-pressed="true"]{background:#F7F4EE;color:#1E2128;}
+  :root[data-theme="dark"] .verdict-cta{color:var(--paper);}
+  :root[data-theme="dark"] .explore-card:hover{border-color:var(--cyan);}
+  :root[data-theme="dark"] img{opacity:.92;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+    --paper:#101216; --paper-soft:#1A1D23; --ink:#ECE8E1; --ink-soft:#9DA3AE;
+    --cyan:#35B9C2; --cyan-soft:rgba(53,185,194,.13); --amber:#F2954F; --amber-soft:rgba(242,149,79,.14);
+    --violet:#A592F8; --violet-soft:rgba(165,146,248,.15); --line:#272B33; --card:#171A20;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+    }
+    :root:not([data-theme="light"]) header.top{background:radial-gradient(900px 260px at 15% -40%, rgba(53,185,194,.20), transparent 65%), #0A0B0E;color:#F7F4EE;border-bottom:1px solid var(--line);}
+    :root:not([data-theme="light"]) .mark{color:#F7F4EE;}
+    :root:not([data-theme="light"]) .cta{background:#0A0B0E;color:#F7F4EE;border:1px solid var(--line);}
+    :root:not([data-theme="light"]) .cta a, :root:not([data-theme="light"]) .btn-accent, :root:not([data-theme="light"]) .level{color:#071A1C !important;}
+    :root:not([data-theme="light"]) .callout, :root:not([data-theme="light"]) .stat:not(.good):not(.bad), :root:not([data-theme="light"]) table, :root:not([data-theme="light"]) code{background:var(--card);}
+    :root:not([data-theme="light"]) pre{background:#0A0B0E;border:1px solid var(--line);}
+    :root:not([data-theme="light"]) .warn{background:var(--amber-soft);border-color:rgba(242,149,79,.35);color:#F5B585;}
+    :root:not([data-theme="light"]) .mode-toggle button[aria-pressed="true"]{background:#F7F4EE;color:#1E2128;}
+    :root:not([data-theme="light"]) .verdict-cta{color:var(--paper);}
+    :root:not([data-theme="light"]) .explore-card:hover{border-color:var(--cyan);}
+    :root:not([data-theme="light"]) img{opacity:.92;}
+  }
 """
 
 
@@ -188,13 +235,16 @@ NAV_LINKS = [
 ]
 
 
+THEME_TOGGLE = '<button type="button" class="theme-toggle" aria-pressed="false" aria-label="Treci la tema întunecată"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>'
+
+
 def nav_html(current_path: str) -> str:
     """Meniul din antet, acelasi pe toate paginile; marcheaza sectiunea curenta."""
     items = []
     for href, label in NAV_LINKS:
         current = href == current_path or (href == "furnizori/" and current_path.startswith("furnizori/"))
         items.append(f'<a href="/{href}"{" aria-current=\"page\"" if current else ""}>{label}</a>')
-    return f'<nav class="site-nav" aria-label="Pagini pzuro">{"".join(items)}</nav>'
+    return f'<nav class="site-nav" aria-label="Pagini pzuro">{"".join(items)}{THEME_TOGGLE}</nav>'
 
 
 def page(path: str, title: str, description: str, tag: str, body: str, og_type: str = "article", jsonld: dict | None = None) -> str:
@@ -210,6 +260,8 @@ def page(path: str, title: str, description: str, tag: str, body: str, og_type: 
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon-192.png" type="image/png">
 <meta name="theme-color" content="#1E2128">
+<meta name="theme-color" content="#0A0B0E" media="(prefers-color-scheme: dark)">
+<script src="/js/theme.js"></script>
 <title>{e(title)} — pzuro.app</title>
 <meta name="description" content="{e(description)}">
 <link rel="canonical" href="{url}">

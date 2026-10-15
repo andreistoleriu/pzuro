@@ -5,7 +5,17 @@
 (function () {
   "use strict";
 
-  const CYAN = "#0F8A93", AMBER = "#D9722C", VIOLET = "#7B5EEA", INKSOFT = "#5B5F6B", INK = "#1E2128";
+  // culorile vin din variabilele CSS ale temei curente (luminoasa/intunecata),
+  // citite la fiecare randare -- canvas-ul graficelor nu urmeaza CSS-ul singur
+  function themeColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n) => cs.getPropertyValue(n).trim();
+    return { cyan: v("--cyan"), amber: v("--amber"), violet: v("--violet"), inkSoft: v("--ink-soft"), ink: v("--ink"), line: v("--line") };
+  }
+  function alpha(hex, a) {
+    const m = hex.replace("#", "").match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+    return m ? `rgba(${parseInt(m[1], 16)},${parseInt(m[2], 16)},${parseInt(m[3], 16)},${a})` : hex;
+  }
   const {
     fmt, isVisiblyNegative, hourlyAverages, profileAvg, solarAvgFromHourly, finalPrice, regulatedTotal,
     isCompleteDay, bestWindows, inferDurationMinutes, parseConsumptionCsv, matchIntervalsToArchive, toCsv,
@@ -50,12 +60,13 @@
   function dayLabel(key) { return key === "tomorrow" ? "mâine" : "azi"; }
 
   function colorFor(interval, min, max) {
-    if (isVisiblyNegative(interval.price_ron_kwh)) return VIOLET;
+    const c = themeColors();
+    if (isVisiblyNegative(interval.price_ron_kwh)) return c.violet;
     const range = max - min || 1;
     const pos = (interval.price_ron_kwh - min) / range;
-    if (pos < 0.33) return CYAN;
-    if (pos > 0.66) return AMBER;
-    return INKSOFT;
+    if (pos < 0.33) return c.cyan;
+    if (pos > 0.66) return c.amber;
+    return c.inkSoft;
   }
 
   // ---------- furnizori si tarife (din data/furnizori.json) ----------
@@ -97,7 +108,7 @@
       const f = furnizorById($("furnizor").value);
       const j = $("judet").value;
       const zona = j === "medie" ? "media națională a tarifelor" : j === "manual" ? "tarifele introduse de tine" : "județul " + j;
-      note.innerHTML = `Preț final estimat, cu taxe și TVA: ${f ? f.oferta : "furnizorul ales"}, ${zona}. <a href="#calculator" id="noteCalcLink" style="color:#9FD6DA;">Schimbă în Calculator</a>`;
+      note.innerHTML = `Preț final estimat, cu taxe și TVA: ${f ? f.oferta : "furnizorul ales"}, ${zona}. <a href="#calculator" id="noteCalcLink" class="note-link">Schimbă în Calculator</a>`;
       $("noteCalcLink").addEventListener("click", (e) => { e.preventDefault(); selectTab("calc"); $("panel-calc").scrollIntoView({ behavior: "smooth" }); });
     } else {
       note.innerHTML = "Preț de piață PZU, fără tarife reglementate, componenta de furnizare și TVA.";
@@ -253,7 +264,8 @@
       if (!bar) return;
       const { ctx, chartArea } = chart;
       ctx.save();
-      ctx.strokeStyle = INK;
+      const ink = themeColors().ink;
+      ctx.strokeStyle = ink;
       ctx.lineWidth = 1.5;
       ctx.setLineDash([4, 3]);
       ctx.beginPath();
@@ -261,7 +273,7 @@
       ctx.lineTo(bar.x, chartArea.bottom);
       ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = INK;
+      ctx.fillStyle = ink;
       ctx.font = "600 10px 'IBM Plex Sans', sans-serif";
       ctx.textAlign = "center";
       ctx.fillText("acum", bar.x, chartArea.top - 4);
@@ -334,7 +346,7 @@
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => fmt(c.parsed.y) + " lei/kWh" } } },
         scales: {
           x: { ticks: { autoSkip: true, maxTicksLimit: 8, font: { family: "IBM Plex Mono", size: 10 } }, grid: { display: false } },
-          y: { ticks: { font: { family: "IBM Plex Mono", size: 10 } }, grid: { color: "#E3DFD4" } },
+          y: { ticks: { font: { family: "IBM Plex Mono", size: 10 } }, grid: { color: themeColors().line } },
         },
       },
       plugins: [nowLinePlugin],
@@ -353,7 +365,8 @@
       const row = document.createElement("div");
       row.className = "hour-row";
       const pct = Math.max(6, Math.round((Math.abs(iv.price_ron_kwh) / maxAbs) * 100));
-      const color = isVisiblyNegative(iv.price_ron_kwh) ? VIOLET : kind === "cheap" ? CYAN : AMBER;
+      const tc = themeColors();
+      const color = isVisiblyNegative(iv.price_ron_kwh) ? tc.violet : kind === "cheap" ? tc.cyan : tc.amber;
       row.innerHTML = `<time>${timeLabel(iv.start)}</time>
         <div class="track"><div class="fill" style="width:${pct}%;background:${color}"></div></div>
         <div class="val">${fmt(disp(iv.price_ron_kwh))}</div>`;
@@ -757,9 +770,9 @@
       data: {
         labels: last30.map((h) => h.date.slice(8, 10) + "." + h.date.slice(5, 7)),
         datasets: [
-          { label: "medie", data: last30.map((h) => disp(h.avg_ron_kwh)), borderColor: CYAN, backgroundColor: "transparent", tension: 0.25, pointRadius: 0 },
-          { label: "maxim", data: last30.map((h) => disp(h.max_ron_kwh)), borderColor: "transparent", backgroundColor: "rgba(217,114,44,.12)", fill: "+1", tension: 0.25, pointRadius: 0 },
-          { label: "minim", data: last30.map((h) => disp(h.min_ron_kwh)), borderColor: "transparent", backgroundColor: "rgba(15,138,147,.10)", fill: false, tension: 0.25, pointRadius: 0 },
+          { label: "medie", data: last30.map((h) => disp(h.avg_ron_kwh)), borderColor: themeColors().cyan, backgroundColor: "transparent", tension: 0.25, pointRadius: 0 },
+          { label: "maxim", data: last30.map((h) => disp(h.max_ron_kwh)), borderColor: "transparent", backgroundColor: alpha(themeColors().amber, 0.14), fill: "+1", tension: 0.25, pointRadius: 0 },
+          { label: "minim", data: last30.map((h) => disp(h.min_ron_kwh)), borderColor: "transparent", backgroundColor: alpha(themeColors().cyan, 0.12), fill: false, tension: 0.25, pointRadius: 0 },
         ],
       },
       options: {
@@ -767,7 +780,7 @@
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.parsed.y)} lei/kWh` } } },
         scales: {
           x: { ticks: { maxTicksLimit: 8, font: { family: "IBM Plex Mono", size: 10 } }, grid: { display: false } },
-          y: { ticks: { font: { family: "IBM Plex Mono", size: 10 } }, grid: { color: "#E3DFD4" } },
+          y: { ticks: { font: { family: "IBM Plex Mono", size: 10 } }, grid: { color: themeColors().line } },
         },
       },
     });
@@ -882,6 +895,13 @@
     return res.json();
   }
 
+  function applyChartTheme() {
+    if (typeof Chart === "undefined") return;
+    const c = themeColors();
+    Chart.defaults.color = c.inkSoft;
+    Chart.defaults.borderColor = c.line;
+  }
+
   async function init() {
     try {
       [pricesData, historyData, statsData, cfg] = await Promise.all([
@@ -894,6 +914,7 @@
       return;
     }
     normalizeDayLabels();
+    applyChartTheme();
     if (!tomorrowReady()) $("btnTomorrow").disabled = true;
     // dupa publicarea preturilor de maine (~14:00), planificarea e despre ziua de maine
     activeDay = tomorrowReady() ? "tomorrow" : "today";
@@ -920,6 +941,13 @@
       }
     }, 60000);
   }
+
+  // la schimbarea temei redesenam tot ce e desenat pe canvas sau colorat din JS
+  document.addEventListener("pzuro-theme", () => {
+    if (!pricesData) return;
+    applyChartTheme();
+    renderModeDependent();
+  });
 
   // ---------- pornire ----------
   wireTabs();

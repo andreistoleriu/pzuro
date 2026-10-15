@@ -13,10 +13,10 @@
 // interceptate -- trec direct la retea, consistent cu degradarea graduala
 // deja prezenta in index.html pentru Chart.js (daca CDN-ul pica, restul merge).
 
-const CACHE_VERSION = "pzuro-v8";
+const CACHE_VERSION = "pzuro-v9";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
-const SHELL_FILES = ["/", "/js/calc.js", "/js/app.js", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
+const SHELL_FILES = ["/", "/js/theme.js", "/js/calc.js", "/js/app.js", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 const DATA_PATHS = ["/data/prices.json", "/data/history.json", "/data/stats.json", "/data/furnizori.json"];
 
 self.addEventListener("install", (event) => {
