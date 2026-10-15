@@ -32,7 +32,7 @@
     {
       "start": "2026-10-08T01:00:00+03:00",
       "end": "2026-10-08T01:15:00+03:00",
-      "price_eur_mwh": 195.0,
+      "price_eur_mwh": 195,
       "price_ron_kwh": 0.9906,
       "is_negative": false
     },
@@ -291,7 +291,7 @@
     {
       "start": "2026-10-08T10:15:00+03:00",
       "end": "2026-10-08T10:30:00+03:00",
-      "price_eur_mwh": 191.0,
+      "price_eur_mwh": 191,
       "price_ron_kwh": 0.9703,
       "is_negative": false
     },
@@ -305,7 +305,7 @@
     {
       "start": "2026-10-08T10:45:00+03:00",
       "end": "2026-10-08T11:00:00+03:00",
-      "price_eur_mwh": 162.0,
+      "price_eur_mwh": 162,
       "price_ron_kwh": 0.823,
       "is_negative": false
     },
@@ -634,7 +634,7 @@
     {
       "start": "2026-10-08T22:30:00+03:00",
       "end": "2026-10-08T22:45:00+03:00",
-      "price_eur_mwh": 249.0,
+      "price_eur_mwh": 249,
       "price_ron_kwh": 1.2649,
       "is_negative": false
     },
@@ -672,17 +672,10 @@
       "price_eur_mwh": 229.45,
       "price_ron_kwh": 1.1656,
       "is_negative": false
-    },
-    {
-      "start": "2026-10-09T00:00:00+03:00",
-      "end": "2026-10-09T00:15:00+03:00",
-      "price_eur_mwh": 245.38,
-      "price_ron_kwh": 1.2465,
-      "is_negative": false
     }
   ],
-  "interval_count": 97,
-  "avg_ron_kwh": 1.0637,
+  "interval_count": 96,
+  "avg_ron_kwh": 1.0618,
   "min_ron_kwh": 0.6843,
   "max_ron_kwh": 1.3819,
   "cheapest_intervals": [

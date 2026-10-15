@@ -116,14 +116,14 @@
     {
       "start": "2026-08-29T04:00:00+03:00",
       "end": "2026-08-29T04:15:00+03:00",
-      "price_eur_mwh": 133.0,
+      "price_eur_mwh": 133,
       "price_ron_kwh": 0.6756,
       "is_negative": false
     },
     {
       "start": "2026-08-29T04:15:00+03:00",
       "end": "2026-08-29T04:30:00+03:00",
-      "price_eur_mwh": 133.0,
+      "price_eur_mwh": 133,
       "price_ron_kwh": 0.6756,
       "is_negative": false
     },
@@ -291,7 +291,7 @@
     {
       "start": "2026-08-29T10:15:00+03:00",
       "end": "2026-08-29T10:30:00+03:00",
-      "price_eur_mwh": 10.0,
+      "price_eur_mwh": 10,
       "price_ron_kwh": 0.0508,
       "is_negative": false
     },
@@ -305,7 +305,7 @@
     {
       "start": "2026-08-29T10:45:00+03:00",
       "end": "2026-08-29T11:00:00+03:00",
-      "price_eur_mwh": 8.0,
+      "price_eur_mwh": 8,
       "price_ron_kwh": 0.0406,
       "is_negative": false
     },
@@ -382,7 +382,7 @@
     {
       "start": "2026-08-29T13:30:00+03:00",
       "end": "2026-08-29T13:45:00+03:00",
-      "price_eur_mwh": 8.0,
+      "price_eur_mwh": 8,
       "price_ron_kwh": 0.0406,
       "is_negative": false
     },
@@ -672,31 +672,24 @@
       "price_eur_mwh": 178.89,
       "price_ron_kwh": 0.9088,
       "is_negative": false
-    },
-    {
-      "start": "2026-08-30T00:00:00+03:00",
-      "end": "2026-08-30T00:15:00+03:00",
-      "price_eur_mwh": 185.33,
-      "price_ron_kwh": 0.9415,
-      "is_negative": false
     }
   ],
-  "interval_count": 97,
-  "avg_ron_kwh": 0.5935,
+  "interval_count": 96,
+  "avg_ron_kwh": 0.5899,
   "min_ron_kwh": 0.0406,
   "max_ron_kwh": 1.1463,
   "cheapest_intervals": [
     {
       "start": "2026-08-29T10:45:00+03:00",
       "end": "2026-08-29T11:00:00+03:00",
-      "price_eur_mwh": 8.0,
+      "price_eur_mwh": 8,
       "price_ron_kwh": 0.0406,
       "is_negative": false
     },
     {
       "start": "2026-08-29T13:30:00+03:00",
       "end": "2026-08-29T13:45:00+03:00",
-      "price_eur_mwh": 8.0,
+      "price_eur_mwh": 8,
       "price_ron_kwh": 0.0406,
       "is_negative": false
     },

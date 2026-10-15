@@ -43,6 +43,27 @@ class SeriesToIntervalsTest(unittest.TestCase):
         self.assertEqual((end - start).total_seconds(), 15 * 60)
 
 
+class TrimToWindowTest(unittest.TestCase):
+    def test_drops_next_day_midnight_interval(self):
+        # entsoe-py intoarce si 00:00 din ziua urmatoare (end inclusiv)
+        start = pd.Timestamp("2026-06-01", tz="Europe/Bucharest")
+        end = start + pd.DateOffset(days=1)
+        index = pd.date_range(start, end, freq="15min")
+        series = pd.Series(range(len(index)), index=index, dtype=float)
+        self.assertEqual(len(series), 97)
+        trimmed = fetch_prices.trim_to_window(series, start, end)
+        self.assertEqual(len(trimmed), 96)
+        self.assertLess(trimmed.index[-1], end)
+
+    def test_dst_day_keeps_all_local_intervals(self):
+        # 25 oct 2026: ora se da inapoi, ziua are 25h = 100 de intervale
+        start = pd.Timestamp("2026-10-25", tz="Europe/Bucharest")
+        end = start + pd.DateOffset(days=1)
+        index = pd.date_range(start, end, freq="15min")
+        series = pd.Series(0.0, index=index)
+        self.assertEqual(len(fetch_prices.trim_to_window(series, start, end)), 100)
+
+
 class BuildDayPayloadTest(unittest.TestCase):
     def _interval(self, price):
         return {"start": "x", "end": "y", "price_eur_mwh": 0, "price_ron_kwh": price, "is_negative": price < 0}

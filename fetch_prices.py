@@ -78,6 +78,14 @@ def get_eur_ron_rate() -> tuple[float, str]:
     return DEFAULT_EUR_RON_RATE, "fallback"
 
 
+def trim_to_window(series: pd.Series, start: pd.Timestamp, end: pd.Timestamp) -> pd.Series:
+    """Pastreaza doar intervalele care INCEP in [start, end). entsoe-py trateaza
+    `end` ca inclusiv si intoarce si intervalul de la 00:00 al zilei urmatoare --
+    fara filtrul asta, fiecare zi ar avea 97 de intervale in loc de 96, iar
+    media/minimul/maximul zilei ar include un pret din ziua de dupa."""
+    return series[(series.index >= start) & (series.index < end)]
+
+
 def fetch_day_ahead(client: EntsoePandasClient, day: pd.Timestamp) -> pd.Series | None:
     """Preia seria de preturi PZU (EUR/MWh) pentru o zi calendaristica intreaga,
     in ora locala Romaniei. Returneaza None (nu ridica exceptie) daca ziua
@@ -91,7 +99,7 @@ def fetch_day_ahead(client: EntsoePandasClient, day: pd.Timestamp) -> pd.Series 
     # schimbare de ora, dand o fereastra de interogare gresita.
     end = start + pd.DateOffset(days=1)
     try:
-        series = client.query_day_ahead_prices(ZONE, start=start, end=end)
+        series = trim_to_window(client.query_day_ahead_prices(ZONE, start=start, end=end), start, end)
         if len(series) < MIN_VALID_INTERVALS:
             # publicare partiala -- ENTSO-E a raspuns, dar cu mult mai putine
             # intervale decat o zi completa. Tratam la fel ca nepublicat inca,

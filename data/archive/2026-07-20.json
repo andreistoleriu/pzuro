@@ -207,7 +207,7 @@
     {
       "start": "2026-07-20T07:15:00+03:00",
       "end": "2026-07-20T07:30:00+03:00",
-      "price_eur_mwh": 152.0,
+      "price_eur_mwh": 152,
       "price_ron_kwh": 0.7969,
       "is_negative": false
     },
@@ -256,14 +256,14 @@
     {
       "start": "2026-07-20T09:00:00+03:00",
       "end": "2026-07-20T09:15:00+03:00",
-      "price_eur_mwh": 159.0,
+      "price_eur_mwh": 159,
       "price_ron_kwh": 0.8336,
       "is_negative": false
     },
     {
       "start": "2026-07-20T09:15:00+03:00",
       "end": "2026-07-20T09:30:00+03:00",
-      "price_eur_mwh": 140.0,
+      "price_eur_mwh": 140,
       "price_ron_kwh": 0.734,
       "is_negative": false
     },
@@ -291,7 +291,7 @@
     {
       "start": "2026-07-20T10:15:00+03:00",
       "end": "2026-07-20T10:30:00+03:00",
-      "price_eur_mwh": 102.0,
+      "price_eur_mwh": 102,
       "price_ron_kwh": 0.5348,
       "is_negative": false
     },
@@ -501,7 +501,7 @@
     {
       "start": "2026-07-20T17:45:00+03:00",
       "end": "2026-07-20T18:00:00+03:00",
-      "price_eur_mwh": 145.0,
+      "price_eur_mwh": 145,
       "price_ron_kwh": 0.7602,
       "is_negative": false
     },
@@ -641,7 +641,7 @@
     {
       "start": "2026-07-20T22:45:00+03:00",
       "end": "2026-07-20T23:00:00+03:00",
-      "price_eur_mwh": 178.0,
+      "price_eur_mwh": 178,
       "price_ron_kwh": 0.9332,
       "is_negative": false
     },
@@ -669,20 +669,13 @@
     {
       "start": "2026-07-20T23:45:00+03:00",
       "end": "2026-07-21T00:00:00+03:00",
-      "price_eur_mwh": 165.0,
+      "price_eur_mwh": 165,
       "price_ron_kwh": 0.8651,
-      "is_negative": false
-    },
-    {
-      "start": "2026-07-21T00:00:00+03:00",
-      "end": "2026-07-21T00:15:00+03:00",
-      "price_eur_mwh": 172.47,
-      "price_ron_kwh": 0.9042,
       "is_negative": false
     }
   ],
-  "interval_count": 97,
-  "avg_ron_kwh": 0.6607,
+  "interval_count": 96,
+  "avg_ron_kwh": 0.6581,
   "min_ron_kwh": 0.1255,
   "max_ron_kwh": 1.1746,
   "cheapest_intervals": [
